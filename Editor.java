@@ -1064,12 +1064,19 @@ public class Editor
 		windowContainer.setLayout(new BoxLayout(windowContainer, BoxLayout.LINE_AXIS));
 
 		MapPanel mapPanel = new MapPanel();
+		JTabbedPane toolsetTabPane = new JTabbedPane();
 		JPanel toolPanel = new JPanel();
+		JPanel objectPanel = new JPanel();
+		JPanel levelSettingsPanel = new JPanel();
 		TilesetPanel tilesetPanel = new TilesetPanel();
 		TileInfoPanel tileInfoPanel = new TileInfoPanel();
 		ToolbarPanel toolbarPanel = new ToolbarPanel();
 		tilesetPanel.setTileInfoPanel(tileInfoPanel);
 		toolbarPanel.setPanels(mapPanel, tilesetPanel);
+
+		toolsetTabPane.addTab("Tiles", null, toolPanel, "Tile edit mode");
+		toolsetTabPane.addTab("Objects", null, objectPanel, "Object edit mode");
+		toolsetTabPane.addTab("Level", null, levelSettingsPanel, "Level settings");
 
 		toolPanel.setLayout(new BoxLayout(toolPanel, BoxLayout.PAGE_AXIS));
 
@@ -1084,6 +1091,9 @@ public class Editor
 		mapPanel.setPreferredSize(new Dimension(640,480));
 		tileInfoPanel.setMinimumSize(new Dimension(256,15));
 		tileInfoPanel.setMaximumSize(new Dimension(256,15));
+		toolsetTabPane.setPreferredSize(new Dimension(256,256));
+		toolsetTabPane.setMinimumSize(new Dimension(256,256));
+		toolsetTabPane.setMaximumSize(new Dimension(256,1200));
 		toolPanel.setPreferredSize(new Dimension(256,256));
 		toolPanel.setMinimumSize(new Dimension(256,256));
 		toolPanel.setMaximumSize(new Dimension(256,1200));
@@ -1101,7 +1111,8 @@ public class Editor
 		toolPanel.add(toolbarPanel, BorderLayout.NORTH);
 
 		windowContainer.add(scrollFrame);
-		windowContainer.add(toolPanel);
+		windowContainer.add(toolsetTabPane);
+		//windowContainer.add(toolPanel);
 
 		mapPanel.setBorder(BorderFactory.createLineBorder(Color.black));
 		tilesetPanel.setBorder(BorderFactory.createLineBorder(Color.black));
