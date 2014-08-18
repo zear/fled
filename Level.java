@@ -11,10 +11,12 @@ public class Level
 	private File filePath = null;
 
 	private LinkedList<LevelLayer> layers;
+	private LinkedList<GameObject> objects;
 
 	public Level(int sizeX, int sizeY)
 	{
 		layers = new LinkedList<LevelLayer>();
+		objects = new LinkedList<GameObject>();
 		LevelLayer curElem = null;
 
 		for(int i = 0; i < 3; i++)
@@ -31,6 +33,7 @@ public class Level
 	public Level(File fileName)
 	{
 		layers = new LinkedList<LevelLayer>();
+		objects = new LinkedList<GameObject>();
 		this.filePath = fileName;
 		System.out.printf("Path is: %s\n", this.filePath);
 		load(filePath);
@@ -54,6 +57,11 @@ public class Level
 	public LevelLayer getLayer(int num)
 	{
 		return this.layers.get(num);
+	}
+
+	public LinkedList<GameObject> getObjectList()
+	{
+		return this.objects;
 	}
 
 	private void load(File fileName)
@@ -81,6 +89,7 @@ public class Level
 						curElem.load(fp); // load the tileset
 					break;
 					case "OBJECTS":
+						loadObjects(fp);
 						//loadObjects(fp); // TODO
 					break;
 
@@ -91,6 +100,36 @@ public class Level
 		}
 
 		fp.close();
+	}
+
+	private void loadObjects(FileRead fp)
+	{
+		String line;
+		String [] words;
+		int token;
+		GameObject curObj;
+
+		while(fp.hasNext())
+		{
+			line = fp.getLine();
+			words = line.split("\\s");
+			token = -1;
+
+			if(words[0].equals("END"))
+				return;
+
+			if(words.length >= 4 && !(words[0].equals("END")))
+			{
+				objects.push(new GameObject());
+				curObj = objects.getFirst();
+				curObj.setName(words[0]);
+				curObj.setX(Integer.parseInt(words[1]));
+				curObj.setY(Integer.parseInt(words[2]));
+				curObj.setDirection(Integer.parseInt(words[3]) != 0);
+
+				System.out.printf("Adding: %s, (%s,%s) dir: %s\n", words[0], words[1], words[2], words[3]);
+			}
+		}
 	}
 
 	public void write(File fileName)
@@ -161,7 +200,11 @@ public class Level
 			}
 
 			levelContent.append("OBJECTS\n");
-			levelContent.append("player\t32\t48\t1\n"); // temp
+			for(GameObject curObj : this.objects)
+			{
+				levelContent.append(curObj.getName() + "\t" + curObj.getX() + "\t" + curObj.getY() + "\t" + (curObj.getDirection() ? 1 : 0) + "\n");
+			}
+//			levelContent.append("player\t32\t48\t1\n"); // temp
 			levelContent.append("END\n");
 
 			System.out.printf("Writing to file\n");

@@ -1,9 +1,9 @@
-public class Object
+public class GameObject
 {
 	private String name;
-	private x;
-	private y;
-	boolean direction;
+	private int x;
+	private int y;
+	private boolean direction;
 
 	public String getName()
 	{
@@ -42,6 +42,6 @@ public class Object
 
 	public void setDirection(boolean direction)
 	{
-		this.x = x;
+		this.direction = direction;
 	}
 }

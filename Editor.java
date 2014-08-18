@@ -176,6 +176,7 @@ class Menu extends JMenuBar
 	private MapPanel mapPanel = null;
 	private TilesetPanel tilesetPanel = null;
 	private ToolbarPanel toolbarPanel = null;
+	private ObjectPanel objectPanel = null;
 
 	private int newSizeX = 20;
 	private int newSizeY = 20;
@@ -242,6 +243,8 @@ class Menu extends JMenuBar
 						mapPanel.setPreferredSize(new Dimension(mapPanel.drawAreaLayers.get(0).getWidth(),mapPanel.drawAreaLayers.get(0).getHeight()));
 						mapPanel.revalidate();
 					}
+
+					objectPanel.loadObjects();
 				}
 			}
 		});
@@ -301,6 +304,8 @@ class Menu extends JMenuBar
 						mapPanel.setPreferredSize(new Dimension(mapPanel.drawAreaLayers.get(0).getWidth(),mapPanel.drawAreaLayers.get(0).getHeight()));
 						mapPanel.revalidate();
 					}
+
+					objectPanel.loadObjects();
 				}
 			}
 		});
@@ -405,11 +410,12 @@ class Menu extends JMenuBar
 		});
 	}
 
-	public void setPanels(MapPanel newMapPanel, TilesetPanel newTilesetPanel, ToolbarPanel newToolbarPanel)
+	public void setPanels(MapPanel newMapPanel, TilesetPanel newTilesetPanel, ToolbarPanel newToolbarPanel, ObjectPanel newObjectPanel)
 	{
 		this.mapPanel = newMapPanel;
 		this.tilesetPanel = newTilesetPanel;
 		this.toolbarPanel = newToolbarPanel;
+		this.objectPanel = newObjectPanel;
 	}
 
 	public void setSizeX(int size)
@@ -1051,6 +1057,143 @@ class ToolbarPanel extends JPanel
 	}
 }
 
+class ObjectPanel extends JPanel
+{
+	private MapPanel mapPanel = null;
+	private ListCellRenderer<Object> renderer;
+	private LinkedList<GameObject> availableObjectsList;
+	private LinkedList<GameObject> addedObjectsList;
+	private DefaultListModel<GameObject> availableListModel;
+	private DefaultListModel<GameObject> addedListModel;
+	private JList <GameObject> availableObjects;
+	private JList <GameObject> addedObjects;
+	private JScrollPane availablePane;
+	private JScrollPane addedPane;
+	private JButton buttonAdd = new JButton("Add");
+	private JButton buttonRemove = new JButton("Remove");
+
+	class ObjectCellRenderer extends JLabel implements ListCellRenderer<Object>
+	{
+		public ObjectCellRenderer()
+		{
+			setOpaque(true);
+		}
+
+		public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus)
+		{
+			if(value instanceof GameObject)
+				setText(((GameObject)value).getName());
+			else
+				setText(value.toString());
+
+			Color background;
+			Color foreground;
+
+			// check if this cell represents the current DnD drop location
+			JList.DropLocation dropLocation = list.getDropLocation();
+			if (dropLocation != null && !dropLocation.isInsert() && dropLocation.getIndex() == index)
+			{
+
+				background = Color.BLUE;
+				foreground = Color.WHITE;
+
+			// check if this cell is selected
+			}
+			else if (isSelected)
+			{
+				background = Color.BLUE;
+				foreground = Color.WHITE;
+
+			// unselected, and not the DnD drop location
+			}
+			else
+			{
+				background = Color.WHITE;
+				foreground = Color.BLACK;
+			}
+
+			setBackground(background);
+			setForeground(foreground);
+
+			return this;
+		}
+	}
+
+	public ObjectPanel()
+	{
+		renderer = new ObjectCellRenderer();
+	}
+
+	void loadObjects()
+	{
+		this.availableListModel = new DefaultListModel<GameObject>();
+		this.addedListModel = new DefaultListModel<GameObject>();
+
+		// Check a directory for object files
+		File folder = new File(Data.getDataDirectory() + "/data/obj/");
+		File [] listOfFiles = folder.listFiles();
+
+		FileRead fp;
+		String line;
+		String [] words;
+
+		for(int i = 0; i < listOfFiles.length; i++)
+		{
+			if(listOfFiles[i].isFile())
+			{
+				fp = new FileRead((File)listOfFiles[i]);
+
+				while(fp.hasNext())
+				{
+					line = fp.getLine();
+					if(line == null)
+					break;
+
+					words = line.split("\\s");
+
+					if (words[0].equals("NAME"))
+					{
+						GameObject newObj = new GameObject();
+						this.availableListModel.addElement(newObj);
+						newObj.setName(words[1]);
+						break;
+					}
+				}
+
+				fp.close();
+			}
+		}
+
+		// Load objects present in the level file
+		this.addedObjectsList = this.mapPanel.level.getObjectList();
+
+		for(GameObject curObj : this.addedObjectsList)
+		{
+			this.addedListModel.addElement(curObj);
+		}
+
+		this.availableObjects = new JList<>(this.availableListModel);
+		this.availableObjects.setCellRenderer(this.renderer);
+		this.addedObjects = new JList<>(this.addedListModel);
+		this.addedObjects.setCellRenderer(this.renderer);
+
+		availablePane = new JScrollPane(availableObjects);
+		addedPane = new JScrollPane(addedObjects);
+
+		this.removeAll();
+		this.add(availablePane);
+		this.add(addedPane);
+		this.add(buttonAdd);
+		this.add(buttonRemove);
+		this.repaint();
+	}
+
+	void setPanels(MapPanel newMapPanel)
+	{
+		this.mapPanel = newMapPanel;
+	}
+}
+
 public class Editor
 {
 	private static void createGui()
@@ -1066,11 +1209,12 @@ public class Editor
 		MapPanel mapPanel = new MapPanel();
 		JTabbedPane toolsetTabPane = new JTabbedPane();
 		JPanel toolPanel = new JPanel();
-		JPanel objectPanel = new JPanel();
+		ObjectPanel objectPanel = new ObjectPanel();
 		JPanel levelSettingsPanel = new JPanel();
 		TilesetPanel tilesetPanel = new TilesetPanel();
 		TileInfoPanel tileInfoPanel = new TileInfoPanel();
 		ToolbarPanel toolbarPanel = new ToolbarPanel();
+		objectPanel.setPanels(mapPanel);
 		tilesetPanel.setTileInfoPanel(tileInfoPanel);
 		toolbarPanel.setPanels(mapPanel, tilesetPanel);
 
@@ -1120,7 +1264,7 @@ public class Editor
 
 		// menu
 		Menu menuBar = new Menu();
-		menuBar.setPanels(mapPanel, tilesetPanel, toolbarPanel);
+		menuBar.setPanels(mapPanel, tilesetPanel, toolbarPanel, objectPanel);
 
 		frame.getContentPane().add(menuBar, BorderLayout.NORTH);
 		frame.getContentPane().add(windowContainer);
