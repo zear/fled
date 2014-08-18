@@ -171,7 +171,7 @@ class Menu extends JMenuBar
 	private JMenu helpMenu = new JMenu("Help");
 	private JMenuItem helpAbout = new JMenuItem("About");
 
-	private JFileChooser fileChooser = new JFileChooser(".");
+	private JFileChooser fileChooser = new JFileChooser(Data.getDataDirectory());
 
 	private MapPanel mapPanel = null;
 	private TilesetPanel tilesetPanel = null;
