@@ -1149,8 +1149,8 @@ class ObjectPanel extends JPanel
 					if(selectedIndex != -1)
 					{
 						newObj.setName(availableListModel.get(selectedIndex).getName());
-						addedListModel.addElement(newObj);
 						addedObjectsList.push(newObj);
+						addedListModel.addElement(newObj);
 					}
 					mapPanel.repaint();
 				}
@@ -1167,7 +1167,6 @@ class ObjectPanel extends JPanel
 					if(selectedIndex != -1)
 					{
 						GameObject objToRem = addedListModel.get(selectedIndex);
-						addedListModel.remove(selectedIndex);
 
 						ListIterator<GameObject> objsli = addedObjectsList.listIterator();
 						while (objsli.hasNext())
@@ -1175,8 +1174,9 @@ class ObjectPanel extends JPanel
 							if(objsli.next() == objToRem)
 							{
 								objsli.remove();
+								addedListModel.remove(selectedIndex);
+								break;
 							}
-							break;
 						}
 						mapPanel.repaint();
 					}
