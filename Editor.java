@@ -14,9 +14,19 @@ import java.awt.event.MouseEvent;
 import javax.swing.event.MouseInputListener;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
 import javax.swing.filechooser.*;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
+
+enum EditMode
+{
+	MODE_NONE,
+	MODE_TILE_EDIT,
+	MODE_OBJECT_EDIT,
+	MODE_LEVEL_EDIT
+}
 
 class Data
 {
@@ -457,12 +467,27 @@ class MapPanel extends DrawPanel implements MouseInputListener
 	public Level level = null;
 	private TilesetPanel tileset = null;
 	private TileInfoPanel tileInfoPanel = null;
+	private ObjectPanel objectPanel = null;
+	private EditMode editMode = EditMode.MODE_TILE_EDIT;
 	private boolean canPaint = false;
 	private int paintX = 0;
 	private int paintY = 0;
 	private int lastPaintOnLayer = 1;
 	private int lastTile = 0;
+
+	private GameObject selectedObject = null;
+	private boolean draggingObject = false;
+
 	protected boolean showGrid = true;
+
+	public EditMode getEditMode()
+	{
+		return this.editMode;
+	}
+	public void setEditMode(EditMode newEditMode)
+	{
+		this.editMode = newEditMode;
+	}
 
 	public void paintTile(int layer, int num, int x, int y, boolean repaint)
 	{
@@ -509,10 +534,11 @@ class MapPanel extends DrawPanel implements MouseInputListener
 		super.repaint();
 	}
 
-	public void setPanels(TilesetPanel newTileset, TileInfoPanel newTileInfoPanel)
+	public void setPanels(TilesetPanel newTileset, TileInfoPanel newTileInfoPanel, ObjectPanel newObjectPanel)
 	{
 		this.tileset = newTileset;
 		this.tileInfoPanel = newTileInfoPanel;
+		this.objectPanel = newObjectPanel;
 	}
 
 	private boolean isInMapArea(int x, int y)
@@ -546,54 +572,115 @@ class MapPanel extends DrawPanel implements MouseInputListener
 	}
 	public void mouseReleased(MouseEvent e)
 	{
-		switch(e.getModifiers())
-		{
-			case InputEvent.BUTTON1_MASK:
-				this.canPaint = false;
-			break;
-
-			default:
-			break;
-		}
-	}
-	public void mousePressed(MouseEvent e)
-	{
-		if(this.level != null && this.level.getNumOfLayers() > 0 && this.tileset != null)
+		if(this.editMode == EditMode.MODE_TILE_EDIT)
 		{
 			switch(e.getModifiers())
 			{
 				case InputEvent.BUTTON1_MASK:
-					this.canPaint = true;
-					int curX = e.getX()/16*16;
-					int curY = e.getY()/16*16;
-					int curTile = this.tileset.getSelY() * 16 + this.tileset.getSelX();
-
-					if(this.paintX != curX || this.paintY != curY || this.lastPaintOnLayer != super.paintOnLayer || this.lastTile != curTile)
-					{
-						if((this.canPaint) && (this.isInMapArea(e.getX(), e.getY())))
-						{
-							this.paintX = e.getX()/16*16;
-							this.paintY = e.getY()/16*16;
-							this.lastPaintOnLayer = super.paintOnLayer;
-							this.lastTile = curTile;
-							this.paintTile(this.paintX, this.paintY);
-						}
-					}
-				break;
-				case InputEvent.BUTTON3_MASK:
-					int tile = this.level.getLayer(super.paintOnLayer).getTile(e.getX()/16, e.getY()/16);
-					int x = tile % 16;
-					int y = tile / 16;
-
-					this.tileset.setSelX(x);
-					this.tileset.setSelY(y);
-					this.tileset.repaint();
-					if(this.tileInfoPanel != null)
-						this.tileInfoPanel.updateInfo(x, y);
+					this.canPaint = false;
 				break;
 
 				default:
 				break;
+			}
+		}
+		else if(this.editMode == EditMode.MODE_OBJECT_EDIT)
+		{
+			switch(e.getModifiers())
+			{
+				case InputEvent.BUTTON1_MASK:
+				{
+					if(this.draggingObject)
+						this.draggingObject = false;
+				}
+				break;
+
+				default:
+				break;
+			}
+		}
+	}
+	public void mousePressed(MouseEvent e)
+	{
+		if(this.editMode == EditMode.MODE_TILE_EDIT)
+		{
+			if(this.level != null && this.level.getNumOfLayers() > 0 && this.tileset != null)
+			{
+				switch(e.getModifiers())
+				{
+					case InputEvent.BUTTON1_MASK:
+					{
+						this.canPaint = true;
+						int curX = e.getX()/16*16;
+						int curY = e.getY()/16*16;
+						int curTile = this.tileset.getSelY() * 16 + this.tileset.getSelX();
+
+						if(this.paintX != curX || this.paintY != curY || this.lastPaintOnLayer != super.paintOnLayer || this.lastTile != curTile)
+						{
+							if((this.canPaint) && (this.isInMapArea(e.getX(), e.getY())))
+							{
+								this.paintX = e.getX()/16*16;
+								this.paintY = e.getY()/16*16;
+								this.lastPaintOnLayer = super.paintOnLayer;
+								this.lastTile = curTile;
+								this.paintTile(this.paintX, this.paintY);
+							}
+						}
+					}
+					break;
+					case InputEvent.BUTTON3_MASK:
+					{
+						int tile = this.level.getLayer(super.paintOnLayer).getTile(e.getX()/16, e.getY()/16);
+						int x = tile % 16;
+						int y = tile / 16;
+
+						this.tileset.setSelX(x);
+						this.tileset.setSelY(y);
+						this.tileset.repaint();
+						if(this.tileInfoPanel != null)
+							this.tileInfoPanel.updateInfo(x, y);
+					}
+					break;
+
+					default:
+					break;
+				}
+			}
+		}
+		else if(this.editMode == EditMode.MODE_OBJECT_EDIT)
+		{
+			if(this.level != null && this.objectPanel != null)
+			{
+				switch(e.getModifiers())
+				{
+					case InputEvent.BUTTON1_MASK:
+					{
+						int objX;
+						int objY;
+						int curX = e.getX()/16*16;
+						int curY = e.getY()/16*16;
+
+						if(!this.draggingObject)
+						{
+							for(GameObject curObj : this.level.getObjectList())
+							{
+								if(curObj.getX()/16*16 == curX && curObj.getY()/16*16 == curY)
+								{
+									this.selectedObject = curObj;
+									this.draggingObject = true;
+									this.objectPanel.setSelectedObject(curObj);
+									break;
+								}
+							}
+						}
+					}
+					break;
+					case InputEvent.BUTTON3_MASK:
+					break;
+
+					default:
+					break;
+				}
 			}
 		}
 	}
@@ -605,28 +692,60 @@ class MapPanel extends DrawPanel implements MouseInputListener
 	}
 	public void mouseDragged(MouseEvent e)
 	{
-		switch(e.getModifiers())
+		if(this.editMode == EditMode.MODE_TILE_EDIT)
 		{
-			case InputEvent.BUTTON1_MASK:
-				int curX = e.getX()/16*16;
-				int curY = e.getY()/16*16;
-				int curTile = this.tileset.getSelY() * 16 + this.tileset.getSelX();
-
-				if(this.paintX != curX || this.paintY != curY || this.lastPaintOnLayer != super.paintOnLayer || this.lastTile != curTile)
+			switch(e.getModifiers())
+			{
+				case InputEvent.BUTTON1_MASK:
 				{
-					if((this.canPaint) && (this.isInMapArea(e.getX(), e.getY())))
+					int curX = e.getX()/16*16;
+					int curY = e.getY()/16*16;
+					int curTile = this.tileset.getSelY() * 16 + this.tileset.getSelX();
+
+					if(this.paintX != curX || this.paintY != curY || this.lastPaintOnLayer != super.paintOnLayer || this.lastTile != curTile)
 					{
-						this.paintX = curX;
-						this.paintY = curY;
-						this.lastPaintOnLayer = super.paintOnLayer;
-						this.lastTile = curTile;
-						this.paintTile(this.paintX, this.paintY);
+						if((this.canPaint) && (this.isInMapArea(e.getX(), e.getY())))
+						{
+							this.paintX = curX;
+							this.paintY = curY;
+							this.lastPaintOnLayer = super.paintOnLayer;
+							this.lastTile = curTile;
+							this.paintTile(this.paintX, this.paintY);
+						}
 					}
 				}
-			break;
+				break;
 
-			default:
-			break;
+				default:
+				break;
+			}
+		}
+		else if(this.editMode == EditMode.MODE_OBJECT_EDIT)
+		{
+			if(this.level != null && this.objectPanel != null)
+			{
+				switch(e.getModifiers())
+				{
+					case InputEvent.BUTTON1_MASK:
+					{
+						if(this.selectedObject != null && this.draggingObject)
+						{
+							int curX = e.getX()/16*16;
+							int curY = e.getY()/16*16;
+
+							this.selectedObject.setX(curX);
+							this.selectedObject.setY(curY);
+							this.repaint();
+						}
+					}
+					break;
+					case InputEvent.BUTTON3_MASK:
+					break;
+
+					default:
+					break;
+				}
+			}
 		}
 	}
 
@@ -661,13 +780,16 @@ class MapPanel extends DrawPanel implements MouseInputListener
 		this.draw(g);
 
 		// temp
-		if(this.level != null)
+		if(this.editMode == EditMode.MODE_OBJECT_EDIT)
 		{
-			for(GameObject curObj : this.level.getObjectList())
+			if(this.level != null)
 			{
-				Graphics2D g2d = (Graphics2D)g;
-				g2d.setColor(Color.RED);
-				g2d.drawLine(curObj.getX(), curObj.getY(), curObj.getX() + 16, curObj.getY() + 16);
+				for(GameObject curObj : this.level.getObjectList())
+				{
+					Graphics2D g2d = (Graphics2D)g;
+					g2d.setColor(Color.RED);
+					g2d.drawLine(curObj.getX(), curObj.getY(), curObj.getX() + 16, curObj.getY() + 16);
+				}
 			}
 		}
 	}
@@ -1151,6 +1273,7 @@ class ObjectPanel extends JPanel
 						newObj.setName(availableListModel.get(selectedIndex).getName());
 						addedObjectsList.push(newObj);
 						addedListModel.addElement(newObj);
+						addedObjects.setSelectedValue(newObj, true);
 					}
 					mapPanel.repaint();
 				}
@@ -1175,6 +1298,7 @@ class ObjectPanel extends JPanel
 							{
 								objsli.remove();
 								addedListModel.remove(selectedIndex);
+								addedObjects.setSelectedIndex(selectedIndex == 0 ? 0 : selectedIndex - 1);
 								break;
 							}
 						}
@@ -1301,9 +1425,48 @@ class ObjectPanel extends JPanel
 		this.repaint();
 	}
 
+	void setSelectedObject(GameObject selObj)
+	{
+		addedObjects.setSelectedValue(selObj, true);
+	}
+
 	void setPanels(MapPanel newMapPanel)
 	{
 		this.mapPanel = newMapPanel;
+	}
+}
+
+class ToolsetTabPane extends JTabbedPane
+{
+	private MapPanel mapPanel = null;
+
+	public void setMapPanel(MapPanel newMapPanel)
+	{
+		this.mapPanel = newMapPanel;
+
+		this.addChangeListener(new ChangeListener()
+		{
+			public void stateChanged(ChangeEvent e)
+			{
+				switch(getSelectedIndex())
+				{
+					case 0:
+						mapPanel.setEditMode(EditMode.MODE_TILE_EDIT);
+					break;
+					case 1:
+						mapPanel.setEditMode(EditMode.MODE_OBJECT_EDIT);
+					break;
+					case 2:
+						mapPanel.setEditMode(EditMode.MODE_LEVEL_EDIT);
+					break;
+
+					default:
+					break;
+				}
+
+				mapPanel.repaint();
+			}
+		});
 	}
 }
 
@@ -1320,7 +1483,7 @@ public class Editor
 		windowContainer.setLayout(new BoxLayout(windowContainer, BoxLayout.LINE_AXIS));
 
 		MapPanel mapPanel = new MapPanel();
-		JTabbedPane toolsetTabPane = new JTabbedPane();
+		ToolsetTabPane toolsetTabPane = new ToolsetTabPane();
 		JPanel toolPanel = new JPanel();
 		ObjectPanel objectPanel = new ObjectPanel();
 		JPanel levelSettingsPanel = new JPanel();
@@ -1334,6 +1497,7 @@ public class Editor
 		toolsetTabPane.addTab("Tiles", null, toolPanel, "Tile edit mode");
 		toolsetTabPane.addTab("Objects", null, objectPanel, "Object edit mode");
 		toolsetTabPane.addTab("Level", null, levelSettingsPanel, "Level settings");
+		toolsetTabPane.setMapPanel(mapPanel);
 
 		toolPanel.setLayout(new BoxLayout(toolPanel, BoxLayout.PAGE_AXIS));
 
@@ -1360,7 +1524,7 @@ public class Editor
 		toolbarPanel.setPreferredSize(new Dimension(256,150));
 		toolbarPanel.setMinimumSize(new Dimension(256,80));
 		toolbarPanel.setMaximumSize(new Dimension(256,150));
-		mapPanel.setPanels(tilesetPanel, tileInfoPanel);
+		mapPanel.setPanels(tilesetPanel, tileInfoPanel, objectPanel);
 
 
 		toolPanel.add(tilesetPanel, BorderLayout.NORTH);
