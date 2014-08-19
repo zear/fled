@@ -380,7 +380,27 @@ class Menu extends JMenuBar
 			{
 				if(mapPanel.level != null)
 				{
+					boolean playerObjPresent = false;
+
+					ListIterator<GameObject> objsli = mapPanel.level.getObjectList().listIterator();
+					while (objsli.hasNext())
+					{
+						if(objsli.next().getName().equals("player"))
+							playerObjPresent = true;
+					}
+
+					if(!playerObjPresent) // Don't launch the level if player object is missing.
+					{
+						JOptionPane.showMessageDialog(runRunLevel, "Add a player object first.");
+						return;
+					}
+
 					File path = new File(Data.getDataDirectory() + "/frog.jar");
+
+					if(!path.exists() || path.isDirectory())
+					{
+						JOptionPane.showMessageDialog(runRunLevel, "ERROR: Missing game executable at location:\n" + path.getAbsolutePath(), "Game launch issue", JOptionPane.ERROR_MESSAGE);
+					}
 
 					// save current level to a temporary file
 					mapPanel.level.write(new File(Data.getDataDirectory() + "/lvl.tmp"));
@@ -392,7 +412,7 @@ class Menu extends JMenuBar
 
 					builder.redirectErrorStream(true);
 					File log = new File("runlog.tmp");
-					builder.redirectOutput(ProcessBuilder.Redirect.appendTo(log));
+					builder.redirectOutput(ProcessBuilder.Redirect.to(log));
 
 					Process proc;
 
@@ -406,7 +426,8 @@ class Menu extends JMenuBar
 					}
 					catch (IOException ioe)
 					{
-						System.out.printf("Failed to launch the game due to:\n%s\n", ioe.getMessage());
+						System.out.printf("Failed to launch the game:\n%s\n", ioe.getMessage());
+						JOptionPane.showMessageDialog(runRunLevel, "ERROR: " + ioe.getMessage(), "Game launch issue", JOptionPane.ERROR_MESSAGE);
 					}
 				}
 			}
