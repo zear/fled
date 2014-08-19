@@ -7,10 +7,13 @@ import javax.imageio.ImageIO;
 import java.io.IOException;
 import java.io.File;
 import java.util.LinkedList;
+import java.util.ListIterator;
 
 import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
 import javax.swing.event.MouseInputListener;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.ListSelectionEvent;
 import javax.swing.filechooser.*;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
@@ -656,6 +659,17 @@ class MapPanel extends DrawPanel implements MouseInputListener
 	{
 		super.paintComponent(g);
 		this.draw(g);
+
+		// temp
+		if(this.level != null)
+		{
+			for(GameObject curObj : this.level.getObjectList())
+			{
+				Graphics2D g2d = (Graphics2D)g;
+				g2d.setColor(Color.RED);
+				g2d.drawLine(curObj.getX(), curObj.getY(), curObj.getX() + 16, curObj.getY() + 16);
+			}
+		}
 	}
 }
 class TilesetPanel extends DrawPanel implements MouseInputListener 
@@ -1061,7 +1075,7 @@ class ObjectPanel extends JPanel
 {
 	private MapPanel mapPanel = null;
 	private ListCellRenderer<Object> renderer;
-	private LinkedList<GameObject> availableObjectsList;
+	//private LinkedList<GameObject> availableObjectsList;
 	private LinkedList<GameObject> addedObjectsList;
 	private DefaultListModel<GameObject> availableListModel;
 	private DefaultListModel<GameObject> addedListModel;
@@ -1082,7 +1096,7 @@ class ObjectPanel extends JPanel
 		public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus)
 		{
 			if(value instanceof GameObject)
-				setText(((GameObject)value).getName());
+				setText(((GameObject)value).getName() + " ["+((GameObject)value).getX()+","+((GameObject)value).getY()+"]");
 			else
 				setText(value.toString());
 
@@ -1122,6 +1136,98 @@ class ObjectPanel extends JPanel
 	public ObjectPanel()
 	{
 		renderer = new ObjectCellRenderer();
+
+		buttonAdd.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				if(availableListModel != null)
+				{
+					GameObject newObj = new GameObject();
+					int selectedIndex = availableObjects.getSelectedIndex();
+
+					if(selectedIndex != -1)
+					{
+						newObj.setName(availableListModel.get(selectedIndex).getName());
+						addedListModel.addElement(newObj);
+						addedObjectsList.push(newObj);
+					}
+					mapPanel.repaint();
+				}
+			}
+		});
+		buttonRemove.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				if(addedListModel != null)
+				{
+					int selectedIndex = addedObjects.getSelectedIndex();
+
+					if(selectedIndex != -1)
+					{
+						GameObject objToRem = addedListModel.get(selectedIndex);
+						addedListModel.remove(selectedIndex);
+
+						ListIterator<GameObject> objsli = addedObjectsList.listIterator();
+						while (objsli.hasNext())
+						{
+							if(objsli.next() == objToRem)
+							{
+								objsli.remove();
+							}
+							break;
+						}
+						mapPanel.repaint();
+					}
+				}
+			}
+		});
+	}
+
+	// feature not needed?
+	void addListeners()
+	{
+//		if(availableObjects != null)
+//		{
+//			availableObjects.addListSelectionListener(new ListSelectionListener()
+//			{
+//				public void valueChanged(ListSelectionEvent e)
+//				{
+//					if(e.getValueIsAdjusting() == false)
+//					{
+//						if(availableObjects.getSelectedIndex() == -1)
+//						{
+//							//No selection
+//						}
+//						else
+//						{
+//							System.out.printf("Selected: %s [%d,%d]\n", availableListModel.get(availableObjects.getSelectedIndex()).getName(), availableListModel.get(availableObjects.getSelectedIndex()).getX(), availableListModel.get(availableObjects.getSelectedIndex()).getY());
+//						}
+//					}
+//				}
+//			});
+//		}
+//		if(addedObjects != null)
+//		{
+//			addedObjects.addListSelectionListener(new ListSelectionListener()
+//			{
+//				public void valueChanged(ListSelectionEvent e)
+//				{
+//					if(e.getValueIsAdjusting() == false)
+//					{
+//						if(addedObjects.getSelectedIndex() == -1)
+//						{
+//							//No selection
+//						}
+//						else
+//						{
+//							System.out.printf("Selected: %s [%d,%d]\n", addedListModel.get(addedObjects.getSelectedIndex()).getName(), addedListModel.get(addedObjects.getSelectedIndex()).getX(), addedListModel.get(addedObjects.getSelectedIndex()).getY());
+//						}
+//					}
+//				}
+//			});
+//		}
 	}
 
 	void loadObjects()
@@ -1176,6 +1282,13 @@ class ObjectPanel extends JPanel
 		this.availableObjects.setCellRenderer(this.renderer);
 		this.addedObjects = new JList<>(this.addedListModel);
 		this.addedObjects.setCellRenderer(this.renderer);
+
+		this.availableObjects.setLayoutOrientation(JList.VERTICAL);
+		this.availableObjects.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		this.addedObjects.setLayoutOrientation(JList.VERTICAL);
+		this.addedObjects.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+		this.addListeners();
 
 		availablePane = new JScrollPane(availableObjects);
 		addedPane = new JScrollPane(addedObjects);
