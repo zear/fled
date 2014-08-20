@@ -584,6 +584,12 @@ class MapPanel extends DrawPanel implements MouseInputListener
 		}
 	}
 
+	public void setSelectedObject(GameObject selectedObject)
+	{
+		this.selectedObject = selectedObject;
+		this.repaint();
+	}
+
 	// mouse listener
 	public void mouseExited(MouseEvent e)
 	{
@@ -690,6 +696,7 @@ class MapPanel extends DrawPanel implements MouseInputListener
 									this.selectedObject = curObj;
 									this.draggingObject = true;
 									this.objectPanel.setSelectedObject(curObj);
+									this.repaint();
 									break;
 								}
 							}
@@ -808,8 +815,21 @@ class MapPanel extends DrawPanel implements MouseInputListener
 				for(GameObject curObj : this.level.getObjectList())
 				{
 					Graphics2D g2d = (Graphics2D)g;
-					g2d.setColor(Color.RED);
-					g2d.drawLine(curObj.getX(), curObj.getY(), curObj.getX() + 16, curObj.getY() + 16);
+					if(curObj == this.selectedObject)
+						g2d.setColor(Color.GREEN);
+					else
+						g2d.setColor(Color.RED);
+
+					// draw rectangle
+					g2d.drawLine(curObj.getX(), curObj.getY(), curObj.getX() + 16, curObj.getY());
+					g2d.drawLine(curObj.getX(), curObj.getY() + 16, curObj.getX() + 16, curObj.getY() + 16);
+					g2d.drawLine(curObj.getX(), curObj.getY(), curObj.getX(), curObj.getY() + 16);
+					g2d.drawLine(curObj.getX() + 16, curObj.getY(), curObj.getX() + 16, curObj.getY() + 16);
+					// draw diagonal line
+					if(curObj.getDirection())
+						g2d.drawLine(curObj.getX(), curObj.getY(), curObj.getX() + 16, curObj.getY() + 16);
+					else
+						g2d.drawLine(curObj.getX() + 16, curObj.getY(), curObj.getX(), curObj.getY() + 16);
 				}
 			}
 		}
@@ -1228,6 +1248,9 @@ class ObjectPanel extends JPanel
 	private JScrollPane addedPane;
 	private JButton buttonAdd = new JButton("Add");
 	private JButton buttonRemove = new JButton("Remove");
+	private ButtonGroup radioDirection = new ButtonGroup();
+	private JRadioButton directionLeft = new JRadioButton("left");
+	private JRadioButton directionRight = new JRadioButton("right");
 
 	class ObjectCellRenderer extends JLabel implements ListCellRenderer<Object>
 	{
@@ -1278,7 +1301,10 @@ class ObjectPanel extends JPanel
 
 	public ObjectPanel()
 	{
-		renderer = new ObjectCellRenderer();
+		this.renderer = new ObjectCellRenderer();
+
+		this.radioDirection.add(directionLeft);
+		this.radioDirection.add(directionRight);
 
 		buttonAdd.addActionListener(new ActionListener()
 		{
@@ -1328,9 +1354,30 @@ class ObjectPanel extends JPanel
 				}
 			}
 		});
+		directionLeft.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				if(addedObjects != null && addedObjects.getSelectedIndex() != -1)
+				{
+					addedListModel.get(addedObjects.getSelectedIndex()).setDirection(false);
+					mapPanel.repaint();
+				}
+			}
+		});
+		directionRight.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				if(addedObjects != null && addedObjects.getSelectedIndex() != -1)
+				{
+					addedListModel.get(addedObjects.getSelectedIndex()).setDirection(true);
+					mapPanel.repaint();
+				}
+			}
+		});
 	}
 
-	// feature not needed?
 	void addListeners()
 	{
 //		if(availableObjects != null)
@@ -1353,26 +1400,37 @@ class ObjectPanel extends JPanel
 //				}
 //			});
 //		}
-//		if(addedObjects != null)
-//		{
-//			addedObjects.addListSelectionListener(new ListSelectionListener()
-//			{
-//				public void valueChanged(ListSelectionEvent e)
-//				{
-//					if(e.getValueIsAdjusting() == false)
-//					{
-//						if(addedObjects.getSelectedIndex() == -1)
-//						{
-//							//No selection
-//						}
-//						else
-//						{
-//							System.out.printf("Selected: %s [%d,%d]\n", addedListModel.get(addedObjects.getSelectedIndex()).getName(), addedListModel.get(addedObjects.getSelectedIndex()).getX(), addedListModel.get(addedObjects.getSelectedIndex()).getY());
-//						}
-//					}
-//				}
-//			});
-//		}
+		if(addedObjects != null)
+		{
+			addedObjects.addListSelectionListener(new ListSelectionListener()
+			{
+				public void valueChanged(ListSelectionEvent e)
+				{
+					if(e.getValueIsAdjusting() == false)
+					{
+						if(addedObjects.getSelectedIndex() == -1)
+						{
+							//No selection
+						}
+						else
+						{
+							GameObject selObj = addedListModel.get(addedObjects.getSelectedIndex());
+
+							mapPanel.setSelectedObject(selObj);
+
+							if(selObj.getDirection())
+							{
+								directionRight.setSelected(true);
+							}
+							else
+							{
+								directionLeft.setSelected(true);
+							}
+						}
+					}
+				}
+			});
+		}
 	}
 
 	void loadObjects()
@@ -1443,6 +1501,8 @@ class ObjectPanel extends JPanel
 		this.add(addedPane);
 		this.add(buttonAdd);
 		this.add(buttonRemove);
+		this.add(directionLeft);
+		this.add(directionRight);
 		this.repaint();
 	}
 
