@@ -1496,6 +1496,7 @@ class ObjectPanel extends JPanel
 
 		for(GameObject curObj : this.addedObjectsList)
 		{
+			curObj.setImgTemplate(this.getObjectTemplateByName(curObj.getName()).getImgTemplate());
 			this.addedListModel.addElement(curObj);
 		}
 
@@ -1532,6 +1533,23 @@ class ObjectPanel extends JPanel
 	void setPanels(MapPanel newMapPanel)
 	{
 		this.mapPanel = newMapPanel;
+	}
+
+	GameObject getObjectTemplateByName(String objName)
+	{
+		if(this.availableListModel != null)
+		{
+			for(int i = 0; i < this.availableListModel.getSize(); i++)
+			{
+				if(this.availableListModel.get(i).getName().equals(objName))
+					return this.availableListModel.get(i);
+			}
+			return null;
+		}
+		else
+		{
+			return null;
+		}
 	}
 }
 
