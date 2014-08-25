@@ -827,10 +827,10 @@ class MapPanel extends DrawPanel implements MouseInputListener
 						g2d.setColor(Color.RED);
 
 					// draw rectangle
-					g2d.drawLine(curObj.getX(), curObj.getY(), curObj.getX() + curObj.getTileW(), curObj.getY());
-					g2d.drawLine(curObj.getX(), curObj.getY() + curObj.getTileH(), curObj.getX() + curObj.getTileW(), curObj.getY() + curObj.getTileH());
-					g2d.drawLine(curObj.getX(), curObj.getY(), curObj.getX(), curObj.getY() + curObj.getTileH());
-					g2d.drawLine(curObj.getX() + curObj.getTileW(), curObj.getY(), curObj.getX() + curObj.getTileW(), curObj.getY() + curObj.getTileH());
+					g2d.drawLine(curObj.getX(), curObj.getY(), curObj.getX() + curObj.getW(), curObj.getY());
+					g2d.drawLine(curObj.getX(), curObj.getY() + curObj.getH(), curObj.getX() + curObj.getW(), curObj.getY() + curObj.getH());
+					g2d.drawLine(curObj.getX(), curObj.getY(), curObj.getX(), curObj.getY() + curObj.getH());
+					g2d.drawLine(curObj.getX() + curObj.getW(), curObj.getY(), curObj.getX() + curObj.getW(), curObj.getY() + curObj.getH());
 //					// draw diagonal line
 //					if(curObj.getDirection())
 //						g2d.drawLine(curObj.getX(), curObj.getY(), curObj.getX() + curObj.getTileW(), curObj.getY() + curObj.getTileH());
@@ -1460,6 +1460,8 @@ class ObjectPanel extends JPanel
 				fp = new FileRead((File)listOfFiles[i]);
 
 				GameObject newObj = null;
+				int tmpW = 0;
+				int tmpH = 0;
 
 				while(fp.hasNext())
 				{
@@ -1476,12 +1478,23 @@ class ObjectPanel extends JPanel
 						newObj.setName(words[1]);
 						continue;
 					}
-					// IMG	frog.bmp 40 40 6 48
+					else if (words[0].equals("WIDTH"))
+					{
+						tmpW = Integer.parseInt(words[1]);
+						continue;
+					}
+					else if (words[0].equals("HEIGHT"))
+					{
+						tmpH = Integer.parseInt(words[1]);
+						continue;
+					}
 					else if (words[0].equals("IMG"))
 					{
 						if(newObj != null)
 						{
 							newObj.setImgTemplate(words[1], Integer.parseInt(words[2]), Integer.parseInt(words[3]));
+							newObj.setW(tmpW);
+							newObj.setH(tmpH);
 						}
 						break;
 					}

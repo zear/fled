@@ -6,6 +6,8 @@ import java.awt.image.WritableRaster;
 
 class ImgTemplate
 {
+	private int w;
+	private int h;
 	private BufferedImage image = null;
 	private int tileW;
 	private int tileH;
@@ -44,6 +46,26 @@ class ImgTemplate
 		{
 			System.out.printf("Failed to load file: %s\n", fileName);
 		}
+	}
+
+	public int getW()
+	{
+		return this.w;
+	}
+
+	public void setW(int w)
+	{
+		this.w = w;
+	}
+
+	public int getH()
+	{
+		return this.h;
+	}
+
+	public void setH(int h)
+	{
+		this.h = h;
 	}
 
 	public BufferedImage getImg()
@@ -111,6 +133,26 @@ public class GameObject
 	public void setY(int y)
 	{
 		this.y = y;
+	}
+
+	public int getW()
+	{
+		return this.img.getW();
+	}
+
+	public void setW(int w)
+	{
+		this.img.setW(w);
+	}
+
+	public int getH()
+	{
+		return this.img.getH();
+	}
+
+	public void setH(int h)
+	{
+		this.img.setH(h);
 	}
 
 	public boolean getDirection()
