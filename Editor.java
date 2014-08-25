@@ -817,9 +817,9 @@ class MapPanel extends DrawPanel implements MouseInputListener
 					Graphics2D g2d = (Graphics2D)g;
 
 					if(curObj.getDirection())
-						g2d.drawImage(curObj.getTile(1), curObj.getX(), curObj.getY(), null);
+						g2d.drawImage(curObj.getTile(1), curObj.getX() + curObj.getOffsetRightX(), curObj.getY() + curObj.getOffsetRightY(), null);
 					else
-						g2d.drawImage(curObj.getTile(0), curObj.getX(), curObj.getY(), null);
+						g2d.drawImage(curObj.getTile(0), curObj.getX() + curObj.getOffsetLeftX(), curObj.getY() + curObj.getOffsetLeftY(), null);
 
 					if(curObj == this.selectedObject)
 						g2d.setColor(Color.GREEN);
@@ -1462,6 +1462,7 @@ class ObjectPanel extends JPanel
 				GameObject newObj = null;
 				int tmpW = 0;
 				int tmpH = 0;
+				boolean parsingFrames = false;
 
 				while(fp.hasNext())
 				{
@@ -1496,7 +1497,25 @@ class ObjectPanel extends JPanel
 							newObj.setW(tmpW);
 							newObj.setH(tmpH);
 						}
-						break;
+						continue;
+					}
+					else if (words[0].equals("IDLE"))
+					{
+						parsingFrames = true;
+						continue;
+					}
+					else if (parsingFrames)
+					{
+						if (words[0].equals("LEFT"))
+						{
+							newObj.setOffset(false, Integer.parseInt(words[1]), Integer.parseInt(words[2]));
+							continue;
+						}
+						else if (words[0].equals("RIGHT"))
+						{
+							newObj.setOffset(true, Integer.parseInt(words[1]), Integer.parseInt(words[2]));
+							break;
+						}
 					}
 				}
 

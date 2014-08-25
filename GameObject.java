@@ -13,6 +13,10 @@ class ImgTemplate
 	private int tileH;
 	private int tileLeft;	// # of IDLE LEFT first frame
 	private int tileRight;	// # of IDLE RIGHT first frame
+	private int offsetLeftX;
+	private int offsetLeftY;
+	private int offsetRightX;
+	private int offsetRightY;
 
 	public ImgTemplate(String fileName, int w, int h)
 	{
@@ -94,6 +98,40 @@ class ImgTemplate
 		tile.getGraphics().drawImage(this.image, 0, -tileNum * this.tileH, null);
 
 		return tile;
+	}
+
+	public int getOffsetLeftX()
+	{
+		return this.offsetLeftX;
+	}
+
+	public int getOffsetLeftY()
+	{
+		return this.offsetLeftY;
+	}
+
+	public int getOffsetRightX()
+	{
+		return this.offsetRightX;
+	}
+
+	public int getOffsetRightY()
+	{
+		return this.offsetRightY;
+	}
+
+	public void setOffset(boolean direction, int x, int y)
+	{
+		if(direction)
+		{
+			this.offsetRightX = x;
+			this.offsetRightY = y;
+		}
+		else
+		{
+			this.offsetLeftX = x;
+			this.offsetLeftY = y;
+		}
 	}
 }
 
@@ -206,5 +244,30 @@ public class GameObject
 	public BufferedImage getTile(int tileNum)
 	{
 		return this.img.getTile(tileNum);
+	}
+
+	public int getOffsetLeftX()
+	{
+		return this.img.getOffsetLeftX();
+	}
+
+	public int getOffsetLeftY()
+	{
+		return this.img.getOffsetLeftY();
+	}
+
+	public int getOffsetRightX()
+	{
+		return this.img.getOffsetRightX();
+	}
+
+	public int getOffsetRightY()
+	{
+		return this.img.getOffsetRightY();
+	}
+
+	public void setOffset(boolean direction, int x, int y)
+	{
+		this.img.setOffset(direction, x, y);
 	}
 }
