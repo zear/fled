@@ -815,21 +815,27 @@ class MapPanel extends DrawPanel implements MouseInputListener
 				for(GameObject curObj : this.level.getObjectList())
 				{
 					Graphics2D g2d = (Graphics2D)g;
+
+					if(curObj.getDirection())
+						g2d.drawImage(curObj.getTile(1), curObj.getX(), curObj.getY(), null);
+					else
+						g2d.drawImage(curObj.getTile(0), curObj.getX(), curObj.getY(), null);
+
 					if(curObj == this.selectedObject)
 						g2d.setColor(Color.GREEN);
 					else
 						g2d.setColor(Color.RED);
 
 					// draw rectangle
-					g2d.drawLine(curObj.getX(), curObj.getY(), curObj.getX() + 16, curObj.getY());
-					g2d.drawLine(curObj.getX(), curObj.getY() + 16, curObj.getX() + 16, curObj.getY() + 16);
-					g2d.drawLine(curObj.getX(), curObj.getY(), curObj.getX(), curObj.getY() + 16);
-					g2d.drawLine(curObj.getX() + 16, curObj.getY(), curObj.getX() + 16, curObj.getY() + 16);
-					// draw diagonal line
-					if(curObj.getDirection())
-						g2d.drawLine(curObj.getX(), curObj.getY(), curObj.getX() + 16, curObj.getY() + 16);
-					else
-						g2d.drawLine(curObj.getX() + 16, curObj.getY(), curObj.getX(), curObj.getY() + 16);
+					g2d.drawLine(curObj.getX(), curObj.getY(), curObj.getX() + curObj.getTileW(), curObj.getY());
+					g2d.drawLine(curObj.getX(), curObj.getY() + curObj.getTileH(), curObj.getX() + curObj.getTileW(), curObj.getY() + curObj.getTileH());
+					g2d.drawLine(curObj.getX(), curObj.getY(), curObj.getX(), curObj.getY() + curObj.getTileH());
+					g2d.drawLine(curObj.getX() + curObj.getTileW(), curObj.getY(), curObj.getX() + curObj.getTileW(), curObj.getY() + curObj.getTileH());
+//					// draw diagonal line
+//					if(curObj.getDirection())
+//						g2d.drawLine(curObj.getX(), curObj.getY(), curObj.getX() + curObj.getTileW(), curObj.getY() + curObj.getTileH());
+//					else
+//						g2d.drawLine(curObj.getX() + curObj.getTileW(), curObj.getY(), curObj.getX(), curObj.getY() + curObj.getTileH());
 				}
 			}
 		}
@@ -1318,6 +1324,7 @@ class ObjectPanel extends JPanel
 					if(selectedIndex != -1)
 					{
 						newObj.setName(availableListModel.get(selectedIndex).getName());
+						newObj.setImgTemplate(availableListModel.get(selectedIndex).getImgTemplate());
 						addedObjectsList.push(newObj);
 						addedListModel.addElement(newObj);
 						addedObjects.setSelectedValue(newObj, true);
@@ -1452,6 +1459,8 @@ class ObjectPanel extends JPanel
 			{
 				fp = new FileRead((File)listOfFiles[i]);
 
+				GameObject newObj = null;
+
 				while(fp.hasNext())
 				{
 					line = fp.getLine();
@@ -1462,9 +1471,18 @@ class ObjectPanel extends JPanel
 
 					if (words[0].equals("NAME"))
 					{
-						GameObject newObj = new GameObject();
+						newObj = new GameObject();
 						this.availableListModel.addElement(newObj);
 						newObj.setName(words[1]);
+						continue;
+					}
+					// IMG	frog.bmp 40 40 6 48
+					else if (words[0].equals("IMG"))
+					{
+						if(newObj != null)
+						{
+							newObj.setImgTemplate(words[1], Integer.parseInt(words[2]), Integer.parseInt(words[3]));
+						}
 						break;
 					}
 				}
