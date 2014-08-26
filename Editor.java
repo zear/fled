@@ -761,12 +761,26 @@ class MapPanel extends DrawPanel implements MouseInputListener
 							int curX = e.getX()/16*16;
 							int curY = e.getY()/16*16;
 
-							if(this.isInMapArea(curX, curY) && this.isInMapArea(curX + this.selectedObject.getW() - 1, curY + this.selectedObject.getH() - 1))
-							{
-								this.selectedObject.setX(curX);
-								this.selectedObject.setY(curY);
-								this.repaint();
-							}
+							if(super.drawAreaLayers.size() < 1)
+								break;
+
+							if(super.drawAreaLayers.get(0) == null)
+								break;
+
+							if(curX < (this.selectedObject.getW() - 1)/16*16)
+								curX = (this.selectedObject.getW() - 1)/16*16;
+							else if(curX >= super.drawAreaLayers.get(0).getWidth())
+								curX = super.drawAreaLayers.get(0).getWidth() - 16;
+
+							if(curY < (this.selectedObject.getH() - 1)/16*16)
+								curY = (this.selectedObject.getH() - 1)/16*16;
+							else if(curY >= super.drawAreaLayers.get(0).getHeight())
+								curY = super.drawAreaLayers.get(0).getHeight() - 16;
+
+							// center at the bottom-left corner
+							this.selectedObject.setX(curX + 16 - this.selectedObject.getW());
+							this.selectedObject.setY(curY + 16 - this.selectedObject.getH());
+							this.repaint();
 						}
 					}
 					break;
