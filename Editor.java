@@ -684,14 +684,14 @@ class MapPanel extends DrawPanel implements MouseInputListener
 					{
 						int objX;
 						int objY;
-						int curX = e.getX()/16*16;
-						int curY = e.getY()/16*16;
+						int curX = e.getX();
+						int curY = e.getY();
 
 						if(!this.draggingObject)
 						{
 							for(GameObject curObj : this.level.getObjectList())
 							{
-								if(curObj.getX()/16*16 == curX && curObj.getY()/16*16 == curY)
+								if(curX >= curObj.getX() && curX <= curObj.getX() + curObj.getW() && curY >= curObj.getY() && curY <= curObj.getY() + curObj.getH())
 								{
 									this.selectedObject = curObj;
 									this.draggingObject = true;
@@ -761,9 +761,12 @@ class MapPanel extends DrawPanel implements MouseInputListener
 							int curX = e.getX()/16*16;
 							int curY = e.getY()/16*16;
 
-							this.selectedObject.setX(curX);
-							this.selectedObject.setY(curY);
-							this.repaint();
+							if(this.isInMapArea(curX, curY) && this.isInMapArea(curX + this.selectedObject.getW() - 1, curY + this.selectedObject.getH() - 1))
+							{
+								this.selectedObject.setX(curX);
+								this.selectedObject.setY(curY);
+								this.repaint();
+							}
 						}
 					}
 					break;
