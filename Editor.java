@@ -498,6 +498,7 @@ class MapPanel extends DrawPanel implements MouseInputListener
 
 	private GameObject selectedObject = null;
 	private boolean draggingObject = false;
+	private boolean objectIsNew = false;
 
 	protected boolean showGrid = true;
 
@@ -508,6 +509,11 @@ class MapPanel extends DrawPanel implements MouseInputListener
 	public void setEditMode(EditMode newEditMode)
 	{
 		this.editMode = newEditMode;
+	}
+
+	public void setObjectIsNew(boolean value)
+	{
+		this.objectIsNew = value;
 	}
 
 	public void paintTile(int layer, int num, int x, int y, boolean repaint)
@@ -698,6 +704,43 @@ class MapPanel extends DrawPanel implements MouseInputListener
 									this.objectPanel.setSelectedObject(curObj);
 									this.repaint();
 									break;
+								}
+								else if(this.objectIsNew)
+								{
+									this.objectIsNew = false;
+									this.draggingObject = true;
+
+									curX = e.getX()/16*16;
+									curY = e.getY()/16*16;
+
+									if(super.drawAreaLayers.size() < 1)
+										break;
+
+									if(super.drawAreaLayers.get(0) == null)
+										break;
+
+									if(curX < (this.selectedObject.getW() - 1)/16*16)
+										curX = (this.selectedObject.getW() - 1)/16*16;
+									else if(curX >= super.drawAreaLayers.get(0).getWidth())
+										curX = super.drawAreaLayers.get(0).getWidth() - 16;
+
+									if(curY < (this.selectedObject.getH() - 1)/16*16)
+										curY = (this.selectedObject.getH() - 1)/16*16;
+									else if(curY >= super.drawAreaLayers.get(0).getHeight())
+										curY = super.drawAreaLayers.get(0).getHeight() - 16;
+
+									// center at the bottom-left corner
+									if(this.selectedObject.getName().equals("diamond")) // TODO: Solve this by checking object type
+									{
+										this.selectedObject.setX(curX + 8 - this.selectedObject.getW()/2);
+										this.selectedObject.setY(curY + 8 - this.selectedObject.getH()/2);
+									}
+									else
+									{
+										this.selectedObject.setX(curX + 16 - this.selectedObject.getW());
+										this.selectedObject.setY(curY + 16 - this.selectedObject.getH());
+									}
+									this.repaint();
 								}
 							}
 						}
@@ -1353,6 +1396,7 @@ class ObjectPanel extends JPanel
 						addedObjectsList.push(newObj);
 						addedListModel.addElement(newObj);
 						addedObjects.setSelectedValue(newObj, true);
+						mapPanel.setObjectIsNew(true);
 					}
 					mapPanel.repaint();
 				}
@@ -1449,6 +1493,7 @@ class ObjectPanel extends JPanel
 							GameObject selObj = addedListModel.get(addedObjects.getSelectedIndex());
 
 							mapPanel.setSelectedObject(selObj);
+							mapPanel.setObjectIsNew(false);
 
 							if(selObj.getDirection())
 							{
