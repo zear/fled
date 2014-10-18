@@ -34,6 +34,10 @@ public class LevelLayer
 		{
 			t.add(0, new ArrayList<Integer>());
 		}
+		protected void removeRow(int row)
+		{
+			t.remove(row);
+		}
 		protected void removeLastRow()
 		{
 			t.remove(getNumOfRows() - 1);
@@ -45,6 +49,10 @@ public class LevelLayer
 		protected void prependElement(int row, int element)
 		{
 			t.get(row).add(0, element);
+		}
+		protected void removeElement(int row, int element)
+		{
+			t.get(row).remove(element);
 		}
 		protected int getElement(int row, int element)
 		{
@@ -289,6 +297,60 @@ public class LevelLayer
 				else
 					tiles.prependElement(numOfRows + j, 22); // HACK!
 			}
+		}
+	}
+
+	public void reduceLeft(int sizeX)
+	{
+		int numOfRows = tiles.getNumOfRows();
+
+		for(int j = 0; j < numOfRows; j++)
+		{
+			for(int i = 0; i < sizeX; i++)
+			{
+				if (this.id != 0)
+					tiles.removeElement(j, i);
+				else
+					tiles.removeElement(j, i); // HACK!
+			}
+		}
+	}
+
+	public void reduceRight(int sizeX)
+	{
+		int numOfRows = tiles.getNumOfRows();
+		int sizeOfRow = tiles.getNumOfElements(0);
+
+		for(int j = 0; j < numOfRows; j++)
+		{
+			for(int i = 0; i < sizeX; i++)
+			{
+				if (this.id != 0)
+					tiles.removeElement(j, sizeOfRow - 1 - i);
+				else
+					tiles.removeElement(j, sizeOfRow - 1 - i); // HACK!
+			}
+		}
+	}
+
+	public void reduceTop(int sizeY)
+	{
+		int sizeOfRow = tiles.getNumOfElements(0);
+
+		for(int j = 0; j < sizeY; j++)
+		{
+			tiles.removeRow(j);
+		}
+	}
+
+	public void reduceBottom(int sizeY)
+	{
+		int numOfRows = tiles.getNumOfRows();
+		int sizeOfRow = tiles.getNumOfElements(0);
+
+		for(int j = 0; j < sizeY; j++)
+		{
+			tiles.removeRow(numOfRows - 1 - j);
 		}
 	}
 }

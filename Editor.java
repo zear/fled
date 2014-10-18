@@ -221,16 +221,16 @@ class ModifyLevelSetup extends JDialog implements ActionListener
 			public void propertyChange(PropertyChangeEvent e)
 			{
 				int value = ((Number)fieldSizeXLeft.getValue()).intValue();
-				if (value < 0)
-				{
-					value = 0;
-					fieldSizeXLeft.setValue(value);
-				}
-				else if (menu.getSizeX() + value > 500)
-				{
-					value = 500 - menu.getSizeX();
-					fieldSizeXLeft.setValue(value);
-				}
+//				if (value < 0)
+//				{
+//					value = 0;
+//					fieldSizeXLeft.setValue(value);
+//				}
+//				else if (menu.getSizeX() + value > 500)
+//				{
+//					value = 500 - menu.getSizeX();
+//					fieldSizeXLeft.setValue(value);
+//				}
 			}
 		});
 
@@ -239,16 +239,16 @@ class ModifyLevelSetup extends JDialog implements ActionListener
 			public void propertyChange(PropertyChangeEvent e)
 			{
 				int value = ((Number)fieldSizeXRight.getValue()).intValue();
-				if (value < 0)
-				{
-					value = 0;
-					fieldSizeXRight.setValue(value);
-				}
-				else if (menu.getSizeX() + value > 500)
-				{
-					value = 500 - menu.getSizeX();
-					fieldSizeXRight.setValue(value);
-				}
+//				if (value < 0)
+//				{
+//					value = 0;
+//					fieldSizeXRight.setValue(value);
+//				}
+//				else if (menu.getSizeX() + value > 500)
+//				{
+//					value = 500 - menu.getSizeX();
+//					fieldSizeXRight.setValue(value);
+//				}
 			}
 		});
 
@@ -257,16 +257,16 @@ class ModifyLevelSetup extends JDialog implements ActionListener
 			public void propertyChange(PropertyChangeEvent e)
 			{
 				int value = ((Number)fieldSizeYTop.getValue()).intValue();
-				if (value < 0)
-				{
-					value = 0;
-					fieldSizeYTop.setValue(value);
-				}
-				else if (menu.getSizeY() + value > 500)
-				{
-					value = 500 - menu.getSizeY();
-					fieldSizeYTop.setValue(value);
-				}
+//				if (value < 0)
+//				{
+//					value = 0;
+//					fieldSizeYTop.setValue(value);
+//				}
+//				else if (menu.getSizeY() + value > 500)
+//				{
+//					value = 500 - menu.getSizeY();
+//					fieldSizeYTop.setValue(value);
+//				}
 			}
 		});
 
@@ -275,16 +275,16 @@ class ModifyLevelSetup extends JDialog implements ActionListener
 			public void propertyChange(PropertyChangeEvent e)
 			{
 				int value = ((Number)fieldSizeYBottom.getValue()).intValue();
-				if (value < 0)
-				{
-					value = 0;
-					fieldSizeYBottom.setValue(value);
-				}
-				else if (menu.getSizeY() + value > 500)
-				{
-					value = 500 - menu.getSizeY();
-					fieldSizeYBottom.setValue(value);
-				}
+//				if (value < 0)
+//				{
+//					value = 0;
+//					fieldSizeYBottom.setValue(value);
+//				}
+//				else if (menu.getSizeY() + value > 500)
+//				{
+//					value = 500 - menu.getSizeY();
+//					fieldSizeYBottom.setValue(value);
+//				}
 			}
 		});
 
@@ -303,7 +303,7 @@ class ModifyLevelSetup extends JDialog implements ActionListener
 			{
 				menu.setSizeX(menu.getSizeX() + ((Number)fieldSizeXLeft.getValue()).intValue() + ((Number)fieldSizeXRight.getValue()).intValue());
 				menu.setSizeY(menu.getSizeY() + ((Number)fieldSizeYTop.getValue()).intValue() + ((Number)fieldSizeYBottom.getValue()).intValue());
-				menu.getMapPanel().level.expand(((Number)fieldSizeXLeft.getValue()).intValue(), ((Number)fieldSizeXRight.getValue()).intValue(), ((Number)fieldSizeYTop.getValue()).intValue(), ((Number)fieldSizeYBottom.getValue()).intValue(), 0);
+				menu.getMapPanel().level.resize(((Number)fieldSizeXLeft.getValue()).intValue(), ((Number)fieldSizeXRight.getValue()).intValue(), ((Number)fieldSizeYTop.getValue()).intValue(), ((Number)fieldSizeYBottom.getValue()).intValue(), 0);
 
 				for(GameObject curObj : menu.getMapPanel().level.getObjectList())
 				{

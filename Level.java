@@ -214,18 +214,28 @@ public class Level
 		fp.close();
 	}
 
-	public void expand(int leftX, int rightX, int topY, int bottomY, int tile)
+	public void resize(int leftX, int rightX, int topY, int bottomY, int tile)
 	{
 		for(int i = 0; i < layers.size(); i++)
 		{
-			if(leftX != 0)
+			// expand
+			if(leftX > 0)
 				layers.get(i).expandLeft(leftX, 0);
-			if(rightX != 0)
+			if(rightX > 0)
 				layers.get(i).expandRight(rightX, 0);
-			if(topY != 0)
+			if(topY > 0)
 				layers.get(i).expandTop(topY, 0);
-			if(bottomY != 0)
+			if(bottomY > 0)
 				layers.get(i).expandBottom(bottomY, 0);
+			// reduce
+			if(leftX < 0)
+				layers.get(i).reduceLeft(-leftX);
+			if(rightX < 0)
+				layers.get(i).reduceRight(-rightX);
+			if(topY < 0)
+				layers.get(i).reduceTop(-topY);
+			if(bottomY < 0)
+				layers.get(i).reduceBottom(-bottomY);
 		}
 	}
 }
