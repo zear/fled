@@ -170,6 +170,185 @@ class NewLevelSetup extends JDialog implements ActionListener
 	}
 }
 
+class ModifyLevelSetup extends JDialog implements ActionListener
+{
+	private GridLayout windowLayout = new GridLayout(3, 1);
+	private JPanel windowContainer = new JPanel(windowLayout);
+	private JPanel fieldContainer = new JPanel(new GridLayout(2, 4));
+	private JPanel buttonContainer = new JPanel(new GridLayout(1, 2));
+	private JLabel labelSize = new JLabel("Add/remove tiles (Enter negative numbers to remove tiles):");
+	private JLabel labelSizeXLeft = new JLabel("From left (x):");
+	private JLabel labelSizeXRight = new JLabel("From right (x):");
+	private JLabel labelSizeYTop = new JLabel("From top (y):");
+	private JLabel labelSizeYBottom = new JLabel("From bottom (y):");
+	private JFormattedTextField fieldSizeXLeft;
+	private JFormattedTextField fieldSizeXRight;
+	private JFormattedTextField fieldSizeYTop;
+	private JFormattedTextField fieldSizeYBottom;
+	private JButton buttonCancel = new JButton("Cancel");
+	private JButton buttonCreate = new JButton("Create");
+
+	private Menu menu = null;
+
+	private boolean choice;
+
+	public ModifyLevelSetup(String caption, Menu newMenu)
+	{
+		this.setTitle(caption);
+		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		this.setModalityType(Dialog.ModalityType.DOCUMENT_MODAL);
+
+		this.menu = newMenu;
+
+		this.fieldSizeXLeft = new JFormattedTextField(0);
+		this.fieldSizeXRight = new JFormattedTextField(0);
+		this.fieldSizeYTop = new JFormattedTextField(0);
+		this.fieldSizeYBottom = new JFormattedTextField(0);
+
+		this.fieldSizeXLeft.setColumns(3);
+		this.fieldSizeXRight.setColumns(3);
+		this.fieldSizeYTop.setColumns(3);
+		this.fieldSizeYBottom.setColumns(3);
+
+		this.labelSize.setHorizontalAlignment(JLabel.CENTER);
+		this.labelSizeXLeft.setHorizontalAlignment(JLabel.CENTER);
+		this.labelSizeXRight.setHorizontalAlignment(JLabel.CENTER);
+		this.labelSizeYTop.setHorizontalAlignment(JLabel.CENTER);
+		this.labelSizeYBottom.setHorizontalAlignment(JLabel.CENTER);
+
+		fieldSizeXLeft.addPropertyChangeListener(new PropertyChangeListener()
+		{
+			public void propertyChange(PropertyChangeEvent e)
+			{
+				int value = ((Number)fieldSizeXLeft.getValue()).intValue();
+				if (value < 0)
+				{
+					value = 0;
+					fieldSizeXLeft.setValue(value);
+				}
+				else if (menu.getSizeX() + value > 500)
+				{
+					value = 500 - menu.getSizeX();
+					fieldSizeXLeft.setValue(value);
+				}
+			}
+		});
+
+		fieldSizeXRight.addPropertyChangeListener(new PropertyChangeListener()
+		{
+			public void propertyChange(PropertyChangeEvent e)
+			{
+				int value = ((Number)fieldSizeXRight.getValue()).intValue();
+				if (value < 0)
+				{
+					value = 0;
+					fieldSizeXRight.setValue(value);
+				}
+				else if (menu.getSizeX() + value > 500)
+				{
+					value = 500 - menu.getSizeX();
+					fieldSizeXRight.setValue(value);
+				}
+			}
+		});
+
+		fieldSizeYTop.addPropertyChangeListener(new PropertyChangeListener()
+		{
+			public void propertyChange(PropertyChangeEvent e)
+			{
+				int value = ((Number)fieldSizeYTop.getValue()).intValue();
+				if (value < 0)
+				{
+					value = 0;
+					fieldSizeYTop.setValue(value);
+				}
+				else if (menu.getSizeY() + value > 500)
+				{
+					value = 500 - menu.getSizeY();
+					fieldSizeYTop.setValue(value);
+				}
+			}
+		});
+
+		fieldSizeYBottom.addPropertyChangeListener(new PropertyChangeListener()
+		{
+			public void propertyChange(PropertyChangeEvent e)
+			{
+				int value = ((Number)fieldSizeYBottom.getValue()).intValue();
+				if (value < 0)
+				{
+					value = 0;
+					fieldSizeYBottom.setValue(value);
+				}
+				else if (menu.getSizeY() + value > 500)
+				{
+					value = 500 - menu.getSizeY();
+					fieldSizeYBottom.setValue(value);
+				}
+			}
+		});
+
+		buttonCancel.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				choice = false;
+				setVisible(false);
+				dispose();
+			}
+		});
+		buttonCreate.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				menu.setSizeX(menu.getSizeX() + ((Number)fieldSizeXLeft.getValue()).intValue() + ((Number)fieldSizeXRight.getValue()).intValue());
+				menu.setSizeY(menu.getSizeY() + ((Number)fieldSizeYTop.getValue()).intValue() + ((Number)fieldSizeYBottom.getValue()).intValue());
+				menu.getMapPanel().level.expand(((Number)fieldSizeXLeft.getValue()).intValue(), ((Number)fieldSizeXRight.getValue()).intValue(), ((Number)fieldSizeYTop.getValue()).intValue(), ((Number)fieldSizeYBottom.getValue()).intValue(), 0);
+
+
+				choice = true;
+				setVisible(false);
+				dispose();
+			}
+		});
+
+		fieldContainer.add(labelSizeXLeft);
+		fieldContainer.add(fieldSizeXLeft);
+		fieldContainer.add(labelSizeXRight);
+		fieldContainer.add(fieldSizeXRight);
+		fieldContainer.add(labelSizeYTop);
+		fieldContainer.add(fieldSizeYTop);
+		fieldContainer.add(labelSizeYBottom);
+		fieldContainer.add(fieldSizeYBottom);
+
+		buttonContainer.add(buttonCancel);
+		buttonContainer.add(buttonCreate);
+
+		windowLayout.setVgap(5);
+		windowContainer.add(labelSize);
+		windowContainer.add(fieldContainer);
+		windowContainer.add(buttonContainer);
+
+
+		this.add(windowContainer);
+
+//		this.pack();
+//		this.setVisible(true);
+	}
+
+	public boolean getChoice()
+	{
+		return this.choice;
+	}
+
+	public void actionPerformed(ActionEvent e)
+	{
+		this.choice = false;
+		setVisible(false);
+		dispose();
+	}
+}
+
 class Menu extends JMenuBar
 {
 	private JMenu fileMenu = new JMenu("File");
@@ -177,6 +356,7 @@ class Menu extends JMenuBar
 	private JMenuItem fileOpen = new JMenuItem("Open level");
 	private JMenuItem fileSave = new JMenuItem("Save level");
 	private JMenuItem fileSaveAs = new JMenuItem("Save level as...");
+	private JMenuItem fileModify = new JMenuItem("Modify level");
 	private JMenuItem fileQuit = new JMenuItem("Quit editor");
 	private JMenu runMenu = new JMenu("Run");
 	private JMenuItem runSetExec = new JMenuItem("Set executable location");
@@ -201,6 +381,7 @@ class Menu extends JMenuBar
 		fileMenu.add(fileOpen);
 		fileMenu.add(fileSave);
 		fileMenu.add(fileSaveAs);
+		fileMenu.add(fileModify);
 		fileMenu.add(fileQuit);
 		this.add(runMenu);
 		runMenu.add(runSetExec);
@@ -366,6 +547,47 @@ class Menu extends JMenuBar
 				}
 			}
 		});
+		fileModify.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				// Modify current level
+				if(showModifyLevelSetup())
+				{
+
+					for(int i = 0; i < mapPanel.level.getNumOfLayers(); i++)
+					{
+						BufferedImage defMapImg = new BufferedImage(mapPanel.level.getLayer(i).getWidth() * 16, mapPanel.level.getLayer(i).getHeight() * 16, BufferedImage.TYPE_INT_ARGB);
+						mapPanel.setImage(i, defMapImg);
+					}
+
+					int levelWidth;
+					int levelHeight;
+					int tile = 0;
+
+					for(int n = 0; n < mapPanel.drawAreaLayers.size(); n++)
+					{
+						levelWidth = mapPanel.level.getLayer(n).getWidth() * 16;
+						levelHeight = mapPanel.level.getLayer(n).getHeight() * 16;
+
+						for(int i = 0, x = 0; i < levelWidth; i+=16, x++)
+						{
+							for(int j = 0, y = 0; j < levelHeight; j+=16, y++)
+							{
+								tile = mapPanel.level.getLayer(n).getTile(x, y);
+								mapPanel.paintTile(n, tile, i, j, false);
+							}
+						}
+					}
+
+					if(mapPanel.drawAreaLayers.size() > 0)
+					{
+						mapPanel.setPreferredSize(new Dimension(mapPanel.drawAreaLayers.get(0).getWidth(),mapPanel.drawAreaLayers.get(0).getHeight()));
+						mapPanel.revalidate();
+					}
+				}
+			}
+		});
 		fileQuit.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -452,6 +674,11 @@ class Menu extends JMenuBar
 		this.objectPanel = newObjectPanel;
 	}
 
+	public MapPanel getMapPanel()
+	{
+		return this.mapPanel;
+	}
+
 	public void setSizeX(int size)
 	{
 		this.newSizeX = size;
@@ -474,6 +701,17 @@ class Menu extends JMenuBar
 	public boolean showNewLevelSetup()
 	{
 		NewLevelSetup dialog = new NewLevelSetup("Create level", this);
+		//dialog.setPreferredSize(new Dimension(320, 240));
+		dialog.setLocationRelativeTo(this);
+		dialog.pack();
+		dialog.setVisible(true);
+
+		return dialog.getChoice();
+	}
+
+	public boolean showModifyLevelSetup()
+	{
+		ModifyLevelSetup dialog = new ModifyLevelSetup("Modify level", this);
 		//dialog.setPreferredSize(new Dimension(320, 240));
 		dialog.setLocationRelativeTo(this);
 		dialog.pack();

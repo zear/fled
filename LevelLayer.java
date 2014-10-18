@@ -30,6 +30,10 @@ public class LevelLayer
 		{
 			t.add(new ArrayList<Integer>());
 		}
+		protected void prependRow()
+		{
+			t.add(0, new ArrayList<Integer>());
+		}
 		protected void removeLastRow()
 		{
 			t.remove(getNumOfRows() - 1);
@@ -37,6 +41,10 @@ public class LevelLayer
 		protected void putElement(int row, int element)
 		{
 			t.get(row).add(element);
+		}
+		protected void prependElement(int row, int element)
+		{
+			t.get(row).add(0, element);
 		}
 		protected int getElement(int row, int element)
 		{
@@ -208,6 +216,78 @@ public class LevelLayer
 					tiles.putElement(tiles.getNumOfRows() - 1, tile);
 				else
 					tiles.putElement(tiles.getNumOfRows() - 1, 22); // HACK!
+			}
+		}
+	}
+
+	public void expandLeft(int sizeX, int tile)
+	{
+		int numOfRows = tiles.getNumOfRows();
+
+		for(int j = 0; j < numOfRows; j++)
+		{
+			for(int i = 0; i < sizeX; i++)
+			{
+				if (this.id != 0)
+					tiles.prependElement(j, tile);
+				else
+					tiles.prependElement(j, 22); // HACK!
+			}
+		}
+	}
+
+	public void expandRight(int sizeX, int tile)
+	{
+		int numOfRows = tiles.getNumOfRows();
+
+		for(int j = 0; j < numOfRows; j++)
+		{
+			for(int i = 0; i < sizeX; i++)
+			{
+				if (this.id != 0)
+					tiles.putElement(j, tile);
+				else
+					tiles.putElement(j, 22); // HACK!
+			}
+		}
+	}
+
+	public void expandTop(int sizeY, int tile)
+	{
+		int sizeOfRow = tiles.getNumOfElements(0);
+
+		for(int j = 0; j < sizeY; j++)
+		{
+			tiles.prependRow();
+		}
+
+		for(int j = 0; j < sizeY; j++)
+		{
+			for(int i = 0; i < sizeOfRow; i++)
+			{
+				if (this.id != 0)
+					tiles.putElement(j, tile);
+				else
+					tiles.putElement(j, 22); // HACK!
+			}
+		}
+	}
+
+	public void expandBottom(int sizeY, int tile)
+	{
+		int numOfRows = tiles.getNumOfRows();
+		int sizeOfRow = tiles.getNumOfElements(0);
+
+		for(int j = 0; j < sizeY; j++)
+		{
+			tiles.addRow();
+
+			for(int i = 0; i < sizeOfRow; i++)
+			{
+				if (this.id != 0)
+					tiles.prependElement(numOfRows + j, tile);
+				else
+					tiles.prependElement(numOfRows + j, 22); // HACK!
 			}
 		}
 	}
