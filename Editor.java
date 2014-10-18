@@ -311,7 +311,6 @@ class ModifyLevelSetup extends JDialog implements ActionListener
 					curObj.setY(curObj.getY() + ((Number)fieldSizeYTop.getValue()).intValue() * 16);
 				}
 
-
 				choice = true;
 				setVisible(false);
 				dispose();
@@ -558,7 +557,7 @@ class Menu extends JMenuBar
 			public void actionPerformed(ActionEvent e)
 			{
 				// Modify current level
-				if(showModifyLevelSetup())
+				if(mapPanel.level != null && showModifyLevelSetup())
 				{
 
 					for(int i = 0; i < mapPanel.level.getNumOfLayers(); i++)
