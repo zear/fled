@@ -220,10 +220,7 @@ public class LevelLayer
 			tiles.addRow();
 			for(int i = 0; i < sizeX; i++)
 			{
-				if (this.id != 0)
-					tiles.putElement(tiles.getNumOfRows() - 1, tile);
-				else
-					tiles.putElement(tiles.getNumOfRows() - 1, 22); // HACK!
+				tiles.putElement(tiles.getNumOfRows() - 1, tile);
 			}
 		}
 	}
@@ -236,10 +233,7 @@ public class LevelLayer
 		{
 			for(int i = 0; i < sizeX; i++)
 			{
-				if (this.id != 0)
-					tiles.prependElement(j, tile);
-				else
-					tiles.prependElement(j, 22); // HACK!
+				tiles.prependElement(j, tile);
 			}
 		}
 	}
@@ -252,10 +246,7 @@ public class LevelLayer
 		{
 			for(int i = 0; i < sizeX; i++)
 			{
-				if (this.id != 0)
-					tiles.putElement(j, tile);
-				else
-					tiles.putElement(j, 22); // HACK!
+				tiles.putElement(j, tile);
 			}
 		}
 	}
@@ -273,10 +264,7 @@ public class LevelLayer
 		{
 			for(int i = 0; i < sizeOfRow; i++)
 			{
-				if (this.id != 0)
-					tiles.putElement(j, tile);
-				else
-					tiles.putElement(j, 22); // HACK!
+				tiles.putElement(j, tile);
 			}
 		}
 	}
@@ -292,10 +280,7 @@ public class LevelLayer
 
 			for(int i = 0; i < sizeOfRow; i++)
 			{
-				if (this.id != 0)
-					tiles.prependElement(numOfRows + j, tile);
-				else
-					tiles.prependElement(numOfRows + j, 22); // HACK!
+				tiles.prependElement(numOfRows + j, tile);
 			}
 		}
 	}
@@ -308,10 +293,7 @@ public class LevelLayer
 		{
 			for(int i = 0; i < sizeX; i++)
 			{
-				if (this.id != 0)
-					tiles.removeElement(j, i);
-				else
-					tiles.removeElement(j, i); // HACK!
+				tiles.removeElement(j, i);
 			}
 		}
 	}
@@ -325,10 +307,7 @@ public class LevelLayer
 		{
 			for(int i = 0; i < sizeX; i++)
 			{
-				if (this.id != 0)
-					tiles.removeElement(j, sizeOfRow - 1 - i);
-				else
-					tiles.removeElement(j, sizeOfRow - 1 - i); // HACK!
+				tiles.removeElement(j, sizeOfRow - 1 - i);
 			}
 		}
 	}
