@@ -9,6 +9,7 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
+import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
 import javax.swing.event.MouseInputListener;
@@ -726,7 +727,7 @@ class Menu extends JMenuBar
 	}
 }
 
-class MapPanel extends DrawPanel implements MouseInputListener
+class MapPanel extends DrawPanel implements KeyListener, MouseInputListener
 {
 	public Level level = null;
 	private TilesetPanel tileset = null;
@@ -839,12 +840,78 @@ class MapPanel extends DrawPanel implements MouseInputListener
 		this.repaint();
 	}
 
+	// key listener
+	public void keyPressed(KeyEvent e)
+	{
+		boolean left = false;
+		boolean right = false;
+		boolean up = false;
+		boolean down = false;
+
+
+		switch(e.getKeyCode())
+		{
+			case KeyEvent.VK_A:
+				left = true;
+			break;
+			case KeyEvent.VK_D:
+				right = true;
+			break;
+			case KeyEvent.VK_W:
+				up = true;
+			break;
+			case KeyEvent.VK_S:
+				down = true;
+			break;
+
+			default:
+			break;
+		}
+
+		if(left || right || up || down)
+		{
+			int x = this.tileset.getSelX();
+			int y = this.tileset.getSelY();
+
+			if(left)
+				x--;
+			if(right)
+				x++;
+			if(up)
+				y--;
+			if(down)
+				y++;
+
+			if(x < 0)
+				x = 0;
+			if(x > 15)
+				x = 15;
+			if(y < 0)
+				y = 0;
+			if(y > 15)
+				y = 15;
+
+			this.tileset.setSelX(x);
+			this.tileset.setSelY(y);
+			this.tileset.repaint();
+			if(this.tileInfoPanel != null)
+				this.tileInfoPanel.updateInfo(x, y);
+		}
+	}
+	public void keyReleased(KeyEvent e)
+	{
+	}
+	public void keyTyped(KeyEvent e)
+	{
+	}
+
 	// mouse listener
 	public void mouseExited(MouseEvent e)
 	{
 	}
 	public void mouseEntered(MouseEvent e)
 	{
+		this.requestFocusInWindow();
 	}
 	public void mouseReleased(MouseEvent e)
 	{
@@ -1965,7 +2032,9 @@ public class Editor
 
 		JScrollPane scrollFrame = new JScrollPane(mapPanel);
 		mapPanel.setAutoscrolls(true);
+		mapPanel.setFocusable(true);
 
+		mapPanel.addKeyListener(mapPanel);
 		mapPanel.addMouseListener(mapPanel);
 		mapPanel.addMouseMotionListener(mapPanel);
 		tilesetPanel.addMouseListener(tilesetPanel);
