@@ -5,7 +5,7 @@ SRC	:= Editor.java
 $(TARGET): $(SRC)
 	$(JC) $^
 
-release:
+release: $(TARGET)
 	jar cfm $(TARGET).jar manifest *.class
 
 clean:
