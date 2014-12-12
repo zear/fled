@@ -814,13 +814,13 @@ class MapPanel extends DrawPanel implements KeyListener, MouseInputListener
 
 	public void selectArea(int x, int y, int w, int h)
 	{
-		selectedArea = new int[Math.abs(w-x)][Math.abs(h-y)];
+		selectedArea = new int[Math.abs(w-x) + (x >= w ? 1 : 0)][Math.abs(h-y) + (y >= h ? 1 : 0)];
 
 		for(int j = 0; j < selectedArea[0].length; j++)
 		{
 			for(int i = 0; i < selectedArea.length; i++)
 			{
-				selectedArea[i][j] = this.level.getLayer(super.paintOnLayer).getTile((x >= w ? w+i : x+i), (y >= h ? h+j :y+j));
+				selectedArea[i][j] = this.level.getLayer(super.paintOnLayer).getTile((x >= w ? w+i : x+i), (y >= h ? h+j : y+j));
 			}
 		}
 	}
@@ -1385,10 +1385,12 @@ class MapPanel extends DrawPanel implements KeyListener, MouseInputListener
 
 			if(x2 <= x1)
 			{
+				x1 += 16;
 				x2 -= 16;
 			}
 			if(y2 <= y1)
 			{
+				y1 += 16;
 				y2 -= 16;
 			}
 
