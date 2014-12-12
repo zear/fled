@@ -937,20 +937,15 @@ class MapPanel extends DrawPanel implements KeyListener, MouseInputListener
 			case KeyEvent.VK_V:
 				if (this.editMode == EditMode.MODE_TILE_EDIT)
 				{
-					int x;
-					int y;
-					try
-					{
-						x = (int)this.getMousePosition().getX()/16;
-						y = (int)this.getMousePosition().getY()/16;
-					}
-					catch (NullPointerException ex) // Mouse position outside the container
-					{
-						x = -1;
-						y = -1;
-					}
+					Point pos = this.getMousePosition();
 
-					pasteSelectedArea(x, y);
+					if (pos != null)
+					{
+						int x = (int)pos.getX()/16;
+						int y = (int)pos.getY()/16;
+
+						pasteSelectedArea(x, y);
+					}
 
 					drawSelection = false;
 				}
@@ -1255,6 +1250,7 @@ class MapPanel extends DrawPanel implements KeyListener, MouseInputListener
 					{
 						selectedAreaX2 = e.getX()/16+1;
 						selectedAreaY2 = e.getY()/16+1;
+
 						this.repaint();
 					}
 				}
@@ -1344,30 +1340,15 @@ class MapPanel extends DrawPanel implements KeyListener, MouseInputListener
 			int y1 = selectedAreaY * 16;
 			int x2;
 			int y2;
-			boolean update = true;
 
 			if(this.editMode == EditMode.MODE_TILE_SELECTION)
 			{
-				try
-				{
-					curX = (int)this.getMousePosition().getX()/16*16 + 16;
-					curY = (int)this.getMousePosition().getY()/16*16 + 16;
-				}
-				catch (NullPointerException ex) // Mouse position outside the container
-				{
-					update = false;
-				}
+				Point pos = this.getMousePosition();
 
-				if (update)
+				if(pos != null)
 				{
-					if(curX < 0)
-						curX = 0;
-					if(curY < 0)
-						curY = 0;
-					if(curX >= this.level.getLayer(0).getWidth() * 16)
-						curX = this.level.getLayer(0).getWidth() * 16;
-					if(curY >= this.level.getLayer(0).getHeight() * 16)
-						curY = this.level.getLayer(0).getHeight() * 16;
+					curX = (int)pos.getX()/16*16 + 16;
+					curY = (int)pos.getY()/16*16 + 16;
 
 					x2 = curX;
 					y2 = curY;
@@ -1383,6 +1364,24 @@ class MapPanel extends DrawPanel implements KeyListener, MouseInputListener
 				x2 = selectedAreaX2 * 16;
 				y2 = selectedAreaY2 * 16;
 			}
+
+			if(x1 < 0)
+				x1 = 0;
+			if(y1 < 0)
+				y1 = 0;
+			if(x1 >= this.level.getLayer(0).getWidth() * 16)
+				x1 = this.level.getLayer(0).getWidth() * 16;
+			if(y1 >= this.level.getLayer(0).getHeight() * 16)
+				y1 = this.level.getLayer(0).getHeight() * 16;
+
+			if(x2 < 0)
+				x2 = 0;
+			if(y2 < 0)
+				y2 = 0;
+			if(x2 >= this.level.getLayer(0).getWidth() * 16)
+				x2 = this.level.getLayer(0).getWidth() * 16;
+			if(y2 >= this.level.getLayer(0).getHeight() * 16)
+				y2 = this.level.getLayer(0).getHeight() * 16;
 
 			if(x2 <= x1)
 			{
