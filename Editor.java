@@ -25,6 +25,7 @@ enum EditMode
 {
 	MODE_NONE,
 	MODE_TILE_EDIT,
+	MODE_TILE_SELECTION,
 	MODE_OBJECT_EDIT,
 	MODE_LEVEL_EDIT
 }
@@ -739,6 +740,9 @@ class MapPanel extends DrawPanel implements KeyListener, MouseInputListener
 	private int paintY = 0;
 	private int lastPaintOnLayer = 1;
 	private int lastTile = 0;
+	private int [][] selectedArea = null;
+	private int selectedAreaX;
+	private int selectedAreaY;
 
 	private GameObject selectedObject = null;
 	private boolean draggingObject = false;
@@ -805,6 +809,77 @@ class MapPanel extends DrawPanel implements KeyListener, MouseInputListener
 		super.repaint();
 	}
 
+	public void selectArea(int x, int y, int w, int h)
+	{
+		selectedArea = new int[Math.abs(w-x)][Math.abs(h-y)];
+
+		if(x > w)
+			selectedAreaX = w;
+		if(y > h)
+			selectedAreaY = h;
+
+		for(int j = 0; j < selectedArea[0].length; j++)
+		{
+			for(int i = 0; i < selectedArea.length; i++)
+			{
+				selectedArea[i][j] = this.level.getLayer(super.paintOnLayer).getTile(x+i, y+j);
+			}
+		}
+	}
+
+	public void cutSelectedArea(int x, int y)
+	{
+		if(selectedArea == null)
+			return;
+
+		for(int j = 0; j < selectedArea[0].length; j++)
+		{
+			for(int i = 0; i < selectedArea.length; i++)
+			{
+				this.level.getLayer(super.paintOnLayer).setTile(x+i, y+j, 0);
+			}
+		}
+	}
+
+	public void pasteSelectedArea(int x, int y)
+	{
+		if(selectedArea == null)
+			return;
+
+		for(int j = 0; j < selectedArea[0].length; j++)
+		{
+			if(y + j >= super.drawAreaLayers.get(super.paintOnLayer).getHeight())
+				continue;
+
+			for(int i = 0; i < selectedArea.length; i++)
+			{
+				if(x + i > super.drawAreaLayers.get(super.paintOnLayer).getWidth())
+					continue;
+
+				this.level.getLayer(super.paintOnLayer).setTile(x+i, y+j, selectedArea[i][j]);
+			}
+		}
+
+		int dw = x*16 + selectedArea.length*16;
+		int dh = y*16 + selectedArea[0].length*16;
+		int sw = selectedAreaX * 16 + selectedArea.length*16;
+		int sh = selectedAreaY * 16 + selectedArea[0].length*16;
+
+		if(dw > super.drawAreaLayers.get(super.paintOnLayer).getWidth())
+		{
+			sw -= dw - super.drawAreaLayers.get(super.paintOnLayer).getWidth();
+			dw = super.drawAreaLayers.get(super.paintOnLayer).getWidth();
+		}
+		if(dh > super.drawAreaLayers.get(super.paintOnLayer).getHeight())
+		{
+			sh -= dh - super.drawAreaLayers.get(super.paintOnLayer).getHeight();
+			dh = super.drawAreaLayers.get(super.paintOnLayer).getHeight();
+		}
+
+		super.blit(super.paintOnLayer, this.drawAreaLayers.get(super.paintOnLayer), x*16, y*16, dw, dh, selectedAreaX*16, selectedAreaY*16, sw, sh);
+		super.repaint();
+	}
+
 	public void setPanels(TilesetPanel newTileset, TileInfoPanel newTileInfoPanel, ObjectPanel newObjectPanel)
 	{
 		this.tileset = newTileset;
@@ -863,12 +938,27 @@ class MapPanel extends DrawPanel implements KeyListener, MouseInputListener
 			case KeyEvent.VK_S:
 				down = true;
 			break;
+			case KeyEvent.VK_SHIFT:
+				if (this.editMode == EditMode.MODE_TILE_EDIT)
+				{
+					this.editMode = EditMode.MODE_TILE_SELECTION;
+				}
+			break;
+			case KeyEvent.VK_V:
+				if (this.editMode == EditMode.MODE_TILE_EDIT)
+				{
+					int x = (int)this.getMousePosition().getX()/16;
+					int y = (int)this.getMousePosition().getY()/16;
+
+					pasteSelectedArea(x, y);
+				}
+			break;
 
 			default:
 			break;
 		}
 
-		if(left || right || up || down)
+		if((left || right || up || down) && (this.level != null && this.level.getNumOfLayers() > 0 && this.tileset != null))
 		{
 			int x = this.tileset.getSelX();
 			int y = this.tileset.getSelY();
@@ -900,6 +990,18 @@ class MapPanel extends DrawPanel implements KeyListener, MouseInputListener
 	}
 	public void keyReleased(KeyEvent e)
 	{
+		switch(e.getKeyCode())
+		{
+			case KeyEvent.VK_SHIFT:
+				if (this.editMode == EditMode.MODE_TILE_SELECTION)
+				{
+					this.editMode = EditMode.MODE_TILE_EDIT;
+				}
+			break;
+
+			default:
+			break;
+		}
 	}
 	public void keyTyped(KeyEvent e)
 	{
@@ -926,6 +1028,18 @@ class MapPanel extends DrawPanel implements KeyListener, MouseInputListener
 				default:
 				break;
 			}
+		}
+		else if(this.editMode == EditMode.MODE_TILE_SELECTION)
+		{
+				int modifiers = e.getModifiers();
+
+				if((e.getModifiers() & InputEvent.BUTTON1_MASK) > 0)
+				{
+					if(this.level != null && this.level.getNumOfLayers() > 0 && this.tileset != null)
+					{
+						selectArea(selectedAreaX, selectedAreaY, e.getX()/16+1, e.getY()/16+1);
+					}
+				}
 		}
 		else if(this.editMode == EditMode.MODE_OBJECT_EDIT)
 		{
@@ -987,6 +1101,19 @@ class MapPanel extends DrawPanel implements KeyListener, MouseInputListener
 
 					default:
 					break;
+				}
+			}
+		}
+		else if(this.editMode == EditMode.MODE_TILE_SELECTION)
+		{
+			if(this.level != null && this.level.getNumOfLayers() > 0 && this.tileset != null)
+			{
+				int modifiers = e.getModifiers();
+
+				if((e.getModifiers() & InputEvent.BUTTON1_MASK) > 0)
+				{
+					selectedAreaX = e.getX()/16;
+					selectedAreaY = e.getY()/16;
 				}
 			}
 		}
