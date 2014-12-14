@@ -6,6 +6,7 @@ import javax.swing.*;
 import javax.imageio.ImageIO;
 import java.io.IOException;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
@@ -28,6 +29,20 @@ enum EditMode
 	MODE_TILE_SELECTION,
 	MODE_OBJECT_EDIT,
 	MODE_LEVEL_EDIT
+}
+
+class TileBackupNode
+{
+	public int x;
+	public int y;
+	public int value;
+
+	public TileBackupNode(int x, int y, int value)
+	{
+		this.x = x;
+		this.y = y;
+		this.value = value;
+	}
 }
 
 class Data
@@ -741,10 +756,14 @@ class MapPanel extends DrawPanel implements KeyListener, MouseInputListener
 	private int lastPaintOnLayer = 1;
 	private int lastTile = 0;
 	private int [][] selectedArea = null;
+	private int [][] selectedAreaBackup = null;
 	private int selectedAreaX;
 	private int selectedAreaY;
 	private int selectedAreaX2;
 	private int selectedAreaY2;
+	private int selectedAreaBackupX;
+	private int selectedAreaBackupY;
+	private ArrayList<TileBackupNode> tileBackup = null;
 	private boolean drawSelection = false;
 
 	private GameObject selectedObject = null;
@@ -805,10 +824,77 @@ class MapPanel extends DrawPanel implements KeyListener, MouseInputListener
 		}
 
 		int tileNum = tileset.getSelY() * 16 + tileset.getSelX();
-
+		selectedAreaBackup = null;
+		tileBackup.add(new TileBackupNode(x/16, y/16, this.level.getLayer(super.paintOnLayer).getTile(x/16,y/16)));
 		this.level.getLayer(super.paintOnLayer).setTile(x/16, y/16, tileNum);
 
 		super.blit(super.paintOnLayer, this.tileset.getImage(0), x, y, x + 16, y + 16, this.tileset.getSelX() * 16, this.tileset.getSelY() * 16, this.tileset.getSelX() * 16 + 16, this.tileset.getSelY() * 16 + 16);
+		super.repaint();
+	}
+
+	public void restoreBackup()
+	{
+		if(tileBackup != null)
+		{
+			// Eliminate tiles visited more than once
+			for(TileBackupNode node : tileBackup)
+			{
+				for(TileBackupNode node2 : tileBackup)
+				{
+					if(node.x == node2.x && node.y == node2.y)
+					{
+						node2.value = node.value;
+					}
+				}
+			}
+
+			for(TileBackupNode node : tileBackup)
+			{
+				this.level.getLayer(super.paintOnLayer).setTile(node.x, node.y, node.value);
+
+				int tileX = node.value % 16;
+				int tileY = node.value / 16;
+				int dx = node.x * 16;
+				int dy = node.y * 16;
+				super.blit(super.paintOnLayer, this.tileset.getImage(0), dx, dy, dx + 16, dy + 16, tileX * 16, tileY * 16, tileX * 16 + 16, tileY * 16 + 16);
+			}
+		}
+		else if(selectedAreaBackup != null)
+		{
+			int x = selectedAreaBackupX;
+			int y = selectedAreaBackupY;
+
+			if(x < 0)
+				x = 0;
+			if(y < 0)
+				y = 0;
+
+			for(int j = 0; j < selectedAreaBackup[0].length; j++)
+			{
+				if(y * 16 + j * 16 >= super.drawAreaLayers.get(super.paintOnLayer).getHeight())
+					continue;
+
+				for(int i = 0; i < selectedAreaBackup.length; i++)
+				{
+					if(x * 16 + i * 16 >= super.drawAreaLayers.get(super.paintOnLayer).getWidth())
+						continue;
+
+					this.level.getLayer(super.paintOnLayer).setTile(x+i, y+j, selectedAreaBackup[i][j]);
+
+					int tileX = selectedAreaBackup[i][j] % 16;
+					int tileY = selectedAreaBackup[i][j] / 16;
+					int dx = x*16 + i*16;
+					int dy = y*16 + j*16;
+
+					super.blit(super.paintOnLayer, this.tileset.getImage(0), dx, dy, dx + 16, dy + 16, tileX * 16, tileY * 16, tileX * 16 + 16, tileY * 16 + 16);
+				}
+			}
+		}
+		else // There is no backup, do nothing.
+		{
+			return;
+		}
+
 		super.repaint();
 	}
 
@@ -841,6 +927,11 @@ class MapPanel extends DrawPanel implements KeyListener, MouseInputListener
 			startY = 0;
 		}
 
+		tileBackup = null;
+		selectedAreaBackup = new int[Math.abs(width-startX)][Math.abs(height-startY)];
+		selectedAreaBackupX = startX;
+		selectedAreaBackupY = startY;
+
 		for(int j = startY; j < height; j++)
 		{
 			if(j * 16 >= super.drawAreaLayers.get(super.paintOnLayer).getHeight())
@@ -851,6 +942,7 @@ class MapPanel extends DrawPanel implements KeyListener, MouseInputListener
 				if(i * 16 >= super.drawAreaLayers.get(super.paintOnLayer).getWidth())
 					continue;
 
+				selectedAreaBackup[i - startX][j - startY] = this.level.getLayer(super.paintOnLayer).getTile(i, j);
 				this.level.getLayer(super.paintOnLayer).setTile(i, j, 0);
 
 				int dx = i*16;
@@ -871,6 +963,11 @@ class MapPanel extends DrawPanel implements KeyListener, MouseInputListener
 		if(x < 0 || y < 0)
 			return;
 
+		tileBackup = null;
+		selectedAreaBackup = new int[selectedArea.length][selectedArea[0].length];
+		selectedAreaBackupX = x;
+		selectedAreaBackupY = y;
+
 		for(int j = 0; j < selectedArea[0].length; j++)
 		{
 			if(y * 16 + j * 16 >= super.drawAreaLayers.get(super.paintOnLayer).getHeight())
@@ -881,6 +978,7 @@ class MapPanel extends DrawPanel implements KeyListener, MouseInputListener
 				if(x * 16 + i * 16 >= super.drawAreaLayers.get(super.paintOnLayer).getWidth())
 					continue;
 
+				selectedAreaBackup[i][j] = this.level.getLayer(super.paintOnLayer).getTile(x+i, y+j);
 				this.level.getLayer(super.paintOnLayer).setTile(x+i, y+j, selectedArea[i][j]);
 
 				int tileX = selectedArea[i][j] % 16;
@@ -957,6 +1055,12 @@ class MapPanel extends DrawPanel implements KeyListener, MouseInputListener
 				if (this.editMode == EditMode.MODE_TILE_EDIT)
 				{
 					this.editMode = EditMode.MODE_TILE_SELECTION;
+				}
+			break;
+			case KeyEvent.VK_Z:	// Restore
+				if (this.editMode == EditMode.MODE_TILE_EDIT && ((modifiers & InputEvent.CTRL_MASK) > 0))
+				{
+					restoreBackup();
 				}
 			break;
 			case KeyEvent.VK_X:	// Cut
@@ -1153,6 +1257,7 @@ class MapPanel extends DrawPanel implements KeyListener, MouseInputListener
 								this.paintY = e.getY()/16*16;
 								this.lastPaintOnLayer = super.paintOnLayer;
 								this.lastTile = curTile;
+								tileBackup = new ArrayList<TileBackupNode>();
 								this.paintTile(this.paintX, this.paintY);
 							}
 						}
@@ -1188,6 +1293,11 @@ class MapPanel extends DrawPanel implements KeyListener, MouseInputListener
 				{
 					selectedAreaX = e.getX()/16;
 					selectedAreaY = e.getY()/16;
+
+					if(selectedAreaX < 0)
+						selectedAreaX = 0;
+					if(selectedAreaY < 0)
+						selectedAreaY = 0;
 
 					drawSelection = true;
 					this.repaint();
@@ -1317,6 +1427,11 @@ class MapPanel extends DrawPanel implements KeyListener, MouseInputListener
 					{
 						selectedAreaX2 = e.getX()/16+1;
 						selectedAreaY2 = e.getY()/16+1;
+
+						if(selectedAreaX2 < 0)
+							selectedAreaX2 = 0;
+						if(selectedAreaY2 < 0)
+							selectedAreaY2 = 0;
 
 						this.repaint();
 					}
