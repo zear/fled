@@ -825,18 +825,42 @@ class MapPanel extends DrawPanel implements KeyListener, MouseInputListener
 		}
 	}
 
-	public void cutSelectedArea(int x, int y)
+	public void deleteSelectedArea(int x, int y, int w, int h)
 	{
-		if(selectedArea == null)
-			return;
+		int startX = (x >= w ? w : x);
+		int startY = (y >= h ? h : y);
+		int width = (x >= w ? x+1 : w);
+		int height = (y >= h ? y+1 : h);
 
-		for(int j = 0; j < selectedArea[0].length; j++)
+		if(startX < 0)
 		{
-			for(int i = 0; i < selectedArea.length; i++)
+			startX = 0;
+		}
+		if(startY < 0)
+		{
+			startY = 0;
+		}
+
+		for(int j = startY; j < height; j++)
+		{
+			if(j * 16 >= super.drawAreaLayers.get(super.paintOnLayer).getHeight())
+				continue;
+
+			for(int i = startX; i < width; i++)
 			{
-				this.level.getLayer(super.paintOnLayer).setTile(x+i, y+j, 0);
+				if(i * 16 >= super.drawAreaLayers.get(super.paintOnLayer).getWidth())
+					continue;
+
+				this.level.getLayer(super.paintOnLayer).setTile(i, j, 0);
+
+				int dx = i*16;
+				int dy = j*16;
+
+				super.blit(super.paintOnLayer, this.tileset.getImage(0), dx, dy, dx + 16, dy + 16, 0, 0, 16, 16);
 			}
 		}
+
+		super.repaint();
 	}
 
 	public void pasteSelectedArea(int x, int y)
@@ -935,6 +959,14 @@ class MapPanel extends DrawPanel implements KeyListener, MouseInputListener
 					this.editMode = EditMode.MODE_TILE_SELECTION;
 				}
 			break;
+			case KeyEvent.VK_X:	// Cut
+				if (this.editMode == EditMode.MODE_TILE_EDIT && ((modifiers & InputEvent.CTRL_MASK) > 0))
+				{
+					selectArea(selectedAreaX, selectedAreaY, selectedAreaX2, selectedAreaY2);
+					deleteSelectedArea(selectedAreaX, selectedAreaY, selectedAreaX2, selectedAreaY2);
+					drawSelection = false;
+				}
+			break;
 			case KeyEvent.VK_C:	// Copy
 				if (this.editMode == EditMode.MODE_TILE_EDIT && ((modifiers & InputEvent.CTRL_MASK) > 0))
 				{
@@ -978,6 +1010,13 @@ class MapPanel extends DrawPanel implements KeyListener, MouseInputListener
 
 						drawSelection = false;
 					}
+				}
+			break;
+			case KeyEvent.VK_DELETE: // Delete
+				if (this.editMode == EditMode.MODE_TILE_EDIT)
+				{
+					deleteSelectedArea(selectedAreaX, selectedAreaY, selectedAreaX2, selectedAreaY2);
+					drawSelection = false;
 				}
 			break;
 
