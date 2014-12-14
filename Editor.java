@@ -913,6 +913,7 @@ class MapPanel extends DrawPanel implements KeyListener, MouseInputListener
 		boolean up = false;
 		boolean down = false;
 
+		int modifiers = e.getModifiers();
 
 		switch(e.getKeyCode())
 		{
@@ -928,14 +929,20 @@ class MapPanel extends DrawPanel implements KeyListener, MouseInputListener
 			case KeyEvent.VK_S:
 				down = true;
 			break;
-			case KeyEvent.VK_SHIFT:
+			case KeyEvent.VK_SHIFT:	// Select
 				if (this.editMode == EditMode.MODE_TILE_EDIT)
 				{
 					this.editMode = EditMode.MODE_TILE_SELECTION;
 				}
 			break;
-			case KeyEvent.VK_V:
-				if (this.editMode == EditMode.MODE_TILE_EDIT)
+			case KeyEvent.VK_C:	// Copy
+				if (this.editMode == EditMode.MODE_TILE_EDIT && ((modifiers & InputEvent.CTRL_MASK) > 0))
+				{
+					selectArea(selectedAreaX, selectedAreaY, selectedAreaX2, selectedAreaY2);
+				}
+			break;
+			case KeyEvent.VK_V:	// Paste
+				if (this.editMode == EditMode.MODE_TILE_EDIT && ((modifiers & InputEvent.CTRL_MASK) > 0))
 				{
 					Point pos = this.getMousePosition();
 
@@ -948,6 +955,29 @@ class MapPanel extends DrawPanel implements KeyListener, MouseInputListener
 					}
 
 					drawSelection = false;
+				}
+			break;
+			case KeyEvent.VK_INSERT: // Unix style
+				if ((this.editMode == EditMode.MODE_TILE_EDIT || this.editMode == EditMode.MODE_TILE_SELECTION))
+				{
+					if ((modifiers & InputEvent.CTRL_MASK) > 0)		// Copy
+					{
+						selectArea(selectedAreaX, selectedAreaY, selectedAreaX2, selectedAreaY2);
+					}
+					else if (((modifiers & InputEvent.SHIFT_MASK) > 0))	// Paste
+					{
+						Point pos = this.getMousePosition();
+
+						if (pos != null)
+						{
+							int x = (int)pos.getX()/16;
+							int y = (int)pos.getY()/16;
+
+							pasteSelectedArea(x, y);
+						}
+
+						drawSelection = false;
+					}
 				}
 			break;
 
@@ -1030,7 +1060,7 @@ class MapPanel extends DrawPanel implements KeyListener, MouseInputListener
 		{
 				int modifiers = e.getModifiers();
 
-				if((e.getModifiers() & InputEvent.BUTTON1_MASK) > 0)
+				if((modifiers & InputEvent.BUTTON1_MASK) > 0)
 				{
 					if(this.level != null && this.level.getNumOfLayers() > 0 && this.tileset != null)
 					{
@@ -1041,8 +1071,6 @@ class MapPanel extends DrawPanel implements KeyListener, MouseInputListener
 							selectedAreaX2 -= 1;
 						if(selectedAreaY2 <= selectedAreaY)
 							selectedAreaY2 -= 1;
-
-						selectArea(selectedAreaX, selectedAreaY, selectedAreaX2, selectedAreaY2);
 						this.repaint();
 					}
 				}
@@ -1117,7 +1145,7 @@ class MapPanel extends DrawPanel implements KeyListener, MouseInputListener
 			{
 				int modifiers = e.getModifiers();
 
-				if((e.getModifiers() & InputEvent.BUTTON1_MASK) > 0)
+				if((modifiers & InputEvent.BUTTON1_MASK) > 0)
 				{
 					selectedAreaX = e.getX()/16;
 					selectedAreaY = e.getY()/16;
@@ -1244,7 +1272,7 @@ class MapPanel extends DrawPanel implements KeyListener, MouseInputListener
 		{
 				int modifiers = e.getModifiers();
 
-				if((e.getModifiers() & InputEvent.BUTTON1_MASK) > 0)
+				if((modifiers & InputEvent.BUTTON1_MASK) > 0)
 				{
 					if(this.level != null && this.level.getNumOfLayers() > 0 && this.tileset != null)
 					{
