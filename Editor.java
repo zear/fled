@@ -858,6 +858,8 @@ class MapPanel extends DrawPanel implements KeyListener, MouseInputListener
 				int dy = node.y * 16;
 				super.blit(super.paintOnLayer, this.tileset.getImage(0), dx, dy, dx + 16, dy + 16, tileX * 16, tileY * 16, tileX * 16 + 16, tileY * 16 + 16);
 			}
+
+			lastTile = 0;
 		}
 		else if(selectedAreaBackup != null)
 		{
