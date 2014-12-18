@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class Level
 {
@@ -13,7 +14,7 @@ public class Level
 	private LinkedList<LevelLayer> layers;
 	private LinkedList<GameObject> objects;
 
-	public Level(int sizeX, int sizeY)
+	public Level(int sizeX, int sizeY) throws IOException
 	{
 		layers = new LinkedList<LevelLayer>();
 		objects = new LinkedList<GameObject>();
@@ -30,7 +31,7 @@ public class Level
 		}
 	}
 
-	public Level(File fileName)
+	public Level(File fileName) throws IOException
 	{
 		layers = new LinkedList<LevelLayer>();
 		objects = new LinkedList<GameObject>();
@@ -64,7 +65,7 @@ public class Level
 		return this.objects;
 	}
 
-	private void load(File fileName)
+	private void load(File fileName) throws IOException
 	{
 		FileRead fp = new FileRead(fileName);
 

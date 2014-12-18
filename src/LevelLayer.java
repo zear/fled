@@ -165,7 +165,7 @@ public class LevelLayer
 		this.id = id;
 	}
 
-	public void load(String fileName, int w, int h, int rowW, int size)
+	public void load(String fileName, int w, int h, int rowW, int size) throws IOException
 	{
 		try
 		{
@@ -177,6 +177,7 @@ public class LevelLayer
 		catch (IOException e)
 		{
 			System.out.printf("ERROR: Failed to load file %s!\n", fileName);
+			throw e;
 		}
 
 		this.imgPath = fileName;

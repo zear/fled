@@ -418,7 +418,16 @@ class Menu extends JMenuBar
 				// create new level
 				if(showNewLevelSetup())
 				{
-					mapPanel.level = new Level(newSizeX, newSizeY);
+					try
+					{
+						mapPanel.level = new Level(newSizeX, newSizeY);
+					}
+					catch (IOException ex)
+					{
+						JOptionPane.showMessageDialog(fileNew, "Unable to locate game data files.\nRun editor from within the game directory.", "Missing data", JOptionPane.ERROR_MESSAGE);
+						return;
+					}
+
 					tilesetPanel.setImage(0, mapPanel.level.getLayer(1).getImg());
 					tilesetPanel.showLayer[0] = true;
 					tilesetPanel.defaultSettings();
@@ -476,7 +485,15 @@ class Menu extends JMenuBar
 				{
 					File file = fileChooser.getSelectedFile();
 
-					mapPanel.level = new Level(file);
+					try
+					{
+						mapPanel.level = new Level(file);
+					}
+					catch (IOException ex)
+					{
+						JOptionPane.showMessageDialog(fileOpen, "Unable to locate game data files.\nRun editor from within the game directory.", "Missing data", JOptionPane.ERROR_MESSAGE);
+						return;
+					}
 
 					// Set tileset panel image
 					tilesetPanel.setImage(0, mapPanel.level.getLayer(1).getImg());
