@@ -177,7 +177,7 @@ public class LevelLayer
 		catch (IOException e)
 		{
 			System.out.printf("ERROR: Failed to load file %s!\n", fileName);
-			throw e;
+			throw new IOException("Missing game data:\n"+fileName+"\nPlace the editor directory within the game directory.");
 		}
 
 		this.imgPath = fileName;

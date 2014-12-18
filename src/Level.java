@@ -91,12 +91,16 @@ public class Level
 					break;
 					case "OBJECTS":
 						loadObjects(fp);
-						//loadObjects(fp); // TODO
 					break;
 
 					default:
 					break;
 				}
+			}
+
+			if(layers.size() == 0)
+			{
+				throw new IOException("No level layers found in:\n"+fileName+"\nPerhaps it is not a valid level file?");
 			}
 		}
 

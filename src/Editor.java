@@ -424,7 +424,7 @@ class Menu extends JMenuBar
 					}
 					catch (IOException ex)
 					{
-						JOptionPane.showMessageDialog(fileNew, "Unable to locate game data files.\nRun editor from within the game directory.", "Missing data", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(fileNew, ex.getMessage(), "Failed to create level file", JOptionPane.ERROR_MESSAGE);
 						return;
 					}
 
@@ -491,7 +491,7 @@ class Menu extends JMenuBar
 					}
 					catch (IOException ex)
 					{
-						JOptionPane.showMessageDialog(fileOpen, "Unable to locate game data files.\nRun editor from within the game directory.", "Missing data", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(fileOpen, ex.getMessage(), "Failed to open level file", JOptionPane.ERROR_MESSAGE);
 						return;
 					}
 
