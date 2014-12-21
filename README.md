@@ -16,4 +16,4 @@ License
 
 Status
 ------
-Basic levels can be created. As of now the only major lacking feature is support of level objects.
+Fully functional. Complete levels can be created.
