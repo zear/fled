@@ -37,6 +37,8 @@ public class Menu extends JMenuBar
 	private int newSizeX = 20;
 	private int newSizeY = 20;
 
+	private String execFile = "frog.jar"; // Default location.
+
 	public Menu()
 	{
 		this.add(fileMenu);
@@ -277,6 +279,21 @@ public class Menu extends JMenuBar
 				frame.dispose(); // Destroy the main window.
 			}
 		});
+		runSetExec.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				// Select new location of the game executable (frog.jar)
+				int choice = fileChooser.showOpenDialog(fileChooser);
+
+				if(choice == JFileChooser.APPROVE_OPTION)
+				{
+					File file = fileChooser.getSelectedFile();
+					Data.setDataDirectory(file.getParent());
+					execFile = file.getName();
+				}
+			}
+		});
 		runRunLevel.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -298,11 +315,24 @@ public class Menu extends JMenuBar
 						return;
 					}
 
-					File path = new File(Data.getDataDirectory() + "/frog.jar");
+					File path = new File(Data.getDataDirectory() + "/" + execFile);
 
-					if(!path.exists() || path.isDirectory())
+					while(!path.exists() || path.isDirectory())
 					{
-						JOptionPane.showMessageDialog(runRunLevel, "ERROR: Missing game executable at location:\n" + path.getAbsolutePath(), "Game launch issue", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(runRunLevel, "No game executable (" + execFile + ") found.\nPlease select a new location for the executable.", "Game launch issue", JOptionPane.ERROR_MESSAGE);
+						int choice = fileChooser.showOpenDialog(fileChooser);
+
+						if(choice == JFileChooser.APPROVE_OPTION)
+						{
+							File file = fileChooser.getSelectedFile();
+							Data.setDataDirectory(file.getParent());
+							execFile = file.getName();
+							path = new File(Data.getDataDirectory() + "/" + execFile);
+						}
+						else if(choice == JFileChooser.CANCEL_OPTION)
+						{
+							return;
+						}
 					}
 
 					// save current level to a temporary file
