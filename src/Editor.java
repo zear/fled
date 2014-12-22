@@ -2,6 +2,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
+import java.awt.geom.Rectangle2D;
 import javax.swing.*;
 import javax.imageio.ImageIO;
 import java.io.IOException;
@@ -826,6 +827,42 @@ class MapPanel extends DrawPanel implements KeyListener, MouseInputListener
 
 		super.blit(layer, this.tileset.getImage(0), x, y, x + 16, y + 16, tileX * 16, tileY * 16, tileX * 16 + 16, tileY * 16 + 16);
 
+		if(layer == 1)
+		{
+			int col = this.level.getCollision(num);
+			Color color = null;
+
+			if((col & Collision.COLLISION_SOLID) > 0)
+			{
+				color = new Color(0, 255 ,255, 100);
+			}
+			if((col & Collision.COLLISION_PLATFORM) > 0)
+			{
+				color = new Color(0, 255 ,0, 100);
+			}
+			if((col & Collision.COLLISION_DAMAGE) > 0)
+			{
+				color = new Color(255, 0 ,0, 100);
+			}
+			if((col & Collision.COLLISION_DESTRUCTIBLE) > 0)
+			{
+				color = new Color(255, 0 ,255, 100);
+			}
+			if((col & Collision.COLLISION_HIDDEN) > 0)
+			{
+				color = new Color(0, 0 ,0, 100);
+			}
+			if((col & Collision.COLLISION_CLIMB) > 0)
+			{
+				color = new Color(255, 255 ,255, 100);
+			}
+
+			if(color != null)
+			{
+				super.drawCollision(layer, x, y, color);
+			}
+		}
+
 		if(repaint)
 		{
 			super.repaint();
@@ -846,6 +883,43 @@ class MapPanel extends DrawPanel implements KeyListener, MouseInputListener
 		this.level.getLayer(super.paintOnLayer).setTile(x/16, y/16, tileNum);
 
 		super.blit(super.paintOnLayer, this.tileset.getImage(0), x, y, x + 16, y + 16, this.tileset.getSelX() * 16, this.tileset.getSelY() * 16, this.tileset.getSelX() * 16 + 16, this.tileset.getSelY() * 16 + 16);
+
+		if(super.paintOnLayer == 1)
+		{
+			int col = this.level.getCollision(tileNum);
+			Color color = null;
+
+			if((col & Collision.COLLISION_SOLID) > 0)
+			{
+				color = new Color(0, 255 ,255, 100);
+			}
+			if((col & Collision.COLLISION_PLATFORM) > 0)
+			{
+				color = new Color(0, 255 ,0, 100);
+			}
+			if((col & Collision.COLLISION_DAMAGE) > 0)
+			{
+				color = new Color(255, 0 ,0, 100);
+			}
+			if((col & Collision.COLLISION_DESTRUCTIBLE) > 0)
+			{
+				color = new Color(255, 0 ,255, 100);
+			}
+			if((col & Collision.COLLISION_HIDDEN) > 0)
+			{
+				color = new Color(0, 0 ,0, 100);
+			}
+			if((col & Collision.COLLISION_CLIMB) > 0)
+			{
+				color = new Color(255, 255 ,255, 100);
+			}
+
+			if(color != null)
+			{
+				super.drawCollision(super.paintOnLayer, x, y, color);
+			}
+		}
+
 		super.repaint();
 	}
 
@@ -874,6 +948,42 @@ class MapPanel extends DrawPanel implements KeyListener, MouseInputListener
 				int dx = node.x * 16;
 				int dy = node.y * 16;
 				super.blit(super.paintOnLayer, this.tileset.getImage(0), dx, dy, dx + 16, dy + 16, tileX * 16, tileY * 16, tileX * 16 + 16, tileY * 16 + 16);
+
+				if(super.paintOnLayer == 1)
+				{
+					int col = this.level.getCollision(node.value);
+					Color color = null;
+
+					if((col & Collision.COLLISION_SOLID) > 0)
+					{
+						color = new Color(0, 255 ,255, 100);
+					}
+					if((col & Collision.COLLISION_PLATFORM) > 0)
+					{
+						color = new Color(0, 255 ,0, 100);
+					}
+					if((col & Collision.COLLISION_DAMAGE) > 0)
+					{
+						color = new Color(255, 0 ,0, 100);
+					}
+					if((col & Collision.COLLISION_DESTRUCTIBLE) > 0)
+					{
+						color = new Color(255, 0 ,255, 100);
+					}
+					if((col & Collision.COLLISION_HIDDEN) > 0)
+					{
+						color = new Color(0, 0 ,0, 100);
+					}
+					if((col & Collision.COLLISION_CLIMB) > 0)
+					{
+						color = new Color(255, 255 ,255, 100);
+					}
+
+					if(color != null)
+					{
+						super.drawCollision(super.paintOnLayer, dx, dy, color);
+					}
+				}
 			}
 
 			lastTile = 0;
@@ -906,6 +1016,42 @@ class MapPanel extends DrawPanel implements KeyListener, MouseInputListener
 					int dy = y*16 + j*16;
 
 					super.blit(super.paintOnLayer, this.tileset.getImage(0), dx, dy, dx + 16, dy + 16, tileX * 16, tileY * 16, tileX * 16 + 16, tileY * 16 + 16);
+
+					if(super.paintOnLayer == 1)
+					{
+						int col = this.level.getCollision(selectedAreaBackup[i][j]);
+						Color color = null;
+
+						if((col & Collision.COLLISION_SOLID) > 0)
+						{
+							color = new Color(0, 255 ,255, 100);
+						}
+						if((col & Collision.COLLISION_PLATFORM) > 0)
+						{
+							color = new Color(0, 255 ,0, 100);
+						}
+						if((col & Collision.COLLISION_DAMAGE) > 0)
+						{
+							color = new Color(255, 0 ,0, 100);
+						}
+						if((col & Collision.COLLISION_DESTRUCTIBLE) > 0)
+						{
+							color = new Color(255, 0 ,255, 100);
+						}
+						if((col & Collision.COLLISION_HIDDEN) > 0)
+						{
+							color = new Color(0, 0 ,0, 100);
+						}
+						if((col & Collision.COLLISION_CLIMB) > 0)
+						{
+							color = new Color(255, 255 ,255, 100);
+						}
+
+						if(color != null)
+						{
+							super.drawCollision(super.paintOnLayer, dx, dy, color);
+						}
+					}
 				}
 			}
 		}
@@ -1006,6 +1152,42 @@ class MapPanel extends DrawPanel implements KeyListener, MouseInputListener
 				int dy = y*16 + j*16;
 
 				super.blit(super.paintOnLayer, this.tileset.getImage(0), dx, dy, dx + 16, dy + 16, tileX * 16, tileY * 16, tileX * 16 + 16, tileY * 16 + 16);
+
+				if(super.paintOnLayer == 1)
+				{
+					int col = this.level.getCollision(selectedArea[i][j]);
+					Color color = null;
+
+					if((col & Collision.COLLISION_SOLID) > 0)
+					{
+						color = new Color(0, 255 ,255, 100);
+					}
+					if((col & Collision.COLLISION_PLATFORM) > 0)
+					{
+						color = new Color(0, 255 ,0, 100);
+					}
+					if((col & Collision.COLLISION_DAMAGE) > 0)
+					{
+						color = new Color(255, 0 ,0, 100);
+					}
+					if((col & Collision.COLLISION_DESTRUCTIBLE) > 0)
+					{
+						color = new Color(255, 0 ,255, 100);
+					}
+					if((col & Collision.COLLISION_HIDDEN) > 0)
+					{
+						color = new Color(0, 0 ,0, 100);
+					}
+					if((col & Collision.COLLISION_CLIMB) > 0)
+					{
+						color = new Color(255, 255 ,255, 100);
+					}
+
+					if(color != null)
+					{
+						super.drawCollision(super.paintOnLayer, dx, dy, color);
+					}
+				}
 			}
 		}
 		super.repaint();
@@ -1822,8 +2004,15 @@ class DrawPanel extends JPanel
 					}
 				}
 			}
-
 		}
+	}
+
+	public void drawCollision(int layer, int x, int y, Color color)
+	{
+		BufferedImage dest = this.drawAreaLayers.get(layer);
+		Graphics2D g2d = (Graphics2D)dest.createGraphics();
+		g2d.setColor(color);
+		g2d.fill(new Rectangle2D.Double(x, y, 16, 16));
 	}
 
 	protected void draw(int layer, Graphics g)

@@ -13,12 +13,14 @@ public class Level
 
 	private LinkedList<LevelLayer> layers;
 	private LinkedList<GameObject> objects;
+	private Collision collision;
 
 	public Level(int sizeX, int sizeY) throws IOException
 	{
 		layers = new LinkedList<LevelLayer>();
 		objects = new LinkedList<GameObject>();
 		LevelLayer curElem = null;
+		collision = new Collision("default.col", 256);
 
 		for(int i = 0; i < 3; i++)
 		{
@@ -65,6 +67,11 @@ public class Level
 		return this.objects;
 	}
 
+	public int getCollision(int tile)
+	{
+		return this.collision.getCollision(tile);
+	}
+
 	private void load(File fileName) throws IOException
 	{
 		FileRead fp = new FileRead(fileName);
@@ -78,7 +85,7 @@ public class Level
 				switch(fp.getNext())
 				{
 					case "COLLISION":
-						//collision = new Collision(fp.getNext(), Integer.parseInt(fp.getNext())); // TODO
+						collision = new Collision(fp.getNext(), Integer.parseInt(fp.getNext()));
 					break;
 					case "LAYER":
 						curElem = new LevelLayer();
