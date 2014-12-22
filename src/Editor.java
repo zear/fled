@@ -790,6 +790,7 @@ class MapPanel extends DrawPanel implements KeyListener, MouseInputListener
 
 	protected boolean showGrid = true;
 	protected boolean showCollision = false;
+	protected boolean showObjects = true;
 
 	public EditMode getEditMode()
 	{
@@ -1798,7 +1799,7 @@ class MapPanel extends DrawPanel implements KeyListener, MouseInputListener
 		this.draw(g);
 
 		// temp
-		if(this.editMode == EditMode.MODE_OBJECT_EDIT)
+		if(this.editMode == EditMode.MODE_OBJECT_EDIT || this.showObjects)
 		{
 			if(this.level != null)
 			{
@@ -1811,21 +1812,24 @@ class MapPanel extends DrawPanel implements KeyListener, MouseInputListener
 					else
 						g2d.drawImage(curObj.getTile(0), curObj.getX() + curObj.getOffsetLeftX(), curObj.getY() + curObj.getOffsetLeftY(), null);
 
-					if(curObj == this.selectedObject)
-						g2d.setColor(Color.GREEN);
-					else
-						g2d.setColor(Color.RED);
+					if(this.editMode == EditMode.MODE_OBJECT_EDIT)
+					{
+						if(curObj == this.selectedObject)
+							g2d.setColor(Color.GREEN);
+						else
+							g2d.setColor(Color.RED);
 
-					// draw rectangle
-					g2d.drawLine(curObj.getX(), curObj.getY(), curObj.getX() + curObj.getW(), curObj.getY());
-					g2d.drawLine(curObj.getX(), curObj.getY() + curObj.getH(), curObj.getX() + curObj.getW(), curObj.getY() + curObj.getH());
-					g2d.drawLine(curObj.getX(), curObj.getY(), curObj.getX(), curObj.getY() + curObj.getH());
-					g2d.drawLine(curObj.getX() + curObj.getW(), curObj.getY(), curObj.getX() + curObj.getW(), curObj.getY() + curObj.getH());
-//					// draw diagonal line
-//					if(curObj.getDirection())
-//						g2d.drawLine(curObj.getX(), curObj.getY(), curObj.getX() + curObj.getTileW(), curObj.getY() + curObj.getTileH());
-//					else
-//						g2d.drawLine(curObj.getX() + curObj.getTileW(), curObj.getY(), curObj.getX(), curObj.getY() + curObj.getTileH());
+						// draw rectangle
+						g2d.drawLine(curObj.getX(), curObj.getY(), curObj.getX() + curObj.getW(), curObj.getY());
+						g2d.drawLine(curObj.getX(), curObj.getY() + curObj.getH(), curObj.getX() + curObj.getW(), curObj.getY() + curObj.getH());
+						g2d.drawLine(curObj.getX(), curObj.getY(), curObj.getX(), curObj.getY() + curObj.getH());
+						g2d.drawLine(curObj.getX() + curObj.getW(), curObj.getY(), curObj.getX() + curObj.getW(), curObj.getY() + curObj.getH());
+	//					// draw diagonal line
+	//					if(curObj.getDirection())
+	//						g2d.drawLine(curObj.getX(), curObj.getY(), curObj.getX() + curObj.getTileW(), curObj.getY() + curObj.getTileH());
+	//					else
+	//						g2d.drawLine(curObj.getX() + curObj.getTileW(), curObj.getY(), curObj.getX(), curObj.getY() + curObj.getTileH());
+					}
 				}
 			}
 		}
@@ -2082,12 +2086,13 @@ class ToolbarPanel extends JPanel
 	private JCheckBox showForeground = new JCheckBox("FGD");
 	private JCheckBox showGrid = new JCheckBox("Tile grid");
 	private JCheckBox showCollision = new JCheckBox("Collision");
+	private JCheckBox showObjects = new JCheckBox("Objects");
 	private JLabel paintLabel = new JLabel("Draw on:");
 	private JLabel showLabel = new JLabel("Show:");
 
 	public ToolbarPanel()
 	{
-		this.setLayout(new GridLayout(6, 2));
+		this.setLayout(new GridLayout(7, 2));
 
 		this.radioLayers.add(drawOnBackground);
 		this.radioLayers.add(drawOnMiddleground);
@@ -2107,6 +2112,8 @@ class ToolbarPanel extends JPanel
 		this.add(showGrid);
 		this.add(new JLabel("")); // add an empty cell
 		this.add(showCollision);
+		this.add(new JLabel("")); // add an empty cell
+		this.add(showObjects);
 
 		drawOnBackground.addActionListener(new ActionListener()
 		{
@@ -2259,6 +2266,26 @@ class ToolbarPanel extends JPanel
 				}
 			}
 		});
+		showObjects.addItemListener(new ItemListener()
+		{
+			public void itemStateChanged(ItemEvent e)
+			{
+				switch(e.getStateChange())
+				{
+					case ItemEvent.SELECTED:
+						mapPanel.showObjects = true;
+						mapPanel.repaint();
+					break;
+					case ItemEvent.DESELECTED:
+						mapPanel.showObjects = false;
+						mapPanel.repaint();
+					break;
+
+					default:
+					break;
+				}
+			}
+		});
 	}
 
 	public void defaultSettings()
@@ -2269,6 +2296,7 @@ class ToolbarPanel extends JPanel
 		this.showForeground.setSelected(true);
 		this.showGrid.setSelected(true);
 		this.showCollision.setSelected(false);
+		this.showObjects.setSelected(true);
 	}
 
 	public void setPanels(MapPanel newMapPanel, TilesetPanel newTilesetPanel)
