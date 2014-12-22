@@ -1,3 +1,5 @@
+package level;
+
 import java.util.LinkedList;
 import java.util.ArrayList;
 import java.util.ListIterator;
@@ -6,6 +8,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+
+import util.*;
 
 public class Level
 {

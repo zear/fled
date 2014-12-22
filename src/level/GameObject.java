@@ -1,8 +1,12 @@
+package level;
+
 import java.io.File;
 import javax.imageio.ImageIO;
 import java.io.IOException;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
+
+import util.*;
 
 class ImgTemplate
 {

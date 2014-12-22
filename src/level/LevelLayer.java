@@ -1,9 +1,13 @@
+package level;
+
 import java.io.File;
 import java.io.IOException;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 import javax.imageio.ImageIO;
 import java.util.ArrayList;
+
+import util.*;
 
 // LevelLayer keeps data related to a single map layer
 public class LevelLayer
