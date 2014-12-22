@@ -16,12 +16,12 @@ public class FileRead
 	private int token;
 	private boolean hasNext = true;
 
-	public FileRead(File file)
+	public FileRead(File file) throws FileNotFoundException
 	{
 		this.open(file);
 	}
 
-	public void open(File file)
+	public void open(File file) throws FileNotFoundException
 	{
 		if(file == null)
 		{
@@ -31,25 +31,11 @@ public class FileRead
 
 		this.fileName = file;
 
-		try
-		{
-			fr = new FileReader(file);
-		}
-		catch (FileNotFoundException e)
-		{
-			System.out.printf("File %s not found!\n", file);
-		}
+		fr = new FileReader(file);
 
 		if(fr != null)
 		{
-			//try
-			//{
-				br = new BufferedReader(fr);
-			//}
-			//catch (IOException e)
-			//{
-			//	System.out.printf("Unable to read from file %s!\n", file);
-			//}
+			br = new BufferedReader(fr);
 		}
 	}
 

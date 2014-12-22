@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.LinkedList;
 import java.util.ListIterator;
 import javax.swing.event.ListSelectionListener;
@@ -223,7 +224,7 @@ public class ObjectPanel extends JPanel
 		File folder = new File(Data.getDataDirectory() + "/data/obj/");
 		File [] listOfFiles = folder.listFiles();
 
-		FileRead fp;
+		FileRead fp = null;
 		String line;
 		String [] words;
 
@@ -231,7 +232,14 @@ public class ObjectPanel extends JPanel
 		{
 			if(listOfFiles[i].isFile())
 			{
-				fp = new FileRead((File)listOfFiles[i]);
+				try
+				{
+					fp = new FileRead((File)listOfFiles[i]);
+				}
+				catch (FileNotFoundException e)
+				{
+					System.out.printf("Failed to load object: %s\n", listOfFiles[i].getName());
+				}
 
 				GameObject newObj = null;
 				int tmpW = 0;
