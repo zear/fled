@@ -28,6 +28,7 @@ public class Menu extends JMenuBar
 
 	private JFileChooser fileChooser = new JFileChooser(Data.getDataDirectory());
 
+	private JFrame frame = null;
 	private MapPanel mapPanel = null;
 	private TilesetPanel tilesetPanel = null;
 	private ToolbarPanel toolbarPanel = null;
@@ -271,8 +272,9 @@ public class Menu extends JMenuBar
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				// quit program
-				System.out.printf("Pressed Quit\n"); // TODO
+				// Exit program.
+				frame.setVisible(false);
+				frame.dispose(); // Destroy the main window.
 			}
 		});
 		runRunLevel.addActionListener(new ActionListener()
@@ -345,8 +347,9 @@ public class Menu extends JMenuBar
 		});
 	}
 
-	public void setPanels(MapPanel newMapPanel, TilesetPanel newTilesetPanel, ToolbarPanel newToolbarPanel, ObjectPanel newObjectPanel)
+	public void setPanels(JFrame newFrame, MapPanel newMapPanel, TilesetPanel newTilesetPanel, ToolbarPanel newToolbarPanel, ObjectPanel newObjectPanel)
 	{
+		this.frame = newFrame;
 		this.mapPanel = newMapPanel;
 		this.tilesetPanel = newTilesetPanel;
 		this.toolbarPanel = newToolbarPanel;

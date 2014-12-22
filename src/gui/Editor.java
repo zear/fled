@@ -76,7 +76,7 @@ public class Editor
 
 		// menu
 		Menu menuBar = new Menu();
-		menuBar.setPanels(mapPanel, tilesetPanel, toolbarPanel, objectPanel);
+		menuBar.setPanels(frame, mapPanel, tilesetPanel, toolbarPanel, objectPanel);
 
 		frame.getContentPane().add(menuBar, BorderLayout.NORTH);
 		frame.getContentPane().add(windowContainer);
