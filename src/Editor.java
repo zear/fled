@@ -789,6 +789,7 @@ class MapPanel extends DrawPanel implements KeyListener, MouseInputListener
 	private boolean objectIsNew = false;
 
 	protected boolean showGrid = true;
+	protected boolean showCollision = false;
 
 	public EditMode getEditMode()
 	{
@@ -827,7 +828,7 @@ class MapPanel extends DrawPanel implements KeyListener, MouseInputListener
 
 		super.blit(layer, this.tileset.getImage(0), x, y, x + 16, y + 16, tileX * 16, tileY * 16, tileX * 16 + 16, tileY * 16 + 16);
 
-		if(layer == 1)
+		if(this.showCollision && layer == 1)
 		{
 			int col = this.level.getCollision(num);
 			Color color = null;
@@ -884,7 +885,7 @@ class MapPanel extends DrawPanel implements KeyListener, MouseInputListener
 
 		super.blit(super.paintOnLayer, this.tileset.getImage(0), x, y, x + 16, y + 16, this.tileset.getSelX() * 16, this.tileset.getSelY() * 16, this.tileset.getSelX() * 16 + 16, this.tileset.getSelY() * 16 + 16);
 
-		if(super.paintOnLayer == 1)
+		if(this.showCollision && super.paintOnLayer == 1)
 		{
 			int col = this.level.getCollision(tileNum);
 			Color color = null;
@@ -949,7 +950,7 @@ class MapPanel extends DrawPanel implements KeyListener, MouseInputListener
 				int dy = node.y * 16;
 				super.blit(super.paintOnLayer, this.tileset.getImage(0), dx, dy, dx + 16, dy + 16, tileX * 16, tileY * 16, tileX * 16 + 16, tileY * 16 + 16);
 
-				if(super.paintOnLayer == 1)
+				if(this.showCollision && super.paintOnLayer == 1)
 				{
 					int col = this.level.getCollision(node.value);
 					Color color = null;
@@ -1017,7 +1018,7 @@ class MapPanel extends DrawPanel implements KeyListener, MouseInputListener
 
 					super.blit(super.paintOnLayer, this.tileset.getImage(0), dx, dy, dx + 16, dy + 16, tileX * 16, tileY * 16, tileX * 16 + 16, tileY * 16 + 16);
 
-					if(super.paintOnLayer == 1)
+					if(this.showCollision && super.paintOnLayer == 1)
 					{
 						int col = this.level.getCollision(selectedAreaBackup[i][j]);
 						Color color = null;
@@ -1153,7 +1154,7 @@ class MapPanel extends DrawPanel implements KeyListener, MouseInputListener
 
 				super.blit(super.paintOnLayer, this.tileset.getImage(0), dx, dy, dx + 16, dy + 16, tileX * 16, tileY * 16, tileX * 16 + 16, tileY * 16 + 16);
 
-				if(super.paintOnLayer == 1)
+				if(this.showCollision && super.paintOnLayer == 1)
 				{
 					int col = this.level.getCollision(selectedArea[i][j]);
 					Color color = null;
@@ -2080,6 +2081,7 @@ class ToolbarPanel extends JPanel
 	private JCheckBox showMiddleground = new JCheckBox("MGD");
 	private JCheckBox showForeground = new JCheckBox("FGD");
 	private JCheckBox showGrid = new JCheckBox("Tile grid");
+	private JCheckBox showCollision = new JCheckBox("Collision");
 	private JLabel paintLabel = new JLabel("Draw on:");
 	private JLabel showLabel = new JLabel("Show:");
 
@@ -2103,6 +2105,8 @@ class ToolbarPanel extends JPanel
 		this.add(showForeground);
 		this.add(new JLabel("")); // add an empty cell
 		this.add(showGrid);
+		this.add(new JLabel("")); // add an empty cell
+		this.add(showCollision);
 
 		drawOnBackground.addActionListener(new ActionListener()
 		{
@@ -2218,6 +2222,43 @@ class ToolbarPanel extends JPanel
 				}
 			}
 		});
+		showCollision.addItemListener(new ItemListener()
+		{
+			public void itemStateChanged(ItemEvent e)
+			{
+				int levelWidth;
+				int levelHeight;
+				int tile;
+
+				switch(e.getStateChange())
+				{
+					case ItemEvent.SELECTED:
+						mapPanel.showCollision = true;
+					break;
+					case ItemEvent.DESELECTED:
+						mapPanel.showCollision = false;
+					break;
+
+					default:
+					break;
+				}
+
+				for(int n = 0; n < mapPanel.drawAreaLayers.size(); n++)
+				{
+					levelWidth = mapPanel.level.getLayer(n).getWidth() * 16;
+					levelHeight = mapPanel.level.getLayer(n).getHeight() * 16;
+
+					for(int i = 0, x = 0; i < levelWidth; i+=16, x++)
+					{
+						for(int j = 0, y = 0; j < levelHeight; j+=16, y++)
+						{
+							tile = mapPanel.level.getLayer(n).getTile(x, y);
+							mapPanel.paintTile(n, tile, i, j, true);
+						}
+					}
+				}
+			}
+		});
 	}
 
 	public void defaultSettings()
@@ -2227,6 +2268,7 @@ class ToolbarPanel extends JPanel
 		this.showMiddleground.setSelected(true);
 		this.showForeground.setSelected(true);
 		this.showGrid.setSelected(true);
+		this.showCollision.setSelected(false);
 	}
 
 	public void setPanels(MapPanel newMapPanel, TilesetPanel newTilesetPanel)
