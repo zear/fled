@@ -272,11 +272,52 @@ public class Menu extends JMenuBar
 		});
 		fileQuit.addActionListener(new ActionListener()
 		{
+			boolean leave = false;
+
 			public void actionPerformed(ActionEvent e)
 			{
+				// Ask about saving the changes
+				if(mapPanel.level != null)
+				{
+					int choice = JOptionPane.showConfirmDialog(fileChooser, "Store the changes?", "", JOptionPane.YES_NO_CANCEL_OPTION);
+
+					if(choice == JOptionPane.YES_OPTION)
+					{
+						if(mapPanel.level.getFilePath() != null)
+						{
+							mapPanel.level.write(mapPanel.level.getFilePath());
+						}
+						else
+						{
+							// ask for the file name
+							int choice2 = fileChooser.showSaveDialog(fileChooser);
+
+							if(choice2 == JFileChooser.APPROVE_OPTION)
+							{
+								File file = fileChooser.getSelectedFile();
+								mapPanel.level.setFilePath(file);
+								mapPanel.level.write(mapPanel.level.getFilePath());
+
+								leave = true;
+							}
+						}
+					}
+					else if(choice == JOptionPane.NO_OPTION)
+					{
+						leave = true;
+					}
+				}
+				else
+				{
+					leave = true;
+				}
+
 				// Exit program.
-				frame.setVisible(false);
-				frame.dispose(); // Destroy the main window.
+				if(leave)
+				{
+					frame.setVisible(false);
+					frame.dispose(); // Destroy the main window.
+				}
 			}
 		});
 		runSetExec.addActionListener(new ActionListener()
