@@ -127,6 +127,10 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 
 		int tileNum = tileset.getSelY() * 16 + tileset.getSelX();
 		selectedAreaBackup = null;
+		if(tileBackup == null)
+		{
+			tileBackup = new ArrayList<TileBackupNode>();
+		}
 		tileBackup.add(new TileBackupNode(x/16, y/16, this.level.getLayer(super.paintOnLayer).getTile(x/16,y/16)));
 		this.level.getLayer(super.paintOnLayer).setTile(x/16, y/16, tileNum);
 
