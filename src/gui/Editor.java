@@ -10,7 +10,7 @@ public class Editor
 		JFrame frame = new JFrame("FROG Level Editor");
 		ImageIcon icon = new ImageIcon("./data/icon.png");
 		frame.setIconImage(icon.getImage());
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		JPanel windowContainer = new JPanel(new BorderLayout());
 		windowContainer.setLayout(new BoxLayout(windowContainer, BoxLayout.LINE_AXIS));
@@ -84,8 +84,9 @@ public class Editor
 		frame.setLocationRelativeTo(null);
 
 		// display the window
-		frame.pack();
 		frame.setVisible(true);
+		frame.pack();
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
 	public static void main(String [] args)

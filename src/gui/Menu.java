@@ -317,6 +317,7 @@ public class Menu extends JMenuBar
 				{
 					frame.setVisible(false);
 					frame.dispose(); // Destroy the main window.
+					System.exit(0); // HACK! Prevents the application from freezing after dispose() is called in certain circumstances.
 				}
 			}
 		});
