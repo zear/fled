@@ -315,9 +315,9 @@ public class Menu extends JMenuBar
 				// Exit program.
 				if(leave)
 				{
+					frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
 					frame.setVisible(false);
 					frame.dispose(); // Destroy the main window.
-					System.exit(0); // HACK! Prevents the application from freezing after dispose() is called in certain circumstances.
 				}
 			}
 		});
