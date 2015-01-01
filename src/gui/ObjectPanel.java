@@ -40,7 +40,7 @@ public class ObjectPanel extends JPanel
 
 		public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus)
 		{
-			if(value instanceof GameObject)
+			if (value instanceof GameObject)
 				setText(((GameObject)value).getName() + " ["+((GameObject)value).getX()+","+((GameObject)value).getY()+"]");
 			else
 				setText(value.toString());
@@ -89,12 +89,12 @@ public class ObjectPanel extends JPanel
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				if(availableListModel != null)
+				if (availableListModel != null)
 				{
 					GameObject newObj = new GameObject();
 					int selectedIndex = availableObjects.getSelectedIndex();
 
-					if(selectedIndex != -1)
+					if (selectedIndex != -1)
 					{
 						newObj.setName(availableListModel.get(selectedIndex).getName());
 						newObj.setImgTemplate(availableListModel.get(selectedIndex).getImgTemplate());
@@ -111,18 +111,18 @@ public class ObjectPanel extends JPanel
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				if(addedListModel != null)
+				if (addedListModel != null)
 				{
 					int selectedIndex = addedObjects.getSelectedIndex();
 
-					if(selectedIndex != -1)
+					if (selectedIndex != -1)
 					{
 						GameObject objToRem = addedListModel.get(selectedIndex);
 
 						ListIterator<GameObject> objsli = addedObjectsList.listIterator();
 						while (objsli.hasNext())
 						{
-							if(objsli.next() == objToRem)
+							if (objsli.next() == objToRem)
 							{
 								objsli.remove();
 								addedListModel.remove(selectedIndex);
@@ -139,7 +139,7 @@ public class ObjectPanel extends JPanel
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				if(addedObjects != null && addedObjects.getSelectedIndex() != -1)
+				if (addedObjects != null && addedObjects.getSelectedIndex() != -1)
 				{
 					addedListModel.get(addedObjects.getSelectedIndex()).setDirection(false);
 					mapPanel.repaint();
@@ -150,7 +150,7 @@ public class ObjectPanel extends JPanel
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				if(addedObjects != null && addedObjects.getSelectedIndex() != -1)
+				if (addedObjects != null && addedObjects.getSelectedIndex() != -1)
 				{
 					addedListModel.get(addedObjects.getSelectedIndex()).setDirection(true);
 					mapPanel.repaint();
@@ -161,15 +161,15 @@ public class ObjectPanel extends JPanel
 
 	void addListeners()
 	{
-//		if(availableObjects != null)
+//		if (availableObjects != null)
 //		{
 //			availableObjects.addListSelectionListener(new ListSelectionListener()
 //			{
 //				public void valueChanged(ListSelectionEvent e)
 //				{
-//					if(e.getValueIsAdjusting() == false)
+//					if (e.getValueIsAdjusting() == false)
 //					{
-//						if(availableObjects.getSelectedIndex() == -1)
+//						if (availableObjects.getSelectedIndex() == -1)
 //						{
 //							//No selection
 //						}
@@ -181,15 +181,15 @@ public class ObjectPanel extends JPanel
 //				}
 //			});
 //		}
-		if(addedObjects != null)
+		if (addedObjects != null)
 		{
 			addedObjects.addListSelectionListener(new ListSelectionListener()
 			{
 				public void valueChanged(ListSelectionEvent e)
 				{
-					if(e.getValueIsAdjusting() == false)
+					if (e.getValueIsAdjusting() == false)
 					{
-						if(addedObjects.getSelectedIndex() == -1)
+						if (addedObjects.getSelectedIndex() == -1)
 						{
 							//No selection
 						}
@@ -200,7 +200,7 @@ public class ObjectPanel extends JPanel
 							mapPanel.setSelectedObject(selObj);
 							mapPanel.setObjectIsNew(false);
 
-							if(selObj.getDirection())
+							if (selObj.getDirection())
 							{
 								directionRight.setSelected(true);
 							}
@@ -228,9 +228,9 @@ public class ObjectPanel extends JPanel
 		String line;
 		String [] words;
 
-		for(int i = 0; i < listOfFiles.length; i++)
+		for (int i = 0; i < listOfFiles.length; i++)
 		{
-			if(listOfFiles[i].isFile())
+			if (listOfFiles[i].isFile())
 			{
 				try
 				{
@@ -246,10 +246,10 @@ public class ObjectPanel extends JPanel
 				int tmpH = 0;
 				boolean parsingFrames = false;
 
-				while(fp.hasNext())
+				while (fp.hasNext())
 				{
 					line = fp.getLine();
-					if(line == null)
+					if (line == null)
 					break;
 
 					words = line.split("\\s");
@@ -273,7 +273,7 @@ public class ObjectPanel extends JPanel
 					}
 					else if (words[0].equals("IMG"))
 					{
-						if(newObj != null)
+						if (newObj != null)
 						{
 							newObj.setImgTemplate(words[1], Integer.parseInt(words[2]), Integer.parseInt(words[3]));
 							newObj.setW(tmpW);
@@ -308,7 +308,7 @@ public class ObjectPanel extends JPanel
 		// Load objects present in the level file
 		this.addedObjectsList = this.mapPanel.level.getObjectList();
 
-		for(GameObject curObj : this.addedObjectsList)
+		for (GameObject curObj : this.addedObjectsList)
 		{
 			curObj.setImgTemplate(this.getObjectTemplateByName(curObj.getName()).getImgTemplate());
 			this.addedListModel.addElement(curObj);
@@ -351,11 +351,11 @@ public class ObjectPanel extends JPanel
 
 	GameObject getObjectTemplateByName(String objName)
 	{
-		if(this.availableListModel != null)
+		if (this.availableListModel != null)
 		{
-			for(int i = 0; i < this.availableListModel.getSize(); i++)
+			for (int i = 0; i < this.availableListModel.getSize(); i++)
 			{
-				if(this.availableListModel.get(i).getName().equals(objName))
+				if (this.availableListModel.get(i).getName().equals(objName))
 					return this.availableListModel.get(i);
 			}
 			return null;

@@ -144,7 +144,7 @@ public class ModifyLevelSetup extends JDialog implements ActionListener
 				menu.setSizeY(menu.getSizeY() + ((Number)fieldSizeYTop.getValue()).intValue() + ((Number)fieldSizeYBottom.getValue()).intValue());
 				menu.getMapPanel().level.resize(((Number)fieldSizeXLeft.getValue()).intValue(), ((Number)fieldSizeXRight.getValue()).intValue(), ((Number)fieldSizeYTop.getValue()).intValue(), ((Number)fieldSizeYBottom.getValue()).intValue(), 0);
 
-				for(GameObject curObj : menu.getMapPanel().level.getObjectList())
+				for (GameObject curObj : menu.getMapPanel().level.getObjectList())
 				{
 					curObj.setX(curObj.getX() + ((Number)fieldSizeXLeft.getValue()).intValue() * 16);
 					curObj.setY(curObj.getY() + ((Number)fieldSizeYTop.getValue()).intValue() * 16);

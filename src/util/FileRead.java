@@ -23,7 +23,7 @@ public class FileRead
 
 	public void open(File file) throws FileNotFoundException
 	{
-		if(file == null)
+		if (file == null)
 		{
 			System.out.printf("File is empty!\n");
 			return;
@@ -33,7 +33,7 @@ public class FileRead
 
 		fr = new FileReader(file);
 
-		if(fr != null)
+		if (fr != null)
 		{
 			br = new BufferedReader(fr);
 		}
@@ -64,7 +64,7 @@ public class FileRead
 		try
 		{
 			String nextLine = br.readLine();
-			if(nextLine == null)
+			if (nextLine == null)
 				this.hasNext = false;
 
 			return nextLine;
@@ -79,7 +79,7 @@ public class FileRead
 
 	public boolean nextLine()
 	{
-		if((this.line = this.getLine()) != null)
+		if ((this.line = this.getLine()) != null)
 		{
 			words = this.line.split("\\s");
 			token = -1;
@@ -91,13 +91,13 @@ public class FileRead
 
 	public String getNext()
 	{
-		if(words == null)
-			if(nextLine())
+		if (words == null)
+			if (nextLine())
 				return "EOF";
 		token++;
-		if(token >= this.words.length)
+		if (token >= this.words.length)
 		{
-			if(nextLine())
+			if (nextLine())
 				return "EOF";
 			token++;
 		}

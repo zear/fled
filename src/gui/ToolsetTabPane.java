@@ -16,7 +16,7 @@ public class ToolsetTabPane extends JTabbedPane
 		{
 			public void stateChanged(ChangeEvent e)
 			{
-				switch(getSelectedIndex())
+				switch (getSelectedIndex())
 				{
 					case 0:
 						mapPanel.setEditMode(EditMode.MODE_TILE_EDIT);

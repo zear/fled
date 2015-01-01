@@ -72,7 +72,7 @@ public class ToolbarPanel extends JPanel
 		{
 			public void itemStateChanged(ItemEvent e)
 			{
-				switch(e.getStateChange())
+				switch (e.getStateChange())
 				{
 					case ItemEvent.SELECTED:
 						drawOnBackground.setEnabled(true);
@@ -81,7 +81,7 @@ public class ToolbarPanel extends JPanel
 					break;
 					case ItemEvent.DESELECTED:
 						drawOnBackground.setEnabled(false);
-						if(drawOnBackground.isSelected())
+						if (drawOnBackground.isSelected())
 							radioLayers.clearSelection();
 						mapPanel.showLayer[2] = false;
 						mapPanel.repaint();
@@ -96,7 +96,7 @@ public class ToolbarPanel extends JPanel
 		{
 			public void itemStateChanged(ItemEvent e)
 			{
-				switch(e.getStateChange())
+				switch (e.getStateChange())
 				{
 					case ItemEvent.SELECTED:
 						drawOnMiddleground.setEnabled(true);
@@ -105,7 +105,7 @@ public class ToolbarPanel extends JPanel
 					break;
 					case ItemEvent.DESELECTED:
 						drawOnMiddleground.setEnabled(false);
-						if(drawOnMiddleground.isSelected())
+						if (drawOnMiddleground.isSelected())
 							radioLayers.clearSelection();
 						mapPanel.showLayer[1] = false;
 						mapPanel.repaint();
@@ -120,7 +120,7 @@ public class ToolbarPanel extends JPanel
 		{
 			public void itemStateChanged(ItemEvent e)
 			{
-				switch(e.getStateChange())
+				switch (e.getStateChange())
 				{
 					case ItemEvent.SELECTED:
 						drawOnForeground.setEnabled(true);
@@ -129,7 +129,7 @@ public class ToolbarPanel extends JPanel
 					break;
 					case ItemEvent.DESELECTED:
 						drawOnForeground.setEnabled(false);
-						if(drawOnForeground.isSelected())
+						if (drawOnForeground.isSelected())
 							radioLayers.clearSelection();
 						mapPanel.showLayer[0] = false;
 						mapPanel.repaint();
@@ -144,7 +144,7 @@ public class ToolbarPanel extends JPanel
 		{
 			public void itemStateChanged(ItemEvent e)
 			{
-				switch(e.getStateChange())
+				switch (e.getStateChange())
 				{
 					case ItemEvent.SELECTED:
 						mapPanel.showGrid = true;
@@ -168,7 +168,7 @@ public class ToolbarPanel extends JPanel
 				int levelHeight;
 				int tile;
 
-				switch(e.getStateChange())
+				switch (e.getStateChange())
 				{
 					case ItemEvent.SELECTED:
 						mapPanel.showCollision = true;
@@ -181,14 +181,14 @@ public class ToolbarPanel extends JPanel
 					break;
 				}
 
-				for(int n = 0; n < mapPanel.drawAreaLayers.size(); n++)
+				for (int n = 0; n < mapPanel.drawAreaLayers.size(); n++)
 				{
 					levelWidth = mapPanel.level.getLayer(n).getWidth() * 16;
 					levelHeight = mapPanel.level.getLayer(n).getHeight() * 16;
 
-					for(int i = 0, x = 0; i < levelWidth; i+=16, x++)
+					for (int i = 0, x = 0; i < levelWidth; i+=16, x++)
 					{
-						for(int j = 0, y = 0; j < levelHeight; j+=16, y++)
+						for (int j = 0, y = 0; j < levelHeight; j+=16, y++)
 						{
 							tile = mapPanel.level.getLayer(n).getTile(x, y);
 							mapPanel.paintTile(n, tile, i, j, true);
@@ -201,7 +201,7 @@ public class ToolbarPanel extends JPanel
 		{
 			public void itemStateChanged(ItemEvent e)
 			{
-				switch(e.getStateChange())
+				switch (e.getStateChange())
 				{
 					case ItemEvent.SELECTED:
 						mapPanel.showObjects = true;

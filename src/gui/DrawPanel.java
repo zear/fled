@@ -27,7 +27,7 @@ public class DrawPanel extends JPanel
 
 	public void setImage(int layer, BufferedImage src)
 	{
-		if(layer >= this.drawAreaLayers.size())
+		if (layer >= this.drawAreaLayers.size())
 		{
 			this.drawAreaLayers.push(src);
 		}
@@ -40,7 +40,7 @@ public class DrawPanel extends JPanel
 
 	public void loadImage(int layer, String fileName)
 	{
-		if(fileName.equals(""))
+		if (fileName.equals(""))
 			return;
 
 		try
@@ -55,20 +55,20 @@ public class DrawPanel extends JPanel
 
 	public void blit(int layer, BufferedImage src, int destx1, int desty1, int destx2, int desty2, int srcx1, int srcy1, int srcx2, int srcy2)
 	{
-		if(this.drawAreaLayers.get(layer) != null && src != null)
+		if (this.drawAreaLayers.get(layer) != null && src != null)
 		{
 			BufferedImage dest = this.drawAreaLayers.get(layer);
 
 			dest.createGraphics().drawImage(src, destx1, desty1, destx2, desty2, srcx1, srcy1, srcx2, srcy2, null);
 
 			WritableRaster raster = dest.getRaster();
-			for(int j = desty1; j < desty2; j++)
+			for (int j = desty1; j < desty2; j++)
 			{
-				for(int i = destx1; i < destx2; i++)
+				for (int i = destx1; i < destx2; i++)
 				{
 					int [] pixels = raster.getPixel(i, j, (int[]) null);
 
-					if(pixels[0] == 255 && pixels[1] == 0 && pixels[2] == 255) // magenta
+					if (pixels[0] == 255 && pixels[1] == 0 && pixels[2] == 255) // magenta
 					{
 						pixels[3] = 0;
 						raster.setPixel(i, j, pixels);
@@ -90,7 +90,7 @@ public class DrawPanel extends JPanel
 	{
 		Graphics2D g2d = (Graphics2D)g;
 
-		if(layer < this.drawAreaLayers.size() && this.drawAreaLayers.get(layer) != null)
+		if (layer < this.drawAreaLayers.size() && this.drawAreaLayers.get(layer) != null)
 		{
 			g2d.drawImage(drawAreaLayers.get(layer), 0, 0, null);
 		}
@@ -100,9 +100,9 @@ public class DrawPanel extends JPanel
 	public void paintComponent(Graphics g)
 	{
 		super.paintComponent(g);
-		for(int i = 0; i < this.drawAreaLayers.size(); i++)
+		for (int i = 0; i < this.drawAreaLayers.size(); i++)
 		{
-			if(this.showLayer[this.drawAreaLayers.size() - 1 - i])
+			if (this.showLayer[this.drawAreaLayers.size() - 1 - i])
 			{
 				this.draw(this.drawAreaLayers.size() - 1 - i, g);
 			}

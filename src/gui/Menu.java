@@ -59,7 +59,7 @@ public class Menu extends JMenuBar
 			public void actionPerformed(ActionEvent e)
 			{
 				// create new level
-				if(showNewLevelSetup())
+				if (showNewLevelSetup())
 				{
 					try
 					{
@@ -75,28 +75,28 @@ public class Menu extends JMenuBar
 					tilesetPanel.showLayer[0] = true;
 					tilesetPanel.defaultSettings();
 
-					for(int i = 0; i < mapPanel.level.getNumOfLayers(); i++)
+					for (int i = 0; i < mapPanel.level.getNumOfLayers(); i++)
 					{
 						BufferedImage defMapImg = new BufferedImage(mapPanel.level.getLayer(i).getWidth() * 16, mapPanel.level.getLayer(i).getHeight() * 16, BufferedImage.TYPE_INT_ARGB);
 						mapPanel.setImage(i, defMapImg);
 						mapPanel.showLayer[i] = true;
 					}
 
-					if(mapPanel.drawAreaLayers.size() >= 1)
+					if (mapPanel.drawAreaLayers.size() >= 1)
 						mapPanel.paintOnLayer = 1; // We assume that layer 1 is the "walkable" layer
 
 					int levelWidth;
 					int levelHeight;
 					int tile = 0;
 
-					for(int n = 0; n < mapPanel.drawAreaLayers.size(); n++)
+					for (int n = 0; n < mapPanel.drawAreaLayers.size(); n++)
 					{
 						levelWidth = mapPanel.level.getLayer(n).getWidth() * 16;
 						levelHeight = mapPanel.level.getLayer(n).getHeight() * 16;
 
-						for(int i = 0, x = 0; i < levelWidth; i+=16, x++)
+						for (int i = 0, x = 0; i < levelWidth; i+=16, x++)
 						{
-							for(int j = 0, y = 0; j < levelHeight; j+=16, y++)
+							for (int j = 0, y = 0; j < levelHeight; j+=16, y++)
 							{
 								tile = mapPanel.level.getLayer(n).getTile(x, y);
 								mapPanel.paintTile(n, tile, i, j, false);
@@ -106,7 +106,7 @@ public class Menu extends JMenuBar
 
 					toolbarPanel.defaultSettings();
 
-					if(mapPanel.drawAreaLayers.size() > 0)
+					if (mapPanel.drawAreaLayers.size() > 0)
 					{
 						mapPanel.setPreferredSize(new Dimension(mapPanel.drawAreaLayers.get(0).getWidth(),mapPanel.drawAreaLayers.get(0).getHeight()));
 						mapPanel.revalidate();
@@ -124,7 +124,7 @@ public class Menu extends JMenuBar
 				int choice = fileChooser.showOpenDialog(fileChooser);
 				//fileChooser.setFileFilter(new FileFilter(""));
 
-				if(choice == JFileChooser.APPROVE_OPTION)
+				if (choice == JFileChooser.APPROVE_OPTION)
 				{
 					File file = fileChooser.getSelectedFile();
 
@@ -144,28 +144,28 @@ public class Menu extends JMenuBar
 					tilesetPanel.defaultSettings();
 
 					// Set map panel images
-					for(int n = 0; n < mapPanel.level.getNumOfLayers(); n++)
+					for (int n = 0; n < mapPanel.level.getNumOfLayers(); n++)
 					{
 						BufferedImage defMapImg = new BufferedImage(mapPanel.level.getLayer(n).getWidth() * 16, mapPanel.level.getLayer(n).getHeight() * 16, BufferedImage.TYPE_INT_ARGB);
 						mapPanel.setImage(n, defMapImg);
 						mapPanel.showLayer[n] = true;
 					}
 
-					if(mapPanel.drawAreaLayers.size() >= 1)
+					if (mapPanel.drawAreaLayers.size() >= 1)
 						mapPanel.paintOnLayer = 1; // We assume that layer 1 is the "walkable" layer
 
 					int levelWidth;
 					int levelHeight;
 					int tile = 0;
 
-					for(int n = 0; n < mapPanel.drawAreaLayers.size(); n++)
+					for (int n = 0; n < mapPanel.drawAreaLayers.size(); n++)
 					{
 						levelWidth = mapPanel.level.getLayer(n).getWidth() * 16;
 						levelHeight = mapPanel.level.getLayer(n).getHeight() * 16;
 
-						for(int i = 0, x = 0; i < levelWidth; i+=16, x++)
+						for (int i = 0, x = 0; i < levelWidth; i+=16, x++)
 						{
-							for(int j = 0, y = 0; j < levelHeight; j+=16, y++)
+							for (int j = 0, y = 0; j < levelHeight; j+=16, y++)
 							{
 								tile = mapPanel.level.getLayer(n).getTile(x, y);
 								mapPanel.paintTile(n, tile, i, j, false);
@@ -175,7 +175,7 @@ public class Menu extends JMenuBar
 
 					toolbarPanel.defaultSettings();
 
-					if(mapPanel.drawAreaLayers.size() > 0)
+					if (mapPanel.drawAreaLayers.size() > 0)
 					{
 						mapPanel.setPreferredSize(new Dimension(mapPanel.drawAreaLayers.get(0).getWidth(),mapPanel.drawAreaLayers.get(0).getHeight()));
 						mapPanel.revalidate();
@@ -190,9 +190,9 @@ public class Menu extends JMenuBar
 			public void actionPerformed(ActionEvent e)
 			{
 				// save current level
-				if(mapPanel.level != null)
+				if (mapPanel.level != null)
 				{
-					if(mapPanel.level.getFilePath() != null)
+					if (mapPanel.level.getFilePath() != null)
 					{
 						mapPanel.level.write(mapPanel.level.getFilePath());
 					}
@@ -201,7 +201,7 @@ public class Menu extends JMenuBar
 						// ask for the file name
 						int choice = fileChooser.showSaveDialog(fileChooser);
 
-						if(choice == JFileChooser.APPROVE_OPTION)
+						if (choice == JFileChooser.APPROVE_OPTION)
 						{
 							File file = fileChooser.getSelectedFile();
 							mapPanel.level.setFilePath(file);
@@ -215,12 +215,12 @@ public class Menu extends JMenuBar
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				if(mapPanel.level != null)
+				if (mapPanel.level != null)
 				{
 					// save current level under a different name
 					int choice = fileChooser.showSaveDialog(fileChooser);
 
-					if(choice == JFileChooser.APPROVE_OPTION)
+					if (choice == JFileChooser.APPROVE_OPTION)
 					{
 						File file = fileChooser.getSelectedFile();
 						mapPanel.level.setFilePath(file);
@@ -234,10 +234,10 @@ public class Menu extends JMenuBar
 			public void actionPerformed(ActionEvent e)
 			{
 				// Modify current level
-				if(mapPanel.level != null && showModifyLevelSetup())
+				if (mapPanel.level != null && showModifyLevelSetup())
 				{
 
-					for(int i = 0; i < mapPanel.level.getNumOfLayers(); i++)
+					for (int i = 0; i < mapPanel.level.getNumOfLayers(); i++)
 					{
 						BufferedImage defMapImg = new BufferedImage(mapPanel.level.getLayer(i).getWidth() * 16, mapPanel.level.getLayer(i).getHeight() * 16, BufferedImage.TYPE_INT_ARGB);
 						mapPanel.setImage(i, defMapImg);
@@ -247,14 +247,14 @@ public class Menu extends JMenuBar
 					int levelHeight;
 					int tile = 0;
 
-					for(int n = 0; n < mapPanel.drawAreaLayers.size(); n++)
+					for (int n = 0; n < mapPanel.drawAreaLayers.size(); n++)
 					{
 						levelWidth = mapPanel.level.getLayer(n).getWidth() * 16;
 						levelHeight = mapPanel.level.getLayer(n).getHeight() * 16;
 
-						for(int i = 0, x = 0; i < levelWidth; i+=16, x++)
+						for (int i = 0, x = 0; i < levelWidth; i+=16, x++)
 						{
-							for(int j = 0, y = 0; j < levelHeight; j+=16, y++)
+							for (int j = 0, y = 0; j < levelHeight; j+=16, y++)
 							{
 								tile = mapPanel.level.getLayer(n).getTile(x, y);
 								mapPanel.paintTile(n, tile, i, j, false);
@@ -262,7 +262,7 @@ public class Menu extends JMenuBar
 						}
 					}
 
-					if(mapPanel.drawAreaLayers.size() > 0)
+					if (mapPanel.drawAreaLayers.size() > 0)
 					{
 						mapPanel.setPreferredSize(new Dimension(mapPanel.drawAreaLayers.get(0).getWidth(),mapPanel.drawAreaLayers.get(0).getHeight()));
 						mapPanel.revalidate();
@@ -277,13 +277,13 @@ public class Menu extends JMenuBar
 			public void actionPerformed(ActionEvent e)
 			{
 				// Ask about saving the changes
-				if(mapPanel.level != null)
+				if (mapPanel.level != null)
 				{
 					int choice = JOptionPane.showConfirmDialog(fileChooser, "Store the changes?", "", JOptionPane.YES_NO_CANCEL_OPTION);
 
-					if(choice == JOptionPane.YES_OPTION)
+					if (choice == JOptionPane.YES_OPTION)
 					{
-						if(mapPanel.level.getFilePath() != null)
+						if (mapPanel.level.getFilePath() != null)
 						{
 							mapPanel.level.write(mapPanel.level.getFilePath());
 						}
@@ -292,7 +292,7 @@ public class Menu extends JMenuBar
 							// ask for the file name
 							int choice2 = fileChooser.showSaveDialog(fileChooser);
 
-							if(choice2 == JFileChooser.APPROVE_OPTION)
+							if (choice2 == JFileChooser.APPROVE_OPTION)
 							{
 								File file = fileChooser.getSelectedFile();
 								mapPanel.level.setFilePath(file);
@@ -302,7 +302,7 @@ public class Menu extends JMenuBar
 							}
 						}
 					}
-					else if(choice == JOptionPane.NO_OPTION)
+					else if (choice == JOptionPane.NO_OPTION)
 					{
 						leave = true;
 					}
@@ -313,7 +313,7 @@ public class Menu extends JMenuBar
 				}
 
 				// Exit program.
-				if(leave)
+				if (leave)
 				{
 					frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
 					frame.setVisible(false);
@@ -328,7 +328,7 @@ public class Menu extends JMenuBar
 				// Select new location of the game executable (frog.jar)
 				int choice = fileChooser.showOpenDialog(fileChooser);
 
-				if(choice == JFileChooser.APPROVE_OPTION)
+				if (choice == JFileChooser.APPROVE_OPTION)
 				{
 					File file = fileChooser.getSelectedFile();
 					Data.setDataDirectory(file.getParent());
@@ -340,18 +340,18 @@ public class Menu extends JMenuBar
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				if(mapPanel.level != null)
+				if (mapPanel.level != null)
 				{
 					boolean playerObjPresent = false;
 
 					ListIterator<GameObject> objsli = mapPanel.level.getObjectList().listIterator();
 					while (objsli.hasNext())
 					{
-						if(objsli.next().getName().equals("player"))
+						if (objsli.next().getName().equals("player"))
 							playerObjPresent = true;
 					}
 
-					if(!playerObjPresent) // Don't launch the level if player object is missing.
+					if (!playerObjPresent) // Don't launch the level if player object is missing.
 					{
 						JOptionPane.showMessageDialog(runRunLevel, "Add a player object first.");
 						return;
@@ -359,19 +359,19 @@ public class Menu extends JMenuBar
 
 					File path = new File(Data.getDataDirectory() + "/" + execFile);
 
-					while(!path.exists() || path.isDirectory())
+					while (!path.exists() || path.isDirectory())
 					{
 						JOptionPane.showMessageDialog(runRunLevel, "No game executable (" + execFile + ") found.\nPlease select a new location for the executable.", "Game launch issue", JOptionPane.ERROR_MESSAGE);
 						int choice = fileChooser.showOpenDialog(fileChooser);
 
-						if(choice == JFileChooser.APPROVE_OPTION)
+						if (choice == JFileChooser.APPROVE_OPTION)
 						{
 							File file = fileChooser.getSelectedFile();
 							Data.setDataDirectory(file.getParent());
 							execFile = file.getName();
 							path = new File(Data.getDataDirectory() + "/" + execFile);
 						}
-						else if(choice == JFileChooser.CANCEL_OPTION)
+						else if (choice == JFileChooser.CANCEL_OPTION)
 						{
 							return;
 						}

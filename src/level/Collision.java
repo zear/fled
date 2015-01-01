@@ -39,11 +39,11 @@ public class Collision
 			throw new IOException("Missing game data:\n"+fileName+"\nPlace the editor directory within the game directory.");
 		}
 
-		if(fp != null)
+		if (fp != null)
 		{
 			int index = 0;
 
-			while(fp.hasNext())
+			while (fp.hasNext())
 			{
 				String next = fp.getNext();
 
@@ -58,10 +58,10 @@ public class Collision
 
 	public int getCollision(int index)
 	{
-		if(index == -1)
+		if (index == -1)
 			return COLLISION_NONE;
 
-		switch(map[index])
+		switch (map[index])
 		{
 			case 1:	// solid
 				return COLLISION_SOLID;

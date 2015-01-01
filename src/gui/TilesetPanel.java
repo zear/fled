@@ -52,9 +52,9 @@ public class TilesetPanel extends DrawPanel implements MouseInputListener
 	}
 	public void mouseClicked(MouseEvent e)
 	{
-		if(super.drawAreaLayers.size() > 0 && super.drawAreaLayers.get(0) != null)
+		if (super.drawAreaLayers.size() > 0 && super.drawAreaLayers.get(0) != null)
 		{
-			if(e.getX() > 0 && e.getX() < super.drawAreaLayers.get(0).getWidth() && e.getY() > 0 && e.getY() < super.drawAreaLayers.get(0).getHeight())
+			if (e.getX() > 0 && e.getX() < super.drawAreaLayers.get(0).getWidth() && e.getY() > 0 && e.getY() < super.drawAreaLayers.get(0).getHeight())
 			{
 				this.selX = e.getX()/16;
 				this.selY = e.getY()/16;
@@ -70,9 +70,9 @@ public class TilesetPanel extends DrawPanel implements MouseInputListener
 	}
 	public void mouseDragged(MouseEvent e)
 	{
-		if(super.drawAreaLayers.size() > 0 && super.drawAreaLayers.get(0) != null)
+		if (super.drawAreaLayers.size() > 0 && super.drawAreaLayers.get(0) != null)
 		{
-			if(e.getX() > 0 && e.getX() < super.drawAreaLayers.get(0).getWidth() && e.getY() > 0 && e.getY() < super.drawAreaLayers.get(0).getHeight())
+			if (e.getX() > 0 && e.getX() < super.drawAreaLayers.get(0).getWidth() && e.getY() > 0 && e.getY() < super.drawAreaLayers.get(0).getHeight())
 			{
 				this.selX = e.getX()/16;
 				this.selY = e.getY()/16;
@@ -86,7 +86,7 @@ public class TilesetPanel extends DrawPanel implements MouseInputListener
 
 	protected void draw(Graphics g)
 	{
-		if(super.drawAreaLayers.size() > 0)
+		if (super.drawAreaLayers.size() > 0)
 		{
 			Graphics2D g2d = (Graphics2D)g;
 			g2d.setColor(Color.yellow);

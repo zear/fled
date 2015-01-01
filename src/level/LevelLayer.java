@@ -93,13 +93,13 @@ public class LevelLayer
 
 	public int getTile(int x, int y)
 	{
-		if(x < 0)
+		if (x < 0)
 			return -1;
-		if(y < 0)
+		if (y < 0)
 			return -1;
-		if(x > getWidth() - 1)
+		if (x > getWidth() - 1)
 			return -1;
-		if(y > getHeight() - 1)
+		if (y > getHeight() - 1)
 			return -1;
 
 		return tiles.getElement(y, x);
@@ -152,13 +152,13 @@ public class LevelLayer
 
 	public void setTile(int x, int y, int value)
 	{
-		if(x < 0)
+		if (x < 0)
 			return;
-		if(y < 0)
+		if (y < 0)
 			return;
-		if(x > getWidth() - 1)
+		if (x > getWidth() - 1)
 			return;
-		if(y > getHeight() - 1)
+		if (y > getHeight() - 1)
 			return;
 
 		tiles.setElement(y, x, value);
@@ -198,19 +198,19 @@ public class LevelLayer
 		String [] words;
 		int token;
 
-		while(fp.hasNext())
+		while (fp.hasNext())
 		{
 			line = fp.getLine();
 			words = line.split("\\s");
 			token = -1;
 
-			if(words[0].equals("END"))
+			if (words[0].equals("END"))
 				return;
 
-			if(words.length > 0 && !(words[0].equals("END")))
+			if (words.length > 0 && !(words[0].equals("END")))
 				tiles.addRow();
 
-			while(token < words.length - 1)
+			while (token < words.length - 1)
 			{
 				token++;
 				tiles.putElement(tiles.getNumOfRows() - 1, Integer.parseInt(words[token]));
@@ -220,10 +220,10 @@ public class LevelLayer
 
 	public void populate(int sizeX, int sizeY, int tile)
 	{
-		for(int j = 0; j < sizeY; j++)
+		for (int j = 0; j < sizeY; j++)
 		{
 			tiles.addRow();
-			for(int i = 0; i < sizeX; i++)
+			for (int i = 0; i < sizeX; i++)
 			{
 				tiles.putElement(tiles.getNumOfRows() - 1, tile);
 			}
@@ -234,9 +234,9 @@ public class LevelLayer
 	{
 		int numOfRows = tiles.getNumOfRows();
 
-		for(int j = 0; j < numOfRows; j++)
+		for (int j = 0; j < numOfRows; j++)
 		{
-			for(int i = 0; i < sizeX; i++)
+			for (int i = 0; i < sizeX; i++)
 			{
 				tiles.prependElement(j, tile);
 			}
@@ -247,9 +247,9 @@ public class LevelLayer
 	{
 		int numOfRows = tiles.getNumOfRows();
 
-		for(int j = 0; j < numOfRows; j++)
+		for (int j = 0; j < numOfRows; j++)
 		{
-			for(int i = 0; i < sizeX; i++)
+			for (int i = 0; i < sizeX; i++)
 			{
 				tiles.putElement(j, tile);
 			}
@@ -260,14 +260,14 @@ public class LevelLayer
 	{
 		int sizeOfRow = tiles.getNumOfElements(0);
 
-		for(int j = 0; j < sizeY; j++)
+		for (int j = 0; j < sizeY; j++)
 		{
 			tiles.prependRow();
 		}
 
-		for(int j = 0; j < sizeY; j++)
+		for (int j = 0; j < sizeY; j++)
 		{
-			for(int i = 0; i < sizeOfRow; i++)
+			for (int i = 0; i < sizeOfRow; i++)
 			{
 				tiles.putElement(j, tile);
 			}
@@ -279,11 +279,11 @@ public class LevelLayer
 		int numOfRows = tiles.getNumOfRows();
 		int sizeOfRow = tiles.getNumOfElements(0);
 
-		for(int j = 0; j < sizeY; j++)
+		for (int j = 0; j < sizeY; j++)
 		{
 			tiles.addRow();
 
-			for(int i = 0; i < sizeOfRow; i++)
+			for (int i = 0; i < sizeOfRow; i++)
 			{
 				tiles.prependElement(numOfRows + j, tile);
 			}
@@ -294,9 +294,9 @@ public class LevelLayer
 	{
 		int numOfRows = tiles.getNumOfRows();
 
-		for(int j = 0; j < numOfRows; j++)
+		for (int j = 0; j < numOfRows; j++)
 		{
-			for(int i = 0; i < sizeX; i++)
+			for (int i = 0; i < sizeX; i++)
 			{
 				tiles.removeElement(j, i);
 			}
@@ -308,9 +308,9 @@ public class LevelLayer
 		int numOfRows = tiles.getNumOfRows();
 		int sizeOfRow = tiles.getNumOfElements(0);
 
-		for(int j = 0; j < numOfRows; j++)
+		for (int j = 0; j < numOfRows; j++)
 		{
-			for(int i = 0; i < sizeX; i++)
+			for (int i = 0; i < sizeX; i++)
 			{
 				tiles.removeElement(j, sizeOfRow - 1 - i);
 			}
@@ -321,7 +321,7 @@ public class LevelLayer
 	{
 		int sizeOfRow = tiles.getNumOfElements(0);
 
-		for(int j = 0; j < sizeY; j++)
+		for (int j = 0; j < sizeY; j++)
 		{
 			tiles.removeRow(j);
 		}
@@ -332,7 +332,7 @@ public class LevelLayer
 		int numOfRows = tiles.getNumOfRows();
 		int sizeOfRow = tiles.getNumOfElements(0);
 
-		for(int j = 0; j < sizeY; j++)
+		for (int j = 0; j < sizeY; j++)
 		{
 			tiles.removeRow(numOfRows - 1 - j);
 		}

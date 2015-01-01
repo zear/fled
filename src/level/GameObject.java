@@ -33,13 +33,13 @@ class ImgTemplate
 
 			// apply transparency
 			WritableRaster raster = this.image.getRaster();
-			for(int j = 0; j < this.image.getHeight(); j++)
+			for (int j = 0; j < this.image.getHeight(); j++)
 			{
-				for(int i = 0; i < this.image.getWidth(); i++)
+				for (int i = 0; i < this.image.getWidth(); i++)
 				{
 					int [] pixels = raster.getPixel(i, j, (int[]) null);
 
-					if(pixels[0] == 255 && pixels[1] == 0 && pixels[2] == 255) // magenta
+					if (pixels[0] == 255 && pixels[1] == 0 && pixels[2] == 255) // magenta
 					{
 						pixels[3] = 0;
 						raster.setPixel(i, j, pixels);
@@ -126,7 +126,7 @@ class ImgTemplate
 
 	public void setOffset(boolean direction, int x, int y)
 	{
-		if(direction)
+		if (direction)
 		{
 			this.offsetRightX = x;
 			this.offsetRightY = y;
@@ -219,7 +219,7 @@ public class GameObject
 
 	public void setImgTemplate(String fileName, int w, int h)
 	{
-		if(this.img == null)
+		if (this.img == null)
 		{
 			this.img = new ImgTemplate(fileName, w, h);
 		}

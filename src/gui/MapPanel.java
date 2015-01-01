@@ -75,43 +75,43 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 
 		super.blit(layer, this.tileset.getImage(0), x, y, x + 16, y + 16, tileX * 16, tileY * 16, tileX * 16 + 16, tileY * 16 + 16);
 
-		if(this.showCollision && layer == 1)
+		if (this.showCollision && layer == 1)
 		{
 			int col = this.level.getCollision(num);
 			Color color = null;
 
-			if((col & Collision.COLLISION_SOLID) > 0)
+			if ((col & Collision.COLLISION_SOLID) > 0)
 			{
 				color = new Color(0, 255 ,255, 100);
 			}
-			if((col & Collision.COLLISION_PLATFORM) > 0)
+			if ((col & Collision.COLLISION_PLATFORM) > 0)
 			{
 				color = new Color(0, 255 ,0, 100);
 			}
-			if((col & Collision.COLLISION_DAMAGE) > 0)
+			if ((col & Collision.COLLISION_DAMAGE) > 0)
 			{
 				color = new Color(255, 0 ,0, 100);
 			}
-			if((col & Collision.COLLISION_DESTRUCTIBLE) > 0)
+			if ((col & Collision.COLLISION_DESTRUCTIBLE) > 0)
 			{
 				color = new Color(255, 0 ,255, 100);
 			}
-			if((col & Collision.COLLISION_HIDDEN) > 0)
+			if ((col & Collision.COLLISION_HIDDEN) > 0)
 			{
 				color = new Color(0, 0 ,0, 100);
 			}
-			if((col & Collision.COLLISION_CLIMB) > 0)
+			if ((col & Collision.COLLISION_CLIMB) > 0)
 			{
 				color = new Color(255, 255 ,255, 100);
 			}
 
-			if(color != null)
+			if (color != null)
 			{
 				super.drawCollision(layer, x, y, color);
 			}
 		}
 
-		if(repaint)
+		if (repaint)
 		{
 			super.repaint();
 		}
@@ -127,7 +127,7 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 
 		int tileNum = tileset.getSelY() * 16 + tileset.getSelX();
 		selectedAreaBackup = null;
-		if(tileBackup == null)
+		if (tileBackup == null)
 		{
 			tileBackup = new ArrayList<TileBackupNode>();
 		}
@@ -136,37 +136,37 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 
 		super.blit(super.paintOnLayer, this.tileset.getImage(0), x, y, x + 16, y + 16, this.tileset.getSelX() * 16, this.tileset.getSelY() * 16, this.tileset.getSelX() * 16 + 16, this.tileset.getSelY() * 16 + 16);
 
-		if(this.showCollision && super.paintOnLayer == 1)
+		if (this.showCollision && super.paintOnLayer == 1)
 		{
 			int col = this.level.getCollision(tileNum);
 			Color color = null;
 
-			if((col & Collision.COLLISION_SOLID) > 0)
+			if ((col & Collision.COLLISION_SOLID) > 0)
 			{
 				color = new Color(0, 255 ,255, 100);
 			}
-			if((col & Collision.COLLISION_PLATFORM) > 0)
+			if ((col & Collision.COLLISION_PLATFORM) > 0)
 			{
 				color = new Color(0, 255 ,0, 100);
 			}
-			if((col & Collision.COLLISION_DAMAGE) > 0)
+			if ((col & Collision.COLLISION_DAMAGE) > 0)
 			{
 				color = new Color(255, 0 ,0, 100);
 			}
-			if((col & Collision.COLLISION_DESTRUCTIBLE) > 0)
+			if ((col & Collision.COLLISION_DESTRUCTIBLE) > 0)
 			{
 				color = new Color(255, 0 ,255, 100);
 			}
-			if((col & Collision.COLLISION_HIDDEN) > 0)
+			if ((col & Collision.COLLISION_HIDDEN) > 0)
 			{
 				color = new Color(0, 0 ,0, 100);
 			}
-			if((col & Collision.COLLISION_CLIMB) > 0)
+			if ((col & Collision.COLLISION_CLIMB) > 0)
 			{
 				color = new Color(255, 255 ,255, 100);
 			}
 
-			if(color != null)
+			if (color != null)
 			{
 				super.drawCollision(super.paintOnLayer, x, y, color);
 			}
@@ -177,21 +177,21 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 
 	public void restoreBackup()
 	{
-		if(tileBackup != null)
+		if (tileBackup != null)
 		{
 			// Eliminate tiles visited more than once
-			for(TileBackupNode node : tileBackup)
+			for (TileBackupNode node : tileBackup)
 			{
-				for(TileBackupNode node2 : tileBackup)
+				for (TileBackupNode node2 : tileBackup)
 				{
-					if(node.x == node2.x && node.y == node2.y)
+					if (node.x == node2.x && node.y == node2.y)
 					{
 						node2.value = node.value;
 					}
 				}
 			}
 
-			for(TileBackupNode node : tileBackup)
+			for (TileBackupNode node : tileBackup)
 			{
 				this.level.getLayer(super.paintOnLayer).setTile(node.x, node.y, node.value);
 
@@ -201,37 +201,37 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 				int dy = node.y * 16;
 				super.blit(super.paintOnLayer, this.tileset.getImage(0), dx, dy, dx + 16, dy + 16, tileX * 16, tileY * 16, tileX * 16 + 16, tileY * 16 + 16);
 
-				if(this.showCollision && super.paintOnLayer == 1)
+				if (this.showCollision && super.paintOnLayer == 1)
 				{
 					int col = this.level.getCollision(node.value);
 					Color color = null;
 
-					if((col & Collision.COLLISION_SOLID) > 0)
+					if ((col & Collision.COLLISION_SOLID) > 0)
 					{
 						color = new Color(0, 255 ,255, 100);
 					}
-					if((col & Collision.COLLISION_PLATFORM) > 0)
+					if ((col & Collision.COLLISION_PLATFORM) > 0)
 					{
 						color = new Color(0, 255 ,0, 100);
 					}
-					if((col & Collision.COLLISION_DAMAGE) > 0)
+					if ((col & Collision.COLLISION_DAMAGE) > 0)
 					{
 						color = new Color(255, 0 ,0, 100);
 					}
-					if((col & Collision.COLLISION_DESTRUCTIBLE) > 0)
+					if ((col & Collision.COLLISION_DESTRUCTIBLE) > 0)
 					{
 						color = new Color(255, 0 ,255, 100);
 					}
-					if((col & Collision.COLLISION_HIDDEN) > 0)
+					if ((col & Collision.COLLISION_HIDDEN) > 0)
 					{
 						color = new Color(0, 0 ,0, 100);
 					}
-					if((col & Collision.COLLISION_CLIMB) > 0)
+					if ((col & Collision.COLLISION_CLIMB) > 0)
 					{
 						color = new Color(255, 255 ,255, 100);
 					}
 
-					if(color != null)
+					if (color != null)
 					{
 						super.drawCollision(super.paintOnLayer, dx, dy, color);
 					}
@@ -240,24 +240,24 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 
 			lastTile = 0;
 		}
-		else if(selectedAreaBackup != null)
+		else if (selectedAreaBackup != null)
 		{
 			int x = selectedAreaBackupX;
 			int y = selectedAreaBackupY;
 
-			if(x < 0)
+			if (x < 0)
 				x = 0;
-			if(y < 0)
+			if (y < 0)
 				y = 0;
 
-			for(int j = 0; j < selectedAreaBackup[0].length; j++)
+			for (int j = 0; j < selectedAreaBackup[0].length; j++)
 			{
-				if(y * 16 + j * 16 >= super.drawAreaLayers.get(super.paintOnLayer).getHeight())
+				if (y * 16 + j * 16 >= super.drawAreaLayers.get(super.paintOnLayer).getHeight())
 					continue;
 
-				for(int i = 0; i < selectedAreaBackup.length; i++)
+				for (int i = 0; i < selectedAreaBackup.length; i++)
 				{
-					if(x * 16 + i * 16 >= super.drawAreaLayers.get(super.paintOnLayer).getWidth())
+					if (x * 16 + i * 16 >= super.drawAreaLayers.get(super.paintOnLayer).getWidth())
 						continue;
 
 					this.level.getLayer(super.paintOnLayer).setTile(x+i, y+j, selectedAreaBackup[i][j]);
@@ -269,37 +269,37 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 
 					super.blit(super.paintOnLayer, this.tileset.getImage(0), dx, dy, dx + 16, dy + 16, tileX * 16, tileY * 16, tileX * 16 + 16, tileY * 16 + 16);
 
-					if(this.showCollision && super.paintOnLayer == 1)
+					if (this.showCollision && super.paintOnLayer == 1)
 					{
 						int col = this.level.getCollision(selectedAreaBackup[i][j]);
 						Color color = null;
 
-						if((col & Collision.COLLISION_SOLID) > 0)
+						if ((col & Collision.COLLISION_SOLID) > 0)
 						{
 							color = new Color(0, 255 ,255, 100);
 						}
-						if((col & Collision.COLLISION_PLATFORM) > 0)
+						if ((col & Collision.COLLISION_PLATFORM) > 0)
 						{
 							color = new Color(0, 255 ,0, 100);
 						}
-						if((col & Collision.COLLISION_DAMAGE) > 0)
+						if ((col & Collision.COLLISION_DAMAGE) > 0)
 						{
 							color = new Color(255, 0 ,0, 100);
 						}
-						if((col & Collision.COLLISION_DESTRUCTIBLE) > 0)
+						if ((col & Collision.COLLISION_DESTRUCTIBLE) > 0)
 						{
 							color = new Color(255, 0 ,255, 100);
 						}
-						if((col & Collision.COLLISION_HIDDEN) > 0)
+						if ((col & Collision.COLLISION_HIDDEN) > 0)
 						{
 							color = new Color(0, 0 ,0, 100);
 						}
-						if((col & Collision.COLLISION_CLIMB) > 0)
+						if ((col & Collision.COLLISION_CLIMB) > 0)
 						{
 							color = new Color(255, 255 ,255, 100);
 						}
 
-						if(color != null)
+						if (color != null)
 						{
 							super.drawCollision(super.paintOnLayer, dx, dy, color);
 						}
@@ -319,9 +319,9 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 	{
 		selectedArea = new int[Math.abs(w-x) + (x >= w ? 1 : 0)][Math.abs(h-y) + (y >= h ? 1 : 0)];
 
-		for(int j = 0; j < selectedArea[0].length; j++)
+		for (int j = 0; j < selectedArea[0].length; j++)
 		{
-			for(int i = 0; i < selectedArea.length; i++)
+			for (int i = 0; i < selectedArea.length; i++)
 			{
 				selectedArea[i][j] = this.level.getLayer(super.paintOnLayer).getTile((x >= w ? w+i : x+i), (y >= h ? h+j : y+j));
 			}
@@ -335,11 +335,11 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 		int width = (x >= w ? x+1 : w);
 		int height = (y >= h ? y+1 : h);
 
-		if(startX < 0)
+		if (startX < 0)
 		{
 			startX = 0;
 		}
-		if(startY < 0)
+		if (startY < 0)
 		{
 			startY = 0;
 		}
@@ -349,14 +349,14 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 		selectedAreaBackupX = startX;
 		selectedAreaBackupY = startY;
 
-		for(int j = startY; j < height; j++)
+		for (int j = startY; j < height; j++)
 		{
-			if(j * 16 >= super.drawAreaLayers.get(super.paintOnLayer).getHeight())
+			if (j * 16 >= super.drawAreaLayers.get(super.paintOnLayer).getHeight())
 				continue;
 
-			for(int i = startX; i < width; i++)
+			for (int i = startX; i < width; i++)
 			{
-				if(i * 16 >= super.drawAreaLayers.get(super.paintOnLayer).getWidth())
+				if (i * 16 >= super.drawAreaLayers.get(super.paintOnLayer).getWidth())
 					continue;
 
 				selectedAreaBackup[i - startX][j - startY] = this.level.getLayer(super.paintOnLayer).getTile(i, j);
@@ -374,10 +374,10 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 
 	public void pasteSelectedArea(int x, int y)
 	{
-		if(selectedArea == null)
+		if (selectedArea == null)
 			return;
 
-		if(x < 0 || y < 0)
+		if (x < 0 || y < 0)
 			return;
 
 		tileBackup = null;
@@ -385,14 +385,14 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 		selectedAreaBackupX = x;
 		selectedAreaBackupY = y;
 
-		for(int j = 0; j < selectedArea[0].length; j++)
+		for (int j = 0; j < selectedArea[0].length; j++)
 		{
-			if(y * 16 + j * 16 >= super.drawAreaLayers.get(super.paintOnLayer).getHeight())
+			if (y * 16 + j * 16 >= super.drawAreaLayers.get(super.paintOnLayer).getHeight())
 				continue;
 
-			for(int i = 0; i < selectedArea.length; i++)
+			for (int i = 0; i < selectedArea.length; i++)
 			{
-				if(x * 16 + i * 16 >= super.drawAreaLayers.get(super.paintOnLayer).getWidth())
+				if (x * 16 + i * 16 >= super.drawAreaLayers.get(super.paintOnLayer).getWidth())
 					continue;
 
 				selectedAreaBackup[i][j] = this.level.getLayer(super.paintOnLayer).getTile(x+i, y+j);
@@ -405,37 +405,37 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 
 				super.blit(super.paintOnLayer, this.tileset.getImage(0), dx, dy, dx + 16, dy + 16, tileX * 16, tileY * 16, tileX * 16 + 16, tileY * 16 + 16);
 
-				if(this.showCollision && super.paintOnLayer == 1)
+				if (this.showCollision && super.paintOnLayer == 1)
 				{
 					int col = this.level.getCollision(selectedArea[i][j]);
 					Color color = null;
 
-					if((col & Collision.COLLISION_SOLID) > 0)
+					if ((col & Collision.COLLISION_SOLID) > 0)
 					{
 						color = new Color(0, 255 ,255, 100);
 					}
-					if((col & Collision.COLLISION_PLATFORM) > 0)
+					if ((col & Collision.COLLISION_PLATFORM) > 0)
 					{
 						color = new Color(0, 255 ,0, 100);
 					}
-					if((col & Collision.COLLISION_DAMAGE) > 0)
+					if ((col & Collision.COLLISION_DAMAGE) > 0)
 					{
 						color = new Color(255, 0 ,0, 100);
 					}
-					if((col & Collision.COLLISION_DESTRUCTIBLE) > 0)
+					if ((col & Collision.COLLISION_DESTRUCTIBLE) > 0)
 					{
 						color = new Color(255, 0 ,255, 100);
 					}
-					if((col & Collision.COLLISION_HIDDEN) > 0)
+					if ((col & Collision.COLLISION_HIDDEN) > 0)
 					{
 						color = new Color(0, 0 ,0, 100);
 					}
-					if((col & Collision.COLLISION_CLIMB) > 0)
+					if ((col & Collision.COLLISION_CLIMB) > 0)
 					{
 						color = new Color(255, 255 ,255, 100);
 					}
 
-					if(color != null)
+					if (color != null)
 					{
 						super.drawCollision(super.paintOnLayer, dx, dy, color);
 					}
@@ -454,10 +454,10 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 
 	private boolean isInMapArea(int x, int y)
 	{
-		if(super.drawAreaLayers.size() < 1)
+		if (super.drawAreaLayers.size() < 1)
 			return false;
 
-		if(super.drawAreaLayers.get(0) == null)
+		if (super.drawAreaLayers.get(0) == null)
 			return false;
 
 		if (x < 0)
@@ -490,7 +490,7 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 
 		int modifiers = e.getModifiers();
 
-		switch(e.getKeyCode())
+		switch (e.getKeyCode())
 		{
 			case KeyEvent.VK_A:
 				left = true;
@@ -581,39 +581,39 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 			break;
 		}
 
-		if((left || right || up || down) && (this.level != null && this.level.getNumOfLayers() > 0 && this.tileset != null))
+		if ((left || right || up || down) && (this.level != null && this.level.getNumOfLayers() > 0 && this.tileset != null))
 		{
 			int x = this.tileset.getSelX();
 			int y = this.tileset.getSelY();
 
-			if(left)
+			if (left)
 				x--;
-			if(right)
+			if (right)
 				x++;
-			if(up)
+			if (up)
 				y--;
-			if(down)
+			if (down)
 				y++;
 
-			if(x < 0)
+			if (x < 0)
 				x = 0;
-			if(x > 15)
+			if (x > 15)
 				x = 15;
-			if(y < 0)
+			if (y < 0)
 				y = 0;
-			if(y > 15)
+			if (y > 15)
 				y = 15;
 
 			this.tileset.setSelX(x);
 			this.tileset.setSelY(y);
 			this.tileset.repaint();
-			if(this.tileInfoPanel != null)
+			if (this.tileInfoPanel != null)
 				this.tileInfoPanel.updateInfo(x, y);
 		}
 	}
 	public void keyReleased(KeyEvent e)
 	{
-		switch(e.getKeyCode())
+		switch (e.getKeyCode())
 		{
 			case KeyEvent.VK_SHIFT:
 				if (this.editMode == EditMode.MODE_TILE_SELECTION)
@@ -640,9 +640,9 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 	}
 	public void mouseReleased(MouseEvent e)
 	{
-		if(this.editMode == EditMode.MODE_TILE_EDIT)
+		if (this.editMode == EditMode.MODE_TILE_EDIT)
 		{
-			switch(e.getModifiers())
+			switch (e.getModifiers())
 			{
 				case InputEvent.BUTTON1_MASK:
 					this.canPaint = false;
@@ -652,32 +652,32 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 				break;
 			}
 		}
-		else if(this.editMode == EditMode.MODE_TILE_SELECTION)
+		else if (this.editMode == EditMode.MODE_TILE_SELECTION)
 		{
 				int modifiers = e.getModifiers();
 
-				if((modifiers & InputEvent.BUTTON1_MASK) > 0)
+				if ((modifiers & InputEvent.BUTTON1_MASK) > 0)
 				{
-					if(this.level != null && this.level.getNumOfLayers() > 0 && this.tileset != null)
+					if (this.level != null && this.level.getNumOfLayers() > 0 && this.tileset != null)
 					{
 						selectedAreaX2 = e.getX()/16+1;
 						selectedAreaY2 = e.getY()/16+1;
 
-						if(selectedAreaX2 <= selectedAreaX)
+						if (selectedAreaX2 <= selectedAreaX)
 							selectedAreaX2 -= 1;
-						if(selectedAreaY2 <= selectedAreaY)
+						if (selectedAreaY2 <= selectedAreaY)
 							selectedAreaY2 -= 1;
 						this.repaint();
 					}
 				}
 		}
-		else if(this.editMode == EditMode.MODE_OBJECT_EDIT)
+		else if (this.editMode == EditMode.MODE_OBJECT_EDIT)
 		{
-			switch(e.getModifiers())
+			switch (e.getModifiers())
 			{
 				case InputEvent.BUTTON1_MASK:
 				{
-					if(this.draggingObject)
+					if (this.draggingObject)
 						this.draggingObject = false;
 				}
 				break;
@@ -689,11 +689,11 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 	}
 	public void mousePressed(MouseEvent e)
 	{
-		if(this.editMode == EditMode.MODE_TILE_EDIT)
+		if (this.editMode == EditMode.MODE_TILE_EDIT)
 		{
-			if(this.level != null && this.level.getNumOfLayers() > 0 && this.tileset != null)
+			if (this.level != null && this.level.getNumOfLayers() > 0 && this.tileset != null)
 			{
-				switch(e.getModifiers())
+				switch (e.getModifiers())
 				{
 					case InputEvent.BUTTON1_MASK:
 					{
@@ -702,9 +702,9 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 						int curY = e.getY()/16*16;
 						int curTile = this.tileset.getSelY() * 16 + this.tileset.getSelX();
 
-						if(this.paintX != curX || this.paintY != curY || this.lastPaintOnLayer != super.paintOnLayer || this.lastTile != curTile)
+						if (this.paintX != curX || this.paintY != curY || this.lastPaintOnLayer != super.paintOnLayer || this.lastTile != curTile)
 						{
-							if((this.canPaint) && (this.isInMapArea(e.getX(), e.getY())))
+							if ((this.canPaint) && (this.isInMapArea(e.getX(), e.getY())))
 							{
 								this.paintX = e.getX()/16*16;
 								this.paintY = e.getY()/16*16;
@@ -726,7 +726,7 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 						this.tileset.setSelX(x);
 						this.tileset.setSelY(y);
 						this.tileset.repaint();
-						if(this.tileInfoPanel != null)
+						if (this.tileInfoPanel != null)
 							this.tileInfoPanel.updateInfo(x, y);
 					}
 					break;
@@ -736,20 +736,20 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 				}
 			}
 		}
-		else if(this.editMode == EditMode.MODE_TILE_SELECTION)
+		else if (this.editMode == EditMode.MODE_TILE_SELECTION)
 		{
-			if(this.level != null && this.level.getNumOfLayers() > 0 && this.tileset != null)
+			if (this.level != null && this.level.getNumOfLayers() > 0 && this.tileset != null)
 			{
 				int modifiers = e.getModifiers();
 
-				if((modifiers & InputEvent.BUTTON1_MASK) > 0)
+				if ((modifiers & InputEvent.BUTTON1_MASK) > 0)
 				{
 					selectedAreaX = e.getX()/16;
 					selectedAreaY = e.getY()/16;
 
-					if(selectedAreaX < 0)
+					if (selectedAreaX < 0)
 						selectedAreaX = 0;
-					if(selectedAreaY < 0)
+					if (selectedAreaY < 0)
 						selectedAreaY = 0;
 
 					drawSelection = true;
@@ -757,11 +757,11 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 				}
 			}
 		}
-		else if(this.editMode == EditMode.MODE_OBJECT_EDIT)
+		else if (this.editMode == EditMode.MODE_OBJECT_EDIT)
 		{
-			if(this.level != null && this.objectPanel != null)
+			if (this.level != null && this.objectPanel != null)
 			{
-				switch(e.getModifiers())
+				switch (e.getModifiers())
 				{
 					case InputEvent.BUTTON1_MASK:
 					{
@@ -770,11 +770,11 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 						int curX = e.getX();
 						int curY = e.getY();
 
-						if(!this.draggingObject)
+						if (!this.draggingObject)
 						{
-							for(GameObject curObj : this.level.getObjectList())
+							for (GameObject curObj : this.level.getObjectList())
 							{
-								if(curX >= curObj.getX() && curX <= curObj.getX() + curObj.getW() && curY >= curObj.getY() && curY <= curObj.getY() + curObj.getH())
+								if (curX >= curObj.getX() && curX <= curObj.getX() + curObj.getW() && curY >= curObj.getY() && curY <= curObj.getY() + curObj.getH())
 								{
 									this.selectedObject = curObj;
 									this.draggingObject = true;
@@ -782,7 +782,7 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 									this.repaint();
 									break;
 								}
-								else if(this.objectIsNew)
+								else if (this.objectIsNew)
 								{
 									this.objectIsNew = false;
 									this.draggingObject = true;
@@ -790,24 +790,24 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 									curX = e.getX()/16*16;
 									curY = e.getY()/16*16;
 
-									if(super.drawAreaLayers.size() < 1)
+									if (super.drawAreaLayers.size() < 1)
 										break;
 
-									if(super.drawAreaLayers.get(0) == null)
+									if (super.drawAreaLayers.get(0) == null)
 										break;
 
-									if(curX < (this.selectedObject.getW() - 1)/16*16)
+									if (curX < (this.selectedObject.getW() - 1)/16*16)
 										curX = (this.selectedObject.getW() - 1)/16*16;
-									else if(curX >= super.drawAreaLayers.get(0).getWidth())
+									else if (curX >= super.drawAreaLayers.get(0).getWidth())
 										curX = super.drawAreaLayers.get(0).getWidth() - 16;
 
-									if(curY < (this.selectedObject.getH() - 1)/16*16)
+									if (curY < (this.selectedObject.getH() - 1)/16*16)
 										curY = (this.selectedObject.getH() - 1)/16*16;
-									else if(curY >= super.drawAreaLayers.get(0).getHeight())
+									else if (curY >= super.drawAreaLayers.get(0).getHeight())
 										curY = super.drawAreaLayers.get(0).getHeight() - 16;
 
 									// center at the bottom-left corner
-									if(this.selectedObject.getName().equals("diamond")) // TODO: Solve this by checking object type
+									if (this.selectedObject.getName().equals("diamond")) // TODO: Solve this by checking object type
 									{
 										this.selectedObject.setX(curX + 8 - this.selectedObject.getW()/2);
 										this.selectedObject.setY(curY + 8 - this.selectedObject.getH()/2);
@@ -842,9 +842,9 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 	}
 	public void mouseDragged(MouseEvent e)
 	{
-		if(this.editMode == EditMode.MODE_TILE_EDIT)
+		if (this.editMode == EditMode.MODE_TILE_EDIT)
 		{
-			switch(e.getModifiers())
+			switch (e.getModifiers())
 			{
 				case InputEvent.BUTTON1_MASK:
 				{
@@ -852,9 +852,9 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 					int curY = e.getY()/16*16;
 					int curTile = this.tileset.getSelY() * 16 + this.tileset.getSelX();
 
-					if(this.paintX != curX || this.paintY != curY || this.lastPaintOnLayer != super.paintOnLayer || this.lastTile != curTile)
+					if (this.paintX != curX || this.paintY != curY || this.lastPaintOnLayer != super.paintOnLayer || this.lastTile != curTile)
 					{
-						if((this.canPaint) && (this.isInMapArea(e.getX(), e.getY())))
+						if ((this.canPaint) && (this.isInMapArea(e.getX(), e.getY())))
 						{
 							this.paintX = curX;
 							this.paintY = curY;
@@ -870,57 +870,57 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 				break;
 			}
 		}
-		else if(this.editMode == EditMode.MODE_TILE_SELECTION)
+		else if (this.editMode == EditMode.MODE_TILE_SELECTION)
 		{
 				int modifiers = e.getModifiers();
 
-				if((modifiers & InputEvent.BUTTON1_MASK) > 0)
+				if ((modifiers & InputEvent.BUTTON1_MASK) > 0)
 				{
-					if(this.level != null && this.level.getNumOfLayers() > 0 && this.tileset != null)
+					if (this.level != null && this.level.getNumOfLayers() > 0 && this.tileset != null)
 					{
 						selectedAreaX2 = e.getX()/16+1;
 						selectedAreaY2 = e.getY()/16+1;
 
-						if(selectedAreaX2 < 0)
+						if (selectedAreaX2 < 0)
 							selectedAreaX2 = 0;
-						if(selectedAreaY2 < 0)
+						if (selectedAreaY2 < 0)
 							selectedAreaY2 = 0;
 
 						this.repaint();
 					}
 				}
 		}
-		else if(this.editMode == EditMode.MODE_OBJECT_EDIT)
+		else if (this.editMode == EditMode.MODE_OBJECT_EDIT)
 		{
-			if(this.level != null && this.objectPanel != null)
+			if (this.level != null && this.objectPanel != null)
 			{
-				switch(e.getModifiers())
+				switch (e.getModifiers())
 				{
 					case InputEvent.BUTTON1_MASK:
 					{
-						if(this.selectedObject != null && this.draggingObject)
+						if (this.selectedObject != null && this.draggingObject)
 						{
 							int curX = e.getX()/16*16;
 							int curY = e.getY()/16*16;
 
-							if(super.drawAreaLayers.size() < 1)
+							if (super.drawAreaLayers.size() < 1)
 								break;
 
-							if(super.drawAreaLayers.get(0) == null)
+							if (super.drawAreaLayers.get(0) == null)
 								break;
 
-							if(curX < (this.selectedObject.getW() - 1)/16*16)
+							if (curX < (this.selectedObject.getW() - 1)/16*16)
 								curX = (this.selectedObject.getW() - 1)/16*16;
-							else if(curX >= super.drawAreaLayers.get(0).getWidth())
+							else if (curX >= super.drawAreaLayers.get(0).getWidth())
 								curX = super.drawAreaLayers.get(0).getWidth() - 16;
 
-							if(curY < (this.selectedObject.getH() - 1)/16*16)
+							if (curY < (this.selectedObject.getH() - 1)/16*16)
 								curY = (this.selectedObject.getH() - 1)/16*16;
-							else if(curY >= super.drawAreaLayers.get(0).getHeight())
+							else if (curY >= super.drawAreaLayers.get(0).getHeight())
 								curY = super.drawAreaLayers.get(0).getHeight() - 16;
 
 							// center at the bottom-left corner
-							if(this.selectedObject.getName().equals("diamond")) // TODO: Solve this by checking object type
+							if (this.selectedObject.getName().equals("diamond")) // TODO: Solve this by checking object type
 							{
 								this.selectedObject.setX(curX + 8 - this.selectedObject.getW()/2);
 								this.selectedObject.setY(curY + 8 - this.selectedObject.getH()/2);
@@ -947,19 +947,19 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 	protected void draw(Graphics g)
 	{
 		// draw the level grid
-		if(this.showGrid)
+		if (this.showGrid)
 		{
 			Graphics2D g2d = (Graphics2D)g;
 			g2d.setColor(new Color(0, 0 ,0, 100));
 
-			if(this.level != null && this.level.getNumOfLayers() > 0)
+			if (this.level != null && this.level.getNumOfLayers() > 0)
 			{
-				for(int i = 0; i <= this.level.getLayer(0).getWidth(); i++)
+				for (int i = 0; i <= this.level.getLayer(0).getWidth(); i++)
 				{
 					// vertical
 					g2d.drawLine(i * 16, 0, i * 16, this.level.getLayer(0).getHeight() * 16);
 				}
-				for(int j = 0; j <= this.level.getLayer(0).getHeight(); j++)
+				for (int j = 0; j <= this.level.getLayer(0).getHeight(); j++)
 				{
 					// horizontal
 					g2d.drawLine(0, j * 16, this.level.getLayer(0).getWidth() * 16, j * 16);
@@ -976,11 +976,11 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 			int x2;
 			int y2;
 
-			if(this.editMode == EditMode.MODE_TILE_SELECTION)
+			if (this.editMode == EditMode.MODE_TILE_SELECTION)
 			{
 				Point pos = this.getMousePosition();
 
-				if(pos != null)
+				if (pos != null)
 				{
 					curX = (int)pos.getX()/16*16 + 16;
 					curY = (int)pos.getY()/16*16 + 16;
@@ -1000,30 +1000,30 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 				y2 = selectedAreaY2 * 16;
 			}
 
-			if(x1 < 0)
+			if (x1 < 0)
 				x1 = 0;
-			if(y1 < 0)
+			if (y1 < 0)
 				y1 = 0;
-			if(x1 >= this.level.getLayer(0).getWidth() * 16)
+			if (x1 >= this.level.getLayer(0).getWidth() * 16)
 				x1 = this.level.getLayer(0).getWidth() * 16;
-			if(y1 >= this.level.getLayer(0).getHeight() * 16)
+			if (y1 >= this.level.getLayer(0).getHeight() * 16)
 				y1 = this.level.getLayer(0).getHeight() * 16;
 
-			if(x2 < 0)
+			if (x2 < 0)
 				x2 = 0;
-			if(y2 < 0)
+			if (y2 < 0)
 				y2 = 0;
-			if(x2 >= this.level.getLayer(0).getWidth() * 16)
+			if (x2 >= this.level.getLayer(0).getWidth() * 16)
 				x2 = this.level.getLayer(0).getWidth() * 16;
-			if(y2 >= this.level.getLayer(0).getHeight() * 16)
+			if (y2 >= this.level.getLayer(0).getHeight() * 16)
 				y2 = this.level.getLayer(0).getHeight() * 16;
 
-			if(x2 <= x1)
+			if (x2 <= x1)
 			{
 				x1 += 16;
 				x2 -= 16;
 			}
-			if(y2 <= y1)
+			if (y2 <= y1)
 			{
 				y1 += 16;
 				y2 -= 16;
@@ -1049,22 +1049,22 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 		this.draw(g);
 
 		// temp
-		if(this.editMode == EditMode.MODE_OBJECT_EDIT || this.showObjects)
+		if (this.editMode == EditMode.MODE_OBJECT_EDIT || this.showObjects)
 		{
-			if(this.level != null)
+			if (this.level != null)
 			{
-				for(GameObject curObj : this.level.getObjectList())
+				for (GameObject curObj : this.level.getObjectList())
 				{
 					Graphics2D g2d = (Graphics2D)g;
 
-					if(curObj.getDirection())
+					if (curObj.getDirection())
 						g2d.drawImage(curObj.getTile(1), curObj.getX() + curObj.getOffsetRightX(), curObj.getY() + curObj.getOffsetRightY(), null);
 					else
 						g2d.drawImage(curObj.getTile(0), curObj.getX() + curObj.getOffsetLeftX(), curObj.getY() + curObj.getOffsetLeftY(), null);
 
-					if(this.editMode == EditMode.MODE_OBJECT_EDIT)
+					if (this.editMode == EditMode.MODE_OBJECT_EDIT)
 					{
-						if(curObj == this.selectedObject)
+						if (curObj == this.selectedObject)
 							g2d.setColor(Color.GREEN);
 						else
 							g2d.setColor(Color.RED);
@@ -1075,7 +1075,7 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 						g2d.drawLine(curObj.getX(), curObj.getY(), curObj.getX(), curObj.getY() + curObj.getH());
 						g2d.drawLine(curObj.getX() + curObj.getW(), curObj.getY(), curObj.getX() + curObj.getW(), curObj.getY() + curObj.getH());
 	//					// draw diagonal line
-	//					if(curObj.getDirection())
+	//					if (curObj.getDirection())
 	//						g2d.drawLine(curObj.getX(), curObj.getY(), curObj.getX() + curObj.getTileW(), curObj.getY() + curObj.getTileH());
 	//					else
 	//						g2d.drawLine(curObj.getX() + curObj.getTileW(), curObj.getY(), curObj.getX(), curObj.getY() + curObj.getTileH());

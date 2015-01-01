@@ -26,7 +26,7 @@ public class Level
 		LevelLayer curElem = null;
 		collision = new Collision("default.col", 256);
 
-		for(int i = 0; i < 3; i++)
+		for (int i = 0; i < 3; i++)
 		{
 			curElem = new LevelLayer();
 			layers.push(curElem);
@@ -80,13 +80,13 @@ public class Level
 	{
 		FileRead fp = new FileRead(fileName);
 
-		if(fp != null)
+		if (fp != null)
 		{
 			LevelLayer curElem = null;
 
-			while(fp.hasNext())
+			while (fp.hasNext())
 			{
-				switch(fp.getNext())
+				switch (fp.getNext())
 				{
 					case "COLLISION":
 						collision = new Collision(fp.getNext(), Integer.parseInt(fp.getNext()));
@@ -109,7 +109,7 @@ public class Level
 				}
 			}
 
-			if(layers.size() == 0)
+			if (layers.size() == 0)
 			{
 				throw new IOException("No level layers found in:\n"+fileName+"\nPerhaps it is not a valid level file?");
 			}
@@ -125,16 +125,16 @@ public class Level
 		int token;
 		GameObject curObj;
 
-		while(fp.hasNext())
+		while (fp.hasNext())
 		{
 			line = fp.getLine();
 			words = line.split("\\s");
 			token = -1;
 
-			if(words[0].equals("END"))
+			if (words[0].equals("END"))
 				return;
 
-			if(words.length >= 4 && !(words[0].equals("END")))
+			if (words.length >= 4 && !(words[0].equals("END")))
 			{
 				objects.push(new GameObject());
 				curObj = objects.getFirst();
@@ -152,7 +152,7 @@ public class Level
 	{
 		FileWrite fp = new FileWrite(fileName);
 
-		if(fp != null)
+		if (fp != null)
 		{
 			StringBuilder levelContent = new StringBuilder();
 
@@ -161,7 +161,7 @@ public class Level
 
 			// In this algorithm I make an assumption that sequentially accessing elements in an array
 			// is faster than calling getTile() method of an ArrayList object to retreive the elements.
-			for(int i = layers.size(); i > 0; i--)
+			for (int i = layers.size(); i > 0; i--)
 			{
 				LevelLayer curElem = layers.get(i - 1);
 				String imgPath = curElem.getImgPath();
@@ -172,7 +172,7 @@ public class Level
 				ArrayList<ArrayList<Integer>> list = curElem.getList();
 				Integer [][] array = new Integer[list.size()][];
 
-				for(int n = 0; n < list.size(); n++)
+				for (int n = 0; n < list.size(); n++)
 				{
 					array[n] = list.get(n).toArray(new Integer[0]);
 				}
@@ -182,13 +182,13 @@ public class Level
 				levelContent.append("LAYER " + curElem.getId() + "\n");
 				levelContent.append("IMG " + words[words.length - 1] + " " + curElem.getTileW() + " " + curElem.getTileH() + " " + curElem.getImgRowW() + " " + curElem.getImgSize() + "\n");
 
-				for(int y = 0; y < levelHeight; y++)
+				for (int y = 0; y < levelHeight; y++)
 				{
-					for(int x = 0; x < levelWidth; x++)
+					for (int x = 0; x < levelWidth; x++)
 					{
 						levelContent.append(Integer.toString(array[y][x]));
 
-						if(x < levelWidth - 1)
+						if (x < levelWidth - 1)
 						{
 							levelContent.append("\t");
 						}
@@ -197,13 +197,13 @@ public class Level
 				}
 
 				// Old method
-//				for(int y = 0; y < levelHeight; y++)
+//				for (int y = 0; y < levelHeight; y++)
 //				{
-//					for(int x = 0; x < levelWidth; x++)
+//					for (int x = 0; x < levelWidth; x++)
 //					{
 //						levelContent.append(curElem.getTile(x, y)); // this is resource wastful
 
-//						if(x < levelWidth - 1)
+//						if (x < levelWidth - 1)
 //						{
 //							levelContent.append("\t");
 //						}
@@ -216,7 +216,7 @@ public class Level
 			}
 
 			levelContent.append("OBJECTS\n");
-			for(GameObject curObj : this.objects)
+			for (GameObject curObj : this.objects)
 			{
 				levelContent.append(curObj.getName() + "\t" + curObj.getX() + "\t" + curObj.getY() + "\t" + (curObj.getDirection() ? 1 : 0) + "\n");
 			}
@@ -232,25 +232,25 @@ public class Level
 
 	public void resize(int leftX, int rightX, int topY, int bottomY, int tile)
 	{
-		for(int i = 0; i < layers.size(); i++)
+		for (int i = 0; i < layers.size(); i++)
 		{
 			// expand
-			if(leftX > 0)
+			if (leftX > 0)
 				layers.get(i).expandLeft(leftX, 0);
-			if(rightX > 0)
+			if (rightX > 0)
 				layers.get(i).expandRight(rightX, 0);
-			if(topY > 0)
+			if (topY > 0)
 				layers.get(i).expandTop(topY, 0);
-			if(bottomY > 0)
+			if (bottomY > 0)
 				layers.get(i).expandBottom(bottomY, 0);
 			// reduce
-			if(leftX < 0)
+			if (leftX < 0)
 				layers.get(i).reduceLeft(-leftX);
-			if(rightX < 0)
+			if (rightX < 0)
 				layers.get(i).reduceRight(-rightX);
-			if(topY < 0)
+			if (topY < 0)
 				layers.get(i).reduceTop(-topY);
-			if(bottomY < 0)
+			if (bottomY < 0)
 				layers.get(i).reduceBottom(-bottomY);
 		}
 	}

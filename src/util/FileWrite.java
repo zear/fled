@@ -23,7 +23,7 @@ public class FileWrite
 
 	public void open(File file)
 	{
-		if(file == null)
+		if (file == null)
 		{
 			System.out.printf("File is empty!\n");
 			return;
@@ -40,7 +40,7 @@ public class FileWrite
 			System.out.printf("Cannot access file %s!\n", file);
 		}
 
-		if(fw != null)
+		if (fw != null)
 		{
 			bw = new BufferedWriter(fw);
 		}
