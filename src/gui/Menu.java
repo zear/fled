@@ -4,6 +4,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.IOException;
 import java.io.File;
 import java.util.ListIterator;
@@ -27,6 +29,8 @@ public class Menu extends JMenuBar
 	private JMenuItem helpAbout = new JMenuItem("About");
 
 	private JFileChooser fileChooser = new JFileChooser(Data.getDataDirectory());
+	private FileFilter levelFilter = new FileNameExtensionFilter("FROG level file", "lvl");
+	private FileFilter execFilter = new FileNameExtensionFilter("JAR file", "jar");
 
 	private JFrame frame = null;
 	private MapPanel mapPanel = null;
@@ -121,8 +125,10 @@ public class Menu extends JMenuBar
 			public void actionPerformed(ActionEvent e)
 			{
 				// open existing level
+				fileChooser.addChoosableFileFilter(levelFilter);
+				fileChooser.setFileFilter(levelFilter);
 				int choice = fileChooser.showOpenDialog(fileChooser);
-				//fileChooser.setFileFilter(new FileFilter(""));
+				fileChooser.removeChoosableFileFilter(levelFilter);
 
 				if (choice == JFileChooser.APPROVE_OPTION)
 				{
@@ -199,7 +205,10 @@ public class Menu extends JMenuBar
 					else
 					{
 						// ask for the file name
+						fileChooser.addChoosableFileFilter(levelFilter);
+						fileChooser.setFileFilter(levelFilter);
 						int choice = fileChooser.showSaveDialog(fileChooser);
+						fileChooser.removeChoosableFileFilter(levelFilter);
 
 						if (choice == JFileChooser.APPROVE_OPTION)
 						{
@@ -218,7 +227,10 @@ public class Menu extends JMenuBar
 				if (mapPanel.level != null)
 				{
 					// save current level under a different name
+					fileChooser.addChoosableFileFilter(levelFilter);
+					fileChooser.setFileFilter(levelFilter);
 					int choice = fileChooser.showSaveDialog(fileChooser);
+					fileChooser.removeChoosableFileFilter(levelFilter);
 
 					if (choice == JFileChooser.APPROVE_OPTION)
 					{
@@ -290,7 +302,10 @@ public class Menu extends JMenuBar
 						else
 						{
 							// ask for the file name
+							fileChooser.addChoosableFileFilter(levelFilter);
+							fileChooser.setFileFilter(levelFilter);
 							int choice2 = fileChooser.showSaveDialog(fileChooser);
+							fileChooser.removeChoosableFileFilter(levelFilter);
 
 							if (choice2 == JFileChooser.APPROVE_OPTION)
 							{
@@ -326,7 +341,10 @@ public class Menu extends JMenuBar
 			public void actionPerformed(ActionEvent e)
 			{
 				// Select new location of the game executable (frog.jar)
+				fileChooser.addChoosableFileFilter(execFilter);
+				fileChooser.setFileFilter(execFilter);
 				int choice = fileChooser.showOpenDialog(fileChooser);
+				fileChooser.removeChoosableFileFilter(execFilter);
 
 				if (choice == JFileChooser.APPROVE_OPTION)
 				{
@@ -362,7 +380,10 @@ public class Menu extends JMenuBar
 					while (!path.exists() || path.isDirectory())
 					{
 						JOptionPane.showMessageDialog(runRunLevel, "No game executable (" + execFile + ") found.\nPlease select a new location for the executable.", "Game launch issue", JOptionPane.ERROR_MESSAGE);
+						fileChooser.addChoosableFileFilter(execFilter);
+						fileChooser.setFileFilter(execFilter);
 						int choice = fileChooser.showOpenDialog(fileChooser);
+						fileChooser.removeChoosableFileFilter(execFilter);
 
 						if (choice == JFileChooser.APPROVE_OPTION)
 						{
