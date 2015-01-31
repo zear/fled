@@ -30,6 +30,9 @@ public class ObjectPanel extends JPanel
 	private ButtonGroup radioDirection = new ButtonGroup();
 	private JRadioButton directionLeft = new JRadioButton("left");
 	private JRadioButton directionRight = new JRadioButton("right");
+	private JLabel availableLabel = new JLabel("Available:");
+	private JLabel addedLabel = new JLabel("Added to level:");
+	private JLabel directionLabel = new JLabel("Object direction:");
 
 	class ObjectCellRenderer extends JLabel implements ListCellRenderer<Object>
 	{
@@ -329,13 +332,33 @@ public class ObjectPanel extends JPanel
 		availablePane = new JScrollPane(availableObjects);
 		addedPane = new JScrollPane(addedObjects);
 
+		JPanel buttonContainer = new JPanel();
+		JPanel directionContainer = new JPanel();
+
+		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		this.removeAll();
+		this.add(availableLabel);
 		this.add(availablePane);
+		this.add(addedLabel);
 		this.add(addedPane);
-		this.add(buttonAdd);
-		this.add(buttonRemove);
-		this.add(directionLeft);
-		this.add(directionRight);
+		this.add(buttonContainer);
+		this.add(directionLabel);
+		this.add(directionContainer);
+
+		availableLabel.setAlignmentX(this.LEFT_ALIGNMENT);
+		availablePane.setAlignmentX(this.LEFT_ALIGNMENT);
+		addedLabel.setAlignmentX(this.LEFT_ALIGNMENT);
+		addedPane.setAlignmentX(this.LEFT_ALIGNMENT);
+		buttonContainer.setAlignmentX(this.LEFT_ALIGNMENT);
+		directionLabel.setAlignmentX(this.LEFT_ALIGNMENT);
+		directionContainer.setAlignmentX(this.LEFT_ALIGNMENT);
+
+		buttonContainer.add(buttonAdd);
+		buttonContainer.add(buttonRemove);
+
+		directionContainer.add(directionLeft);
+		directionContainer.add(directionRight);
+
 		this.repaint();
 	}
 
