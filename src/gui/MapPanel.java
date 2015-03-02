@@ -667,6 +667,12 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 							selectedAreaX2 -= 1;
 						if (selectedAreaY2 <= selectedAreaY)
 							selectedAreaY2 -= 1;
+
+						if (selectedAreaX2 < 0)
+							selectedAreaX2 = 0;
+						if (selectedAreaY2 < 0)
+							selectedAreaY2 = 0;
+
 						this.repaint();
 					}
 				}
