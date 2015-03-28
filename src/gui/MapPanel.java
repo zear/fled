@@ -887,6 +887,11 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 						selectedAreaX2 = e.getX()/16+1;
 						selectedAreaY2 = e.getY()/16+1;
 
+						if (selectedAreaX2 <= selectedAreaX)
+							selectedAreaX2 -= 1;
+						if (selectedAreaY2 <= selectedAreaY)
+							selectedAreaY2 -= 1;
+
 						if (selectedAreaX2 < 0)
 							selectedAreaX2 = 0;
 						if (selectedAreaY2 < 0)
@@ -996,8 +1001,13 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 				}
 				else
 				{
-					x2 = selectedAreaX2 * 16;
-					y2 = selectedAreaY2 * 16;
+					x2 = selectedAreaX2 * 16 + 16;
+					y2 = selectedAreaY2 * 16 + 16;
+
+					if (x2 > x1)
+						x2 -= 16;
+					if (y2 > y1)
+						y2 -= 16;
 				}
 			}
 			else
