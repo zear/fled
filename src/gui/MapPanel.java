@@ -672,6 +672,10 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 							selectedAreaX2 = 0;
 						if (selectedAreaY2 < 0)
 							selectedAreaY2 = 0;
+						if (selectedAreaX2 >= super.drawAreaLayers.get(0).getWidth()/16)
+							selectedAreaX2 = super.drawAreaLayers.get(0).getWidth()/16 - 1;
+						if (selectedAreaY2 >= super.drawAreaLayers.get(0).getHeight()/16)
+							selectedAreaY2 = super.drawAreaLayers.get(0).getHeight()/16 - 1;
 
 						this.repaint();
 					}
@@ -757,6 +761,10 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 						selectedAreaX = 0;
 					if (selectedAreaY < 0)
 						selectedAreaY = 0;
+					if (selectedAreaX >= super.drawAreaLayers.get(0).getWidth()/16)
+						selectedAreaX = super.drawAreaLayers.get(0).getWidth()/16 - 1;
+					if (selectedAreaY >= super.drawAreaLayers.get(0).getHeight()/16)
+						selectedAreaY = super.drawAreaLayers.get(0).getHeight()/16 - 1;
 
 					drawSelection = true;
 					this.repaint();
@@ -896,6 +904,10 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 							selectedAreaX2 = 0;
 						if (selectedAreaY2 < 0)
 							selectedAreaY2 = 0;
+						if (selectedAreaX2 >= super.drawAreaLayers.get(0).getWidth()/16)
+							selectedAreaX2 = super.drawAreaLayers.get(0).getWidth()/16 - 1;
+						if (selectedAreaY2 >= super.drawAreaLayers.get(0).getHeight()/16)
+							selectedAreaY2 = super.drawAreaLayers.get(0).getHeight()/16 - 1;
 
 						this.repaint();
 					}
