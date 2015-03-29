@@ -25,6 +25,8 @@ public class Menu extends JMenuBar
 	private JMenu runMenu = new JMenu("Run");
 	private JMenuItem runSetExec = new JMenuItem("Set executable location");
 	private JMenuItem runRunLevel = new JMenuItem("Run level");
+	private JMenu extrasMenu = new JMenu("Extras");
+	private JMenuItem extrasScreenshot = new JMenuItem("Screenshot to file");
 	private JMenu helpMenu = new JMenu("Help");
 	private JMenuItem helpAbout = new JMenuItem("About");
 
@@ -55,6 +57,8 @@ public class Menu extends JMenuBar
 		this.add(runMenu);
 		runMenu.add(runSetExec);
 		runMenu.add(runRunLevel);
+		this.add(extrasMenu);
+		extrasMenu.add(extrasScreenshot);
 		this.add(helpMenu);
 		helpMenu.add(helpAbout);
 
@@ -436,6 +440,13 @@ public class Menu extends JMenuBar
 				"\nFROG Level Editor version 0.0.1\n\n" +
 				"Copyright © 2014 Artur Rojek\n" +
 				"Licensed under LGPL v2 +", "About", JOptionPane.INFORMATION_MESSAGE, new ImageIcon("./data/about.png"));
+			}
+		});
+		extrasScreenshot.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				mapPanel.takeScreenshot();
 			}
 		});
 	}

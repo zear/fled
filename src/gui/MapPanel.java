@@ -2,8 +2,12 @@ package gui;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import javax.swing.event.MouseInputListener;
+import javax.imageio.ImageIO;
+import java.io.File;
+import java.io.IOException;
 
 import level.*;
 
@@ -964,6 +968,61 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 					break;
 				}
 			}
+		}
+	}
+
+	protected void takeScreenshot()
+	{
+		if (drawAreaLayers.size() == 0)
+			return;
+
+		BufferedImage image = new BufferedImage(drawAreaLayers.get(0).getWidth(), drawAreaLayers.get(0).getHeight(), BufferedImage.TYPE_INT_ARGB);
+		for (int i = drawAreaLayers.size() - 1; i >= 0; --i)
+		{
+			if (this.showLayer[i])
+				image.getGraphics().drawImage(drawAreaLayers.get(i), 0, 0, null);
+		}
+
+		if (this.showGrid)
+		{
+			Graphics2D g2d = (Graphics2D)image.getGraphics();
+			g2d.setColor(new Color(0, 0 ,0, 100));
+
+			if (this.level != null && this.level.getNumOfLayers() > 0)
+			{
+				for (int i = 0; i <= this.level.getLayer(0).getWidth(); i++)
+				{
+					// vertical
+					g2d.drawLine(i * 16, 0, i * 16, this.level.getLayer(0).getHeight() * 16);
+				}
+				for (int j = 0; j <= this.level.getLayer(0).getHeight(); j++)
+				{
+					// horizontal
+					g2d.drawLine(0, j * 16, this.level.getLayer(0).getWidth() * 16, j * 16);
+				}
+			}
+		}
+
+		if (this.showObjects)
+		{
+			if (this.level != null)
+			{
+				for (GameObject curObj : this.level.getObjectList())
+				{
+					if (curObj.getDirection())
+						image.getGraphics().drawImage(curObj.getTile(1), curObj.getX() + curObj.getOffsetRightX(), curObj.getY() + curObj.getOffsetRightY(), null);
+					else
+						image.getGraphics().drawImage(curObj.getTile(0), curObj.getX() + curObj.getOffsetLeftX(), curObj.getY() + curObj.getOffsetLeftY(), null);
+				}
+			}
+		}
+
+		try
+		{
+			ImageIO.write(image, "png", new File("/tmp/fled_screenshot.png"));
+		}
+		catch (IOException e)
+		{
 		}
 	}
 
