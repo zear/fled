@@ -76,6 +76,11 @@ public class Level
 		return this.collision.getCollision(tile);
 	}
 
+	public void reloadCollision() throws IOException
+	{
+		collision = new Collision("default.col", 256);
+	}
+
 	private void load(File fileName) throws IOException
 	{
 		FileRead fp = new FileRead(fileName);

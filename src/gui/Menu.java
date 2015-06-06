@@ -27,6 +27,7 @@ public class Menu extends JMenuBar
 	private JMenuItem runRunLevel = new JMenuItem("Run level");
 	private JMenu extrasMenu = new JMenu("Extras");
 	private JMenuItem extrasScreenshot = new JMenuItem("Screenshot to file");
+	private JMenuItem extrasReload = new JMenuItem("Reload editor data");
 	private JMenu helpMenu = new JMenu("Help");
 	private JMenuItem helpAbout = new JMenuItem("About");
 
@@ -59,6 +60,7 @@ public class Menu extends JMenuBar
 		runMenu.add(runRunLevel);
 		this.add(extrasMenu);
 		extrasMenu.add(extrasScreenshot);
+		extrasMenu.add(extrasReload);
 		this.add(helpMenu);
 		helpMenu.add(helpAbout);
 
@@ -447,6 +449,68 @@ public class Menu extends JMenuBar
 			public void actionPerformed(ActionEvent e)
 			{
 				mapPanel.takeScreenshot();
+			}
+		});
+		extrasReload.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				if (mapPanel.level != null)
+				{
+					objectPanel.loadObjects();
+
+					for (int n = 0; n < mapPanel.level.getNumOfLayers(); n++)
+					{
+						try
+						{
+							mapPanel.level.getLayer(n).reloadImg();
+						}
+						catch (IOException ex)
+						{
+						}
+					}
+
+					// Set tileset panel image
+					tilesetPanel.setImage(0, mapPanel.level.getLayer(1).getImg());
+					tilesetPanel.showLayer[0] = true;
+					tilesetPanel.defaultSettings();
+
+					// Set map panel images
+					for (int n = 0; n < mapPanel.level.getNumOfLayers(); n++)
+					{
+						BufferedImage defMapImg = new BufferedImage(mapPanel.level.getLayer(n).getWidth() * 16, mapPanel.level.getLayer(n).getHeight() * 16, BufferedImage.TYPE_INT_ARGB);
+						mapPanel.setImage(n, defMapImg);
+						mapPanel.showLayer[n] = true;
+					}
+
+					// Reload collision
+					try
+					{
+						mapPanel.level.reloadCollision();
+					}
+					catch (IOException ex)
+					{
+					}
+
+					tilesetPanel.revalidate();
+					mapPanel.revalidate();
+
+					// Refresh the level area
+					for (int n = 0; n < mapPanel.drawAreaLayers.size(); n++)
+					{
+						int levelWidth = mapPanel.level.getLayer(n).getWidth() * 16;
+						int levelHeight = mapPanel.level.getLayer(n).getHeight() * 16;
+
+						for (int i = 0, x = 0; i < levelWidth; i+=16, x++)
+						{
+							for (int j = 0, y = 0; j < levelHeight; j+=16, y++)
+							{
+								int tile = mapPanel.level.getLayer(n).getTile(x, y);
+								mapPanel.paintTile(n, tile, i, j, true);
+							}
+						}
+					}
+				}
 			}
 		});
 	}

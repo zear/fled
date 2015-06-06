@@ -150,6 +150,21 @@ public class LevelLayer
 		return this.imgRowW;
 	}
 
+	public void reloadImg() throws IOException
+	{
+		try
+		{
+			BufferedImage tmpImg = ImageIO.read(new File(this.imgPath));
+			this.img = new BufferedImage(tmpImg.getWidth(), tmpImg.getHeight(), BufferedImage.TYPE_INT_ARGB);
+			this.img.getGraphics().drawImage(tmpImg, 0, 0, null);
+		}
+		catch (IOException e)
+		{
+			System.out.printf("ERROR: Failed to load file %s!\n", this.imgPath);
+			throw new IOException("Missing game data:\n"+this.imgPath+"\n.");
+		}
+	}
+
 	public void setTile(int x, int y, int value)
 	{
 		if (x < 0)
@@ -173,7 +188,6 @@ public class LevelLayer
 	{
 		try
 		{
-			//this.img = ImageIO.read(new File(fileName));
 			BufferedImage tmpImg = ImageIO.read(new File(fileName));
 			this.img = new BufferedImage(tmpImg.getWidth(), tmpImg.getHeight(), BufferedImage.TYPE_INT_ARGB);
 			this.img.getGraphics().drawImage(tmpImg, 0, 0, null);
