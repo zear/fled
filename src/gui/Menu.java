@@ -399,7 +399,7 @@ public class Menu extends JMenuBar
 			{
 				JOptionPane.showMessageDialog(helpAbout, 
 				"\nFROG Level Editor version 0.0.1\n\n" +
-				"Copyright © 2014 Artur Rojek\n" +
+				"Copyright © 2014-2015 Artur Rojek\n" +
 				"Licensed under LGPL v2 +", "About", JOptionPane.INFORMATION_MESSAGE, new ImageIcon("./data/about.png"));
 			}
 		});
