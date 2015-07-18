@@ -105,6 +105,7 @@ public class ObjectPanel extends JPanel
 						addedListModel.addElement(newObj);
 						addedObjects.setSelectedValue(newObj, true);
 						mapPanel.setObjectIsNew(true);
+						mapPanel.level.setModified(true);
 					}
 					mapPanel.repaint();
 				}
@@ -130,6 +131,7 @@ public class ObjectPanel extends JPanel
 								objsli.remove();
 								addedListModel.remove(selectedIndex);
 								addedObjects.setSelectedIndex(selectedIndex == 0 ? 0 : selectedIndex - 1);
+								mapPanel.level.setModified(true);
 								break;
 							}
 						}
@@ -145,6 +147,7 @@ public class ObjectPanel extends JPanel
 				if (addedObjects != null && addedObjects.getSelectedIndex() != -1)
 				{
 					addedListModel.get(addedObjects.getSelectedIndex()).setDirection(false);
+					mapPanel.level.setModified(true);
 					mapPanel.repaint();
 				}
 			}
@@ -156,6 +159,7 @@ public class ObjectPanel extends JPanel
 				if (addedObjects != null && addedObjects.getSelectedIndex() != -1)
 				{
 					addedListModel.get(addedObjects.getSelectedIndex()).setDirection(true);
+					mapPanel.level.setModified(true);
 					mapPanel.repaint();
 				}
 			}

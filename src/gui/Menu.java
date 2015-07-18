@@ -290,55 +290,14 @@ public class Menu extends JMenuBar
 		});
 		fileQuit.addActionListener(new ActionListener()
 		{
-			boolean leave = false;
-
 			public void actionPerformed(ActionEvent e)
 			{
-				// Ask about saving the changes
-				if (mapPanel.level != null)
-				{
-					int choice = JOptionPane.showConfirmDialog(fileChooser, "Store the changes?", "", JOptionPane.YES_NO_CANCEL_OPTION);
-
-					if (choice == JOptionPane.YES_OPTION)
-					{
-						if (mapPanel.level.getFilePath() != null)
-						{
-							mapPanel.level.write(mapPanel.level.getFilePath());
-						}
-						else
-						{
-							// ask for the file name
-							fileChooser.addChoosableFileFilter(levelFilter);
-							fileChooser.setFileFilter(levelFilter);
-							int choice2 = fileChooser.showSaveDialog(fileChooser);
-							fileChooser.removeChoosableFileFilter(levelFilter);
-
-							if (choice2 == JFileChooser.APPROVE_OPTION)
-							{
-								File file = fileChooser.getSelectedFile();
-								mapPanel.level.setFilePath(file);
-								mapPanel.level.write(mapPanel.level.getFilePath());
-
-								leave = true;
-							}
-						}
-					}
-					else if (choice == JOptionPane.NO_OPTION)
-					{
-						leave = true;
-					}
-				}
-				else
-				{
-					leave = true;
-				}
-
 				// Exit program.
-				if (leave)
+				if (closeLevel())
 				{
-					frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
 					frame.setVisible(false);
 					frame.dispose(); // Destroy the main window.
+					System.exit(0); // Terminate VM.
 				}
 			}
 		});
@@ -408,7 +367,7 @@ public class Menu extends JMenuBar
 					mapPanel.level.write(new File(Data.getDataDirectory() + "/lvl.tmp"));
 
 					// run level
-					ProcessBuilder builder = new ProcessBuilder("java", "-jar", path.getAbsolutePath(), "-l", "./lvl.tmp", "-nojoy");
+					ProcessBuilder builder = new ProcessBuilder("java", "-jar", path.getAbsolutePath(), "-l", "./lvl.tmp");//, "-nojoy");
 					builder.environment().put("LD_LIBRARY_PATH","lib");
 					builder.directory(new File(Data.getDataDirectory()).getAbsoluteFile());
 
@@ -568,5 +527,51 @@ public class Menu extends JMenuBar
 		dialog.setVisible(true);
 
 		return dialog.getChoice();
+	}
+
+	public boolean closeLevel()
+	{
+		boolean leave = false;
+
+		// Ask about saving the changes
+		if (mapPanel != null && mapPanel.level != null && mapPanel.level.isModified())
+		{
+			int choice = JOptionPane.showConfirmDialog(fileChooser, "Store the changes to \"" + mapPanel.level.getLevelName() + "\"?", "", JOptionPane.YES_NO_CANCEL_OPTION);
+
+			if (choice == JOptionPane.YES_OPTION)
+			{
+				if (mapPanel.level.getFilePath() != null)
+				{
+					mapPanel.level.write(mapPanel.level.getFilePath());
+				}
+				else
+				{
+					// ask for the file name
+					fileChooser.addChoosableFileFilter(levelFilter);
+					fileChooser.setFileFilter(levelFilter);
+					int choice2 = fileChooser.showSaveDialog(fileChooser);
+					fileChooser.removeChoosableFileFilter(levelFilter);
+
+					if (choice2 == JFileChooser.APPROVE_OPTION)
+					{
+						File file = fileChooser.getSelectedFile();
+						mapPanel.level.setFilePath(file);
+						mapPanel.level.write(mapPanel.level.getFilePath());
+
+						leave = true;
+					}
+				}
+			}
+			else if (choice == JOptionPane.NO_OPTION)
+			{
+				leave = true;
+			}
+		}
+		else
+		{
+			leave = true;
+		}
+
+		return leave;
 	}
 }

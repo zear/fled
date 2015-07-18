@@ -1,16 +1,24 @@
 package gui;
 
 import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
 
 public class Editor
 {
+	private static JFrame frame;
+	private static String programName = "FROG Level Editor";
+
+	public static void updateWindowTitle(String text)
+	{
+		frame.setTitle(text + " - " + programName);
+	}
+
 	private static void createGui()
 	{
-		JFrame frame = new JFrame("FROG Level Editor");
+		frame = new JFrame(programName);
 		ImageIcon icon = new ImageIcon("./data/icon.png");
 		frame.setIconImage(icon.getImage());
-//		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		JPanel windowContainer = new JPanel(new BorderLayout());
 		windowContainer.setLayout(new BoxLayout(windowContainer, BoxLayout.LINE_AXIS));
@@ -75,7 +83,7 @@ public class Editor
 		//tileInfoPanel.setBorder(BorderFactory.createLineBorder(Color.black));
 
 		// menu
-		Menu menuBar = new Menu();
+		final Menu menuBar = new Menu();
 		menuBar.setPanels(frame, mapPanel, tilesetPanel, toolbarPanel, objectPanel);
 
 		frame.getContentPane().add(menuBar, BorderLayout.NORTH);
@@ -86,7 +94,52 @@ public class Editor
 		// display the window
 		frame.setVisible(true);
 		frame.pack();
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+
+		frame.addWindowListener(new WindowListener()
+		{
+			@Override
+			public void windowOpened(WindowEvent e)
+			{
+			}
+
+			@Override
+			public void windowClosed(WindowEvent e)
+			{
+			}
+
+			@Override
+			public void windowIconified(WindowEvent e)
+			{
+			}
+
+			@Override
+			public void windowDeiconified(WindowEvent e)
+			{
+			}
+
+			@Override
+			public void windowActivated(WindowEvent e)
+			{
+			}
+
+			@Override
+			public void windowDeactivated(WindowEvent e)
+			{
+			}
+
+			@Override
+			public void windowClosing(WindowEvent e)
+			{
+				// Exit program.
+				if (menuBar.closeLevel())
+				{
+					frame.setVisible(false);
+					frame.dispose(); // Destroy the main window.
+					System.exit(0); // Terminate VM.
+				}
+			}
+		});
 	}
 
 	public static void main(String [] args)

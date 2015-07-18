@@ -9,15 +9,18 @@ import java.io.FileReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import gui.*;
 import util.*;
 
 public class Level
 {
 	private File filePath = null;
+	private String levelName = "new";
 
 	private LinkedList<LevelLayer> layers;
 	private LinkedList<GameObject> objects;
 	private Collision collision;
+	private boolean modified;
 
 	public Level(int sizeX, int sizeY) throws IOException
 	{
@@ -25,10 +28,11 @@ public class Level
 		objects = new LinkedList<GameObject>();
 		LevelLayer curElem = null;
 		collision = new Collision("default.col", 256);
+		this.setModified(false);
 
 		for (int i = 0; i < 3; i++)
 		{
-			curElem = new LevelLayer();
+			curElem = new LevelLayer(this);
 			layers.push(curElem);
 			curElem.load(i);
 			curElem.load(Data.getDataDirectory() + "/data/gfx/layer0.bmp", 16, 16, 16, 256);
@@ -42,8 +46,10 @@ public class Level
 		layers = new LinkedList<LevelLayer>();
 		objects = new LinkedList<GameObject>();
 		this.filePath = fileName;
+		this.levelName = fileName.getName();
 		System.out.printf("Path is: %s\n", this.filePath);
 		load(filePath);
+		this.setModified(false);
 	}
 
 	public File getFilePath()
@@ -54,6 +60,11 @@ public class Level
 	public void setFilePath(File path)
 	{
 		this.filePath = path;
+	}
+
+	public String getLevelName()
+	{
+		return this.levelName;
 	}
 
 	public int getNumOfLayers()
@@ -81,6 +92,18 @@ public class Level
 		collision = new Collision("default.col", 256);
 	}
 
+	public boolean isModified()
+	{
+		return this.modified;
+	}
+
+	public void setModified(boolean value)
+	{
+		this.modified = value;
+
+		Editor.updateWindowTitle(this.modified ? "*"+levelName : levelName);
+	}
+
 	private void load(File fileName) throws IOException
 	{
 		FileRead fp = new FileRead(fileName);
@@ -97,7 +120,7 @@ public class Level
 						collision = new Collision(fp.getNext(), Integer.parseInt(fp.getNext()));
 					break;
 					case "LAYER":
-						curElem = new LevelLayer();
+						curElem = new LevelLayer(this);
 						layers.push(curElem);
 						curElem.load(Integer.parseInt(fp.getNext()));
 					break;
@@ -230,6 +253,13 @@ public class Level
 
 			System.out.printf("Writing to file\n");
 			fp.writeLine(levelContent.toString());
+
+			String tmpName = fileName.getName();
+			if (!tmpName.equals("lvl.tmp"))
+			{
+				this.levelName = tmpName;
+				this.setModified(false);
+			}
 		}
 
 		fp.close();
@@ -258,5 +288,6 @@ public class Level
 			if (bottomY < 0)
 				layers.get(i).reduceBottom(-bottomY);
 		}
+		this.setModified(true);
 	}
 }

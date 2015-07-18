@@ -7,11 +7,13 @@ import java.awt.image.WritableRaster;
 import javax.imageio.ImageIO;
 import java.util.ArrayList;
 
+import level.*;
 import util.*;
 
 // LevelLayer keeps data related to a single map layer
 public class LevelLayer
 {
+	private Level level;
 	private int id;
 	private Tiles tiles;
 	private BufferedImage img;
@@ -81,8 +83,9 @@ public class LevelLayer
 		}
 	}
 
-	public LevelLayer()
+	public LevelLayer(Level level)
 	{
+		this.level = level;
 		tiles = new Tiles();
 	}
 
@@ -177,6 +180,7 @@ public class LevelLayer
 			return;
 
 		tiles.setElement(y, x, value);
+		level.setModified(true);
 	}
 
 	public void load(int id)

@@ -958,6 +958,7 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 								this.selectedObject.setY(curY + 16 - this.selectedObject.getH());
 							}
 							this.repaint();
+							this.level.setModified(true);
 						}
 					}
 					break;
