@@ -41,6 +41,7 @@ public class Menu extends JMenuBar
 	private ToolbarPanel toolbarPanel = null;
 	private ObjectPanel objectPanel = null;
 
+	private String tilesetName;
 	private int newSizeX = 20;
 	private int newSizeY = 20;
 
@@ -73,7 +74,7 @@ public class Menu extends JMenuBar
 				{
 					try
 					{
-						mapPanel.level = new Level(newSizeX, newSizeY);
+						mapPanel.level = new Level(newSizeX, newSizeY, tilesetName);
 					}
 					catch (IOException ex)
 					{
@@ -149,6 +150,8 @@ public class Menu extends JMenuBar
 						JOptionPane.showMessageDialog(fileOpen, ex.getMessage(), "Failed to open level file", JOptionPane.ERROR_MESSAGE);
 						return;
 					}
+
+					setTilesetName(mapPanel.level.getTilesetName());
 
 					// Set tileset panel image
 					tilesetPanel.setImage(0, mapPanel.level.getLayer(1).getImg());
@@ -254,7 +257,7 @@ public class Menu extends JMenuBar
 				// Modify current level
 				if (mapPanel.level != null && showModifyLevelSetup())
 				{
-
+					mapPanel.level.setTilesetName(getTilesetName());
 					for (int i = 0; i < mapPanel.level.getNumOfLayers(); i++)
 					{
 						BufferedImage defMapImg = new BufferedImage(mapPanel.level.getLayer(i).getWidth() * 16, mapPanel.level.getLayer(i).getHeight() * 16, BufferedImage.TYPE_INT_ARGB);
@@ -414,62 +417,7 @@ public class Menu extends JMenuBar
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				if (mapPanel.level != null)
-				{
-					objectPanel.loadObjects();
-
-					for (int n = 0; n < mapPanel.level.getNumOfLayers(); n++)
-					{
-						try
-						{
-							mapPanel.level.getLayer(n).reloadImg();
-						}
-						catch (IOException ex)
-						{
-						}
-					}
-
-					// Set tileset panel image
-					tilesetPanel.setImage(0, mapPanel.level.getLayer(1).getImg());
-					tilesetPanel.showLayer[0] = true;
-					tilesetPanel.defaultSettings();
-
-					// Set map panel images
-					for (int n = 0; n < mapPanel.level.getNumOfLayers(); n++)
-					{
-						BufferedImage defMapImg = new BufferedImage(mapPanel.level.getLayer(n).getWidth() * 16, mapPanel.level.getLayer(n).getHeight() * 16, BufferedImage.TYPE_INT_ARGB);
-						mapPanel.setImage(n, defMapImg);
-						mapPanel.showLayer[n] = true;
-					}
-
-					// Reload collision
-					try
-					{
-						mapPanel.level.reloadCollision();
-					}
-					catch (IOException ex)
-					{
-					}
-
-					tilesetPanel.revalidate();
-					mapPanel.revalidate();
-
-					// Refresh the level area
-					for (int n = 0; n < mapPanel.drawAreaLayers.size(); n++)
-					{
-						int levelWidth = mapPanel.level.getLayer(n).getWidth() * 16;
-						int levelHeight = mapPanel.level.getLayer(n).getHeight() * 16;
-
-						for (int i = 0, x = 0; i < levelWidth; i+=16, x++)
-						{
-							for (int j = 0, y = 0; j < levelHeight; j+=16, y++)
-							{
-								int tile = mapPanel.level.getLayer(n).getTile(x, y);
-								mapPanel.paintTile(n, tile, i, j, true);
-							}
-						}
-					}
-				}
+				reload();
 			}
 		});
 	}
@@ -488,6 +436,16 @@ public class Menu extends JMenuBar
 		return this.mapPanel;
 	}
 
+	public void setTilesetName(String name)
+	{
+		this.tilesetName = name;
+	}
+
+	public String getTilesetName()
+	{
+		return this.tilesetName;
+	}
+
 	public void setSizeX(int size)
 	{
 		this.newSizeX = size;
@@ -497,6 +455,7 @@ public class Menu extends JMenuBar
 	{
 		this.newSizeY = size;
 	}
+
 	public int getSizeX()
 	{
 		return this.newSizeX;
@@ -573,5 +532,66 @@ public class Menu extends JMenuBar
 		}
 
 		return leave;
+	}
+
+	public void reload()
+	{
+		if (mapPanel.level != null)
+		{
+			objectPanel.loadObjects();
+
+			for (int n = 0; n < mapPanel.level.getNumOfLayers(); n++)
+			{
+				try
+				{
+					mapPanel.level.getLayer(n).setImgPath(Data.getDataDirectory() + "/data/gfx/tileset/" + tilesetName + "0.bmp");
+					mapPanel.level.getLayer(n).reloadImg();
+				}
+				catch (IOException ex)
+				{
+				}
+			}
+
+			// Set tileset panel image
+			tilesetPanel.setImage(0, mapPanel.level.getLayer(1).getImg());
+			tilesetPanel.showLayer[0] = true;
+			tilesetPanel.defaultSettings();
+
+			// Set map panel images
+			for (int n = 0; n < mapPanel.level.getNumOfLayers(); n++)
+			{
+				BufferedImage defMapImg = new BufferedImage(mapPanel.level.getLayer(n).getWidth() * 16, mapPanel.level.getLayer(n).getHeight() * 16, BufferedImage.TYPE_INT_ARGB);
+				mapPanel.setImage(n, defMapImg);
+				mapPanel.showLayer[n] = true;
+			}
+
+			// Reload collision
+			try
+			{
+				mapPanel.level.reloadCollision();
+			}
+			catch (IOException ex)
+			{
+			}
+
+			tilesetPanel.revalidate();
+			mapPanel.revalidate();
+
+			// Refresh the level area
+			for (int n = 0; n < mapPanel.drawAreaLayers.size(); n++)
+			{
+				int levelWidth = mapPanel.level.getLayer(n).getWidth() * 16;
+				int levelHeight = mapPanel.level.getLayer(n).getHeight() * 16;
+
+				for (int i = 0, x = 0; i < levelWidth; i+=16, x++)
+				{
+					for (int j = 0, y = 0; j < levelHeight; j+=16, y++)
+					{
+						int tile = mapPanel.level.getLayer(n).getTile(x, y);
+						mapPanel.paintTile(n, tile, i, j, true);
+					}
+				}
+			}
+		}
 	}
 }

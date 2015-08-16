@@ -16,18 +16,20 @@ public class Level
 {
 	private File filePath = null;
 	private String levelName = "new";
+	private String tilesetName;
 
 	private LinkedList<LevelLayer> layers;
 	private LinkedList<GameObject> objects;
 	private Collision collision;
 	private boolean modified;
 
-	public Level(int sizeX, int sizeY) throws IOException
+	public Level(int sizeX, int sizeY, String tileset) throws IOException
 	{
 		layers = new LinkedList<LevelLayer>();
 		objects = new LinkedList<GameObject>();
 		LevelLayer curElem = null;
 		collision = new Collision("default.col", 256);
+		tilesetName = tileset;
 		this.setModified(false);
 
 		for (int i = 0; i < 3; i++)
@@ -35,7 +37,7 @@ public class Level
 			curElem = new LevelLayer(this);
 			layers.push(curElem);
 			curElem.load(i);
-			curElem.load(Data.getDataDirectory() + "/data/gfx/layer0.bmp", 16, 16, 16, 256);
+			curElem.load(Data.getDataDirectory() + "/data/gfx/tileset/" + tilesetName + "0.bmp", 16, 16, 16, 256);
 			curElem.populate(sizeX, sizeY, 0);
 			System.out.printf("New layer: %d\n", curElem.getId());
 		}
@@ -49,6 +51,7 @@ public class Level
 		this.levelName = fileName.getName();
 		System.out.printf("Path is: %s\n", this.filePath);
 		load(filePath);
+		this.retrieveTilesetNameFromLayer();
 		this.setModified(false);
 	}
 
@@ -65,6 +68,30 @@ public class Level
 	public String getLevelName()
 	{
 		return this.levelName;
+	}
+
+	public void retrieveTilesetNameFromLayer()
+	{
+		if (getNumOfLayers() < 1)
+			return;
+
+		// This assumes all layers use the same tileset naming.
+		File path = new File(getLayer(0).getImgPath());
+
+		if (path.getName().toLowerCase().contains("0.bmp"))
+		{
+			this.tilesetName = path.getName().substring(0, path.getName().length() - 5);
+		}
+	}
+
+	public String getTilesetName()
+	{
+		return this.tilesetName;
+	}
+
+	public void setTilesetName(String name)
+	{
+		this.tilesetName = name;
 	}
 
 	public int getNumOfLayers()
@@ -125,7 +152,7 @@ public class Level
 						curElem.load(Integer.parseInt(fp.getNext()));
 					break;
 					case "IMG":
-						curElem.load(Data.getDataDirectory() + "/data/gfx/" + fp.getNext(), Integer.parseInt(fp.getNext()), Integer.parseInt(fp.getNext()), Integer.parseInt(fp.getNext()), Integer.parseInt(fp.getNext()));
+						curElem.load(Data.getDataDirectory() + "/data/gfx/tileset/" + fp.getNext(), Integer.parseInt(fp.getNext()), Integer.parseInt(fp.getNext()), Integer.parseInt(fp.getNext()), Integer.parseInt(fp.getNext()));
 						curElem.load(fp); // load the tileset
 					break;
 					case "OBJECTS":
@@ -193,7 +220,6 @@ public class Level
 			{
 				LevelLayer curElem = layers.get(i - 1);
 				String imgPath = curElem.getImgPath();
-				String [] words = imgPath.split("/");
 				int levelWidth = curElem.getWidth();
 				int levelHeight = curElem.getHeight();
 
@@ -208,7 +234,7 @@ public class Level
 				System.out.printf("Converted\n");
 
 				levelContent.append("LAYER " + curElem.getId() + "\n");
-				levelContent.append("IMG " + words[words.length - 1] + " " + curElem.getTileW() + " " + curElem.getTileH() + " " + curElem.getImgRowW() + " " + curElem.getImgSize() + "\n");
+				levelContent.append("IMG " + tilesetName + "0.bmp " + curElem.getTileW() + " " + curElem.getTileH() + " " + curElem.getImgRowW() + " " + curElem.getImgSize() + "\n");
 
 				for (int y = 0; y < levelHeight; y++)
 				{

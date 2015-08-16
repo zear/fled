@@ -133,6 +133,11 @@ public class LevelLayer
 		return this.imgPath;
 	}
 
+	public void setImgPath(String path)
+	{
+		this.imgPath = path;
+	}
+
 	public int getImgSize()
 	{
 		return this.imgSize;

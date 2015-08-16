@@ -5,15 +5,17 @@ import java.awt.event.*;
 import javax.swing.*;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
+import java.io.File;
 
 import level.*;
 import util.*;
 
 public class ModifyLevelSetup extends JDialog implements ActionListener
 {
-	private GridLayout windowLayout = new GridLayout(3, 1);
+	private GridLayout windowLayout = new GridLayout(4, 1);
 	private JPanel windowContainer = new JPanel(windowLayout);
 	private JPanel fieldContainer = new JPanel(new GridLayout(2, 4));
+	private JPanel tilesetContainer = new JPanel(new GridLayout(1, 2));
 	private JPanel buttonContainer = new JPanel(new GridLayout(1, 2));
 	private JLabel labelSize = new JLabel("Add/remove tiles (Enter negative numbers to remove tiles):");
 	private JLabel labelSizeXLeft = new JLabel("From left (x):");
@@ -24,8 +26,10 @@ public class ModifyLevelSetup extends JDialog implements ActionListener
 	private JFormattedTextField fieldSizeXRight;
 	private JFormattedTextField fieldSizeYTop;
 	private JFormattedTextField fieldSizeYBottom;
+	private JLabel labelTileset = new JLabel("Using tileset:");
+	private JComboBox<String> comboTileset;
 	private JButton buttonCancel = new JButton("Cancel");
-	private JButton buttonCreate = new JButton("Create");
+	private JButton buttonCreate = new JButton("Modify");
 
 	private Menu menu = null;
 
@@ -54,6 +58,16 @@ public class ModifyLevelSetup extends JDialog implements ActionListener
 		this.labelSizeXRight.setHorizontalAlignment(JLabel.CENTER);
 		this.labelSizeYTop.setHorizontalAlignment(JLabel.CENTER);
 		this.labelSizeYBottom.setHorizontalAlignment(JLabel.CENTER);
+		this.labelTileset.setHorizontalAlignment(JLabel.CENTER);
+
+		String [] tilesetList = Data.getTilesetList(new File(Data.getDataDirectory() + "/data/gfx/tileset"));
+		if (tilesetList != null)
+		{
+			this.comboTileset = new JComboBox<String>(tilesetList);
+			this.comboTileset.setSelectedItem(menu.getTilesetName());
+		}
+		else
+			this.comboTileset = new JComboBox<String>();
 
 		fieldSizeXLeft.addPropertyChangeListener(new PropertyChangeListener()
 		{
@@ -143,6 +157,11 @@ public class ModifyLevelSetup extends JDialog implements ActionListener
 				menu.setSizeX(menu.getSizeX() + ((Number)fieldSizeXLeft.getValue()).intValue() + ((Number)fieldSizeXRight.getValue()).intValue());
 				menu.setSizeY(menu.getSizeY() + ((Number)fieldSizeYTop.getValue()).intValue() + ((Number)fieldSizeYBottom.getValue()).intValue());
 				menu.getMapPanel().level.resize(((Number)fieldSizeXLeft.getValue()).intValue(), ((Number)fieldSizeXRight.getValue()).intValue(), ((Number)fieldSizeYTop.getValue()).intValue(), ((Number)fieldSizeYBottom.getValue()).intValue(), 0);
+				if (!menu.getTilesetName().equals(String.valueOf(comboTileset.getSelectedItem())))
+				{
+					menu.setTilesetName(String.valueOf(comboTileset.getSelectedItem()));
+					menu.reload();
+				}
 
 				for (GameObject curObj : menu.getMapPanel().level.getObjectList())
 				{
@@ -165,12 +184,16 @@ public class ModifyLevelSetup extends JDialog implements ActionListener
 		fieldContainer.add(labelSizeYBottom);
 		fieldContainer.add(fieldSizeYBottom);
 
+		tilesetContainer.add(labelTileset);
+		tilesetContainer.add(comboTileset);
+
 		buttonContainer.add(buttonCancel);
 		buttonContainer.add(buttonCreate);
 
 		windowLayout.setVgap(5);
 		windowContainer.add(labelSize);
 		windowContainer.add(fieldContainer);
+		windowContainer.add(tilesetContainer);
 		windowContainer.add(buttonContainer);
 
 

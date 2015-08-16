@@ -5,10 +5,14 @@ import java.awt.event.*;
 import javax.swing.*;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
+import java.io.File;
+import java.util.ArrayList;
+
+import util.*;
 
 public class NewLevelSetup extends JDialog implements ActionListener
 {
-	private GridLayout windowLayout = new GridLayout(3, 1);
+	private GridLayout windowLayout = new GridLayout(4, 1);
 	private JPanel windowContainer = new JPanel(windowLayout);
 	private JPanel fieldContainer = new JPanel(new GridLayout(1, 4));
 	private JPanel buttonContainer = new JPanel(new GridLayout(1, 2));
@@ -17,6 +21,7 @@ public class NewLevelSetup extends JDialog implements ActionListener
 	private JLabel labelSizeY = new JLabel("y:");
 	private JFormattedTextField fieldSizeX;
 	private JFormattedTextField fieldSizeY;
+	private JComboBox<String> comboTileset;
 	private JButton buttonCancel = new JButton("Cancel");
 	private JButton buttonCreate = new JButton("Create");
 
@@ -41,6 +46,12 @@ public class NewLevelSetup extends JDialog implements ActionListener
 		this.labelSize.setHorizontalAlignment(JLabel.CENTER);
 		this.labelSizeX.setHorizontalAlignment(JLabel.CENTER);
 		this.labelSizeY.setHorizontalAlignment(JLabel.CENTER);
+
+		String [] tilesetList = Data.getTilesetList(new File(Data.getDataDirectory() + "/data/gfx/tileset"));
+		if (tilesetList != null)
+			this.comboTileset = new JComboBox<String>(tilesetList);
+		else
+			this.comboTileset = new JComboBox<String>();
 
 		fieldSizeX.addPropertyChangeListener(new PropertyChangeListener()
 		{
@@ -93,6 +104,7 @@ public class NewLevelSetup extends JDialog implements ActionListener
 			{
 				menu.setSizeX(((Number)fieldSizeX.getValue()).intValue());
 				menu.setSizeY(((Number)fieldSizeY.getValue()).intValue());
+				menu.setTilesetName(String.valueOf(comboTileset.getSelectedItem()));
 
 				choice = true;
 				setVisible(false);
@@ -111,6 +123,7 @@ public class NewLevelSetup extends JDialog implements ActionListener
 		windowLayout.setVgap(5);
 		windowContainer.add(labelSize);
 		windowContainer.add(fieldContainer);
+		windowContainer.add(comboTileset);
 		windowContainer.add(buttonContainer);
 
 
