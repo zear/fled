@@ -6,12 +6,21 @@ import javax.swing.*;
 
 public class Editor
 {
-	private static JFrame frame;
 	private static String programName = "FROG Level Editor";
+	private static JFrame frame;
+	private static JPanel toolPanel;
+	private static ToolsetTabPane toolsetTabPane;
+	private static ToolbarPanel toolbarPanel;
 
 	public static void updateWindowTitle(String text)
 	{
 		frame.setTitle(text + " - " + programName);
+	}
+
+	public static void unlockToolbar()
+	{
+		toolsetTabPane.setEnabled(true);
+		toolPanel.add(toolbarPanel, BorderLayout.NORTH);
 	}
 
 	private static void createGui()
@@ -24,13 +33,13 @@ public class Editor
 		windowContainer.setLayout(new BoxLayout(windowContainer, BoxLayout.LINE_AXIS));
 
 		MapPanel mapPanel = new MapPanel();
-		ToolsetTabPane toolsetTabPane = new ToolsetTabPane();
-		JPanel toolPanel = new JPanel();
+		toolsetTabPane = new ToolsetTabPane();
+		toolPanel = new JPanel();
 		ObjectPanel objectPanel = new ObjectPanel();
 		JPanel levelSettingsPanel = new JPanel();
 		TilesetPanel tilesetPanel = new TilesetPanel();
 		TileInfoPanel tileInfoPanel = new TileInfoPanel();
-		ToolbarPanel toolbarPanel = new ToolbarPanel();
+		toolbarPanel = new ToolbarPanel();
 		objectPanel.setPanels(mapPanel);
 		tilesetPanel.setTileInfoPanel(tileInfoPanel);
 		toolbarPanel.setPanels(mapPanel, tilesetPanel);
@@ -38,6 +47,7 @@ public class Editor
 		toolsetTabPane.addTab("Tiles", null, toolPanel, "Tile edit mode");
 		toolsetTabPane.addTab("Objects", null, objectPanel, "Object edit mode");
 		toolsetTabPane.addTab("Level", null, levelSettingsPanel, "Level settings");
+		toolsetTabPane.setEnabled(false);
 		toolsetTabPane.setMapPanel(mapPanel);
 
 		toolPanel.setLayout(new BoxLayout(toolPanel, BoxLayout.PAGE_AXIS));
@@ -72,7 +82,6 @@ public class Editor
 
 		toolPanel.add(tilesetPanel, BorderLayout.NORTH);
 		toolPanel.add(tileInfoPanel);
-		toolPanel.add(toolbarPanel, BorderLayout.NORTH);
 
 		windowContainer.add(scrollFrame);
 		windowContainer.add(toolsetTabPane);

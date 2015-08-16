@@ -65,6 +65,13 @@ public class Menu extends JMenuBar
 		this.add(helpMenu);
 		helpMenu.add(helpAbout);
 
+		// Grey out some items by default
+		fileSave.setEnabled(false);
+		fileSaveAs.setEnabled(false);
+		fileModify.setEnabled(false);
+		runRunLevel.setEnabled(false);
+		extrasMenu.setEnabled(false);
+
 		fileNew.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -124,6 +131,15 @@ public class Menu extends JMenuBar
 					}
 
 					objectPanel.loadObjects();
+
+					// Update visibility of menu items
+					fileSave.setEnabled(true);
+					fileSaveAs.setEnabled(false);
+					fileModify.setEnabled(true);
+					runRunLevel.setEnabled(true);
+					extrasMenu.setEnabled(true);
+
+					Editor.unlockToolbar();
 				}
 			}
 		});
@@ -197,6 +213,15 @@ public class Menu extends JMenuBar
 					}
 
 					objectPanel.loadObjects();
+
+					// Update visibility of menu items
+					fileSave.setEnabled(true);
+					fileSaveAs.setEnabled(true);
+					fileModify.setEnabled(true);
+					runRunLevel.setEnabled(true);
+					extrasMenu.setEnabled(true);
+
+					Editor.unlockToolbar();
 				}
 			}
 		});
@@ -226,6 +251,9 @@ public class Menu extends JMenuBar
 							mapPanel.level.write(mapPanel.level.getFilePath());
 						}
 					}
+
+					// Update visibility of menu items
+					fileSaveAs.setEnabled(true);
 				}
 			}
 		});
