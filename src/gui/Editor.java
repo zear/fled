@@ -157,6 +157,15 @@ public class Editor
 		{
 			public void run()
 			{
+				try
+				{
+					UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+				}
+				catch (Exception e)
+				{
+					System.out.println("Error setting Java LAF: " + e);
+				}
+
 				createGui();
 			}
 		});
