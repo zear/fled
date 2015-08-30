@@ -32,6 +32,7 @@ public class Editor
 		JPanel windowContainer = new JPanel(new BorderLayout());
 		windowContainer.setLayout(new BoxLayout(windowContainer, BoxLayout.LINE_AXIS));
 
+		final Menu menuBar = new Menu();
 		MapPanel mapPanel = new MapPanel();
 		toolsetTabPane = new ToolsetTabPane();
 		toolPanel = new JPanel();
@@ -77,7 +78,7 @@ public class Editor
 		toolbarPanel.setPreferredSize(new Dimension(256,150));
 		toolbarPanel.setMinimumSize(new Dimension(256,80));
 		toolbarPanel.setMaximumSize(new Dimension(256,150));
-		mapPanel.setPanels(tilesetPanel, tileInfoPanel, objectPanel);
+		mapPanel.setPanels(tilesetPanel, tileInfoPanel, objectPanel, menuBar);
 
 
 		toolPanel.add(tilesetPanel, BorderLayout.NORTH);
@@ -92,7 +93,6 @@ public class Editor
 		//tileInfoPanel.setBorder(BorderFactory.createLineBorder(Color.black));
 
 		// menu
-		final Menu menuBar = new Menu();
 		menuBar.setPanels(frame, mapPanel, tilesetPanel, toolbarPanel, objectPanel);
 
 		frame.getContentPane().add(menuBar, BorderLayout.NORTH);

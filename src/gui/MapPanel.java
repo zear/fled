@@ -14,6 +14,7 @@ import level.*;
 public class MapPanel extends DrawPanel implements KeyListener, MouseInputListener
 {
 	public Level level = null;
+	private Menu menu = null;
 	private TilesetPanel tileset = null;
 	private TileInfoPanel tileInfoPanel = null;
 	private ObjectPanel objectPanel = null;
@@ -449,11 +450,12 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 		super.repaint();
 	}
 
-	public void setPanels(TilesetPanel newTileset, TileInfoPanel newTileInfoPanel, ObjectPanel newObjectPanel)
+	public void setPanels(TilesetPanel newTileset, TileInfoPanel newTileInfoPanel, ObjectPanel newObjectPanel, Menu menu)
 	{
 		this.tileset = newTileset;
 		this.tileInfoPanel = newTileInfoPanel;
 		this.objectPanel = newObjectPanel;
+		this.menu = menu;
 	}
 
 	private boolean isInMapArea(int x, int y)
@@ -550,6 +552,12 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 					drawSelection = false;
 				}
 			break;
+			case KeyEvent.VK_R:	// Reload editor
+				if (this.editMode == EditMode.MODE_TILE_EDIT && ((modifiers & InputEvent.CTRL_MASK) > 0))
+				{
+					menu.reload();
+				}
+			break;
 			case KeyEvent.VK_INSERT: // Unix style
 				if ((this.editMode == EditMode.MODE_TILE_EDIT || this.editMode == EditMode.MODE_TILE_SELECTION))
 				{
@@ -580,6 +588,8 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 					drawSelection = false;
 				}
 			break;
+			case KeyEvent.VK_F5: // Launch level
+				menu.launchLevel();
 
 			default:
 			break;

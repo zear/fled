@@ -357,74 +357,7 @@ public class Menu extends JMenuBar
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				if (mapPanel.level != null)
-				{
-					boolean playerObjPresent = false;
-
-					ListIterator<GameObject> objsli = mapPanel.level.getObjectList().listIterator();
-					while (objsli.hasNext())
-					{
-						if (objsli.next().getName().equals("player"))
-							playerObjPresent = true;
-					}
-
-					if (!playerObjPresent) // Don't launch the level if player object is missing.
-					{
-						JOptionPane.showMessageDialog(runRunLevel, "Add a player object first.");
-						return;
-					}
-
-					File path = new File(Data.getDataDirectory() + "/" + execFile);
-
-					while (!path.exists() || path.isDirectory())
-					{
-						JOptionPane.showMessageDialog(runRunLevel, "No game executable (" + execFile + ") found.\nPlease select a new location for the executable.", "Game launch issue", JOptionPane.ERROR_MESSAGE);
-						fileChooser.addChoosableFileFilter(execFilter);
-						fileChooser.setFileFilter(execFilter);
-						int choice = fileChooser.showOpenDialog(fileChooser);
-						fileChooser.removeChoosableFileFilter(execFilter);
-
-						if (choice == JFileChooser.APPROVE_OPTION)
-						{
-							File file = fileChooser.getSelectedFile();
-							Data.setDataDirectory(file.getParent());
-							execFile = file.getName();
-							path = new File(Data.getDataDirectory() + "/" + execFile);
-						}
-						else if (choice == JFileChooser.CANCEL_OPTION)
-						{
-							return;
-						}
-					}
-
-					// save current level to a temporary file
-					mapPanel.level.write(new File(Data.getDataDirectory() + "/lvl.tmp"));
-
-					// run level
-					ProcessBuilder builder = new ProcessBuilder("java", "-jar", path.getAbsolutePath(), "-l", "./lvl.tmp");//, "-nojoy");
-					builder.environment().put("LD_LIBRARY_PATH","lib");
-					builder.directory(new File(Data.getDataDirectory()).getAbsoluteFile());
-
-					builder.redirectErrorStream(true);
-					File log = new File("runlog.tmp");
-					builder.redirectOutput(ProcessBuilder.Redirect.to(log));
-
-					Process proc;
-
-					try
-					{
-						System.out.printf("Launching game... (log: %s)\n", log.getAbsolutePath());
-						proc = builder.start();
-						assert builder.redirectInput() == ProcessBuilder.Redirect.PIPE;
-						assert builder.redirectOutput().file() == log;
-						assert proc.getInputStream().read() == -1;
-					}
-					catch (IOException ioe)
-					{
-						System.out.printf("Failed to launch the game:\n%s\n", ioe.getMessage());
-						JOptionPane.showMessageDialog(runRunLevel, "ERROR: " + ioe.getMessage(), "Game launch issue", JOptionPane.ERROR_MESSAGE);
-					}
-				}
+				launchLevel();
 			}
 		});
 		helpShortcuts.addActionListener(new ActionListener()
@@ -445,7 +378,9 @@ public class Menu extends JMenuBar
 					{ "Move tile picker left", "A", "" },
 					{ "Move tile picker right", "D", "" },
 					{ "Move tile picker up", "W", "" },
-					{ "Move tile picker down", "S", "" }
+					{ "Move tile picker down", "S", "" },
+					{ "Launch level", "F5", "" },
+					{ "Reload editor data", "CTRL + R", "" }
 				};
 				TableModel model = new DefaultTableModel(rows, columns);
 				JOptionPane.showMessageDialog(helpShortcuts, new JScrollPane(new JTable(model)), "Key shortcuts", JOptionPane.PLAIN_MESSAGE);
@@ -587,6 +522,78 @@ public class Menu extends JMenuBar
 		}
 
 		return leave;
+	}
+
+	public void launchLevel()
+	{
+		if (mapPanel.level != null)
+		{
+			boolean playerObjPresent = false;
+
+			ListIterator<GameObject> objsli = mapPanel.level.getObjectList().listIterator();
+			while (objsli.hasNext())
+			{
+				if (objsli.next().getName().equals("player"))
+					playerObjPresent = true;
+			}
+
+			if (!playerObjPresent) // Don't launch the level if player object is missing.
+			{
+				JOptionPane.showMessageDialog(runRunLevel, "Add a player object first.");
+				return;
+			}
+
+			File path = new File(Data.getDataDirectory() + "/" + execFile);
+
+			while (!path.exists() || path.isDirectory())
+			{
+				JOptionPane.showMessageDialog(runRunLevel, "No game executable (" + execFile + ") found.\nPlease select a new location for the executable.", "Game launch issue", JOptionPane.ERROR_MESSAGE);
+				fileChooser.addChoosableFileFilter(execFilter);
+				fileChooser.setFileFilter(execFilter);
+				int choice = fileChooser.showOpenDialog(fileChooser);
+				fileChooser.removeChoosableFileFilter(execFilter);
+
+				if (choice == JFileChooser.APPROVE_OPTION)
+				{
+					File file = fileChooser.getSelectedFile();
+					Data.setDataDirectory(file.getParent());
+					execFile = file.getName();
+					path = new File(Data.getDataDirectory() + "/" + execFile);
+				}
+				else if (choice == JFileChooser.CANCEL_OPTION)
+				{
+					return;
+				}
+			}
+
+			// save current level to a temporary file
+			mapPanel.level.write(new File(Data.getDataDirectory() + "/lvl.tmp"));
+
+			// run level
+			ProcessBuilder builder = new ProcessBuilder("java", "-jar", path.getAbsolutePath(), "-l", "./lvl.tmp");//, "-nojoy");
+			builder.environment().put("LD_LIBRARY_PATH","lib");
+			builder.directory(new File(Data.getDataDirectory()).getAbsoluteFile());
+
+			builder.redirectErrorStream(true);
+			File log = new File("runlog.tmp");
+			builder.redirectOutput(ProcessBuilder.Redirect.to(log));
+
+			Process proc;
+
+			try
+			{
+				System.out.printf("Launching game... (log: %s)\n", log.getAbsolutePath());
+				proc = builder.start();
+				assert builder.redirectInput() == ProcessBuilder.Redirect.PIPE;
+				assert builder.redirectOutput().file() == log;
+				assert proc.getInputStream().read() == -1;
+			}
+			catch (IOException ioe)
+			{
+				System.out.printf("Failed to launch the game:\n%s\n", ioe.getMessage());
+				JOptionPane.showMessageDialog(runRunLevel, "ERROR: " + ioe.getMessage(), "Game launch issue", JOptionPane.ERROR_MESSAGE);
+			}
+		}
 	}
 
 	public void reload()
