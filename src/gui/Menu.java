@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.*;
 import java.io.IOException;
 import java.io.File;
 import java.util.ListIterator;
@@ -29,6 +30,7 @@ public class Menu extends JMenuBar
 	private JMenuItem extrasScreenshot = new JMenuItem("Screenshot to file");
 	private JMenuItem extrasReload = new JMenuItem("Reload editor data");
 	private JMenu helpMenu = new JMenu("Help");
+	private JMenuItem helpShortcuts = new JMenuItem("Keyboard shortcuts");
 	private JMenuItem helpAbout = new JMenuItem("About");
 
 	private JFileChooser fileChooser = new JFileChooser(Data.getDataDirectory());
@@ -63,6 +65,7 @@ public class Menu extends JMenuBar
 		extrasMenu.add(extrasScreenshot);
 		extrasMenu.add(extrasReload);
 		this.add(helpMenu);
+		helpMenu.add(helpShortcuts);
 		helpMenu.add(helpAbout);
 
 		// Grey out some items by default
@@ -422,6 +425,30 @@ public class Menu extends JMenuBar
 						JOptionPane.showMessageDialog(runRunLevel, "ERROR: " + ioe.getMessage(), "Game launch issue", JOptionPane.ERROR_MESSAGE);
 					}
 				}
+			}
+		});
+		helpShortcuts.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				String[] columns = { "Action:", "Key shortcut:", "Alt. key shortcut:" };
+				Object[][] rows =
+				{
+					{ "Paint", "LMB", "" },
+					{ "Pick a tile", "RMB", "" },
+					{ "Select level area", "Shift + drag LMB", "" },
+					{ "Cut selection", "Ctrl + X", "" },
+					{ "Copy selection", "Ctrl + C", "Ctrl + Insert" },
+					{ "Paste selection", "Ctrl + V", "Shift + Insert" },
+					{ "Delete selection", "Delete", "" },
+					{ "Undo action", "Ctrl + Z", "" },
+					{ "Move tile picker left", "A", "" },
+					{ "Move tile picker right", "D", "" },
+					{ "Move tile picker up", "W", "" },
+					{ "Move tile picker down", "S", "" }
+				};
+				TableModel model = new DefaultTableModel(rows, columns);
+				JOptionPane.showMessageDialog(helpShortcuts, new JScrollPane(new JTable(model)), "Key shortcuts", JOptionPane.PLAIN_MESSAGE);
 			}
 		});
 		helpAbout.addActionListener(new ActionListener()
