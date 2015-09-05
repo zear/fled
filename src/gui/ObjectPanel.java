@@ -94,20 +94,12 @@ public class ObjectPanel extends JPanel
 			{
 				if (availableListModel != null)
 				{
-					GameObject newObj = new GameObject();
 					int selectedIndex = availableObjects.getSelectedIndex();
 
 					if (selectedIndex != -1)
 					{
-						newObj.setName(availableListModel.get(selectedIndex).getName());
-						newObj.setImgTemplate(availableListModel.get(selectedIndex).getImgTemplate());
-						addedObjectsList.push(newObj);
-						addedListModel.addElement(newObj);
-						addedObjects.setSelectedValue(newObj, true);
-						mapPanel.setObjectIsNew(true);
-						mapPanel.level.setModified(true);
+						addNewObject(availableListModel.get(selectedIndex).getName());
 					}
-					mapPanel.repaint();
 				}
 			}
 		});
@@ -115,29 +107,7 @@ public class ObjectPanel extends JPanel
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				if (addedListModel != null)
-				{
-					int selectedIndex = addedObjects.getSelectedIndex();
-
-					if (selectedIndex != -1)
-					{
-						GameObject objToRem = addedListModel.get(selectedIndex);
-
-						ListIterator<GameObject> objsli = addedObjectsList.listIterator();
-						while (objsli.hasNext())
-						{
-							if (objsli.next() == objToRem)
-							{
-								objsli.remove();
-								addedListModel.remove(selectedIndex);
-								addedObjects.setSelectedIndex(selectedIndex == 0 ? 0 : selectedIndex - 1);
-								mapPanel.level.setModified(true);
-								break;
-							}
-						}
-						mapPanel.repaint();
-					}
-				}
+				deleteSelectedObject();
 			}
 		});
 		directionLeft.addActionListener(new ActionListener()
@@ -366,9 +336,84 @@ public class ObjectPanel extends JPanel
 		this.repaint();
 	}
 
-	void setSelectedObject(GameObject selObj)
+	public void addNewObject(String name)
+	{
+		if (name == null)
+			return;
+
+		if (availableListModel != null)
+		{
+			Object[] availableArray = availableListModel.toArray();
+			for (Object obj : availableArray)
+			{
+				GameObject gObj = (GameObject)obj;
+
+				if (gObj.getName().equals(name))
+				{
+					GameObject newObj = new GameObject();
+
+					newObj.setName(gObj.getName());
+					newObj.setImgTemplate(gObj.getImgTemplate());
+					addedObjectsList.push(newObj);
+					addedListModel.addElement(newObj);
+					addedObjects.setSelectedValue(newObj, true);
+					mapPanel.setObjectIsNew(true);
+					mapPanel.level.setModified(true);
+					mapPanel.repaint();
+
+					break;
+				}
+			}
+		}
+	}
+
+	public void setSelectedObject(GameObject selObj)
 	{
 		addedObjects.setSelectedValue(selObj, true);
+	}
+
+	public void deleteSelectedObject()
+	{
+		if (addedListModel != null)
+		{
+			int selectedIndex = addedObjects.getSelectedIndex();
+
+			if (selectedIndex != -1)
+			{
+				GameObject objToRem = addedListModel.get(selectedIndex);
+
+				ListIterator<GameObject> objsli = addedObjectsList.listIterator();
+				while (objsli.hasNext())
+				{
+					if (objsli.next() == objToRem)
+					{
+						objsli.remove();
+						addedListModel.remove(selectedIndex);
+						addedObjects.setSelectedIndex(selectedIndex == 0 ? 0 : selectedIndex - 1);
+						mapPanel.level.setModified(true);
+						break;
+					}
+				}
+				mapPanel.repaint();
+			}
+		}
+	}
+
+	public String getSelectedObjectName()
+	{
+		if (addedListModel != null)
+		{
+			int selectedIndex = addedObjects.getSelectedIndex();
+
+			if (selectedIndex != -1)
+				return addedListModel.get(selectedIndex).getName();
+			else
+				return null;
+		}
+		else
+		{
+			return null;
+		}
 	}
 
 	void setPanels(MapPanel newMapPanel)

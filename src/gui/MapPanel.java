@@ -38,6 +38,7 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 	private GameObject selectedObject = null;
 	private boolean draggingObject = false;
 	private boolean objectIsNew = false;
+	private String cachedObjectName;
 
 	protected boolean showGrid = true;
 	protected boolean showCollision = false;
@@ -531,25 +532,40 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 				}
 			break;
 			case KeyEvent.VK_C:	// Copy
-				if (this.editMode == EditMode.MODE_TILE_EDIT && ((modifiers & InputEvent.CTRL_MASK) > 0))
+				if ((modifiers & InputEvent.CTRL_MASK) > 0)
 				{
-					selectArea(selectedAreaX, selectedAreaY, selectedAreaX2, selectedAreaY2);
+					if (this.editMode == EditMode.MODE_TILE_EDIT)
+					{
+						selectArea(selectedAreaX, selectedAreaY, selectedAreaX2, selectedAreaY2);
+					}
+					else if (this.editMode == EditMode.MODE_OBJECT_EDIT && this.objectPanel != null)
+					{
+						cachedObjectName = this.objectPanel.getSelectedObjectName();
+					}
 				}
 			break;
 			case KeyEvent.VK_V:	// Paste
-				if (this.editMode == EditMode.MODE_TILE_EDIT && ((modifiers & InputEvent.CTRL_MASK) > 0))
+				if ((modifiers & InputEvent.CTRL_MASK) > 0)
 				{
-					Point pos = this.getMousePosition();
-
-					if (pos != null)
+					if (this.editMode == EditMode.MODE_TILE_EDIT)
 					{
-						int x = (int)pos.getX()/16;
-						int y = (int)pos.getY()/16;
+						Point pos = this.getMousePosition();
 
-						pasteSelectedArea(x, y);
+						if (pos != null)
+						{
+							int x = (int)pos.getX()/16;
+							int y = (int)pos.getY()/16;
+
+							pasteSelectedArea(x, y);
+						}
+
+						drawSelection = false;
 					}
-
-					drawSelection = false;
+					else if (this.editMode == EditMode.MODE_OBJECT_EDIT && this.objectPanel != null)
+					{
+						if (cachedObjectName != null)
+							this.objectPanel.addNewObject(cachedObjectName);
+					}
 				}
 			break;
 			case KeyEvent.VK_R:	// Reload editor
@@ -580,12 +596,28 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 						drawSelection = false;
 					}
 				}
+				if (this.editMode == EditMode.MODE_OBJECT_EDIT && this.objectPanel != null)
+				{
+					if ((modifiers & InputEvent.CTRL_MASK) > 0)		// Copy
+					{
+						cachedObjectName = this.objectPanel.getSelectedObjectName();
+					}
+					else if (((modifiers & InputEvent.SHIFT_MASK) > 0))	// Paste
+					{
+						if (cachedObjectName != null)
+							this.objectPanel.addNewObject(cachedObjectName);
+					}
+				}
 			break;
 			case KeyEvent.VK_DELETE: // Delete
 				if (this.editMode == EditMode.MODE_TILE_EDIT)
 				{
 					deleteSelectedArea(selectedAreaX, selectedAreaY, selectedAreaX2, selectedAreaY2);
 					drawSelection = false;
+				}
+				else if (this.editMode == EditMode.MODE_OBJECT_EDIT && this.objectPanel != null)
+				{
+					this.objectPanel.deleteSelectedObject();
 				}
 			break;
 			case KeyEvent.VK_F5: // Launch level
