@@ -38,7 +38,9 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 	private GameObject selectedObject = null;
 	private boolean draggingObject = false;
 	private boolean objectIsNew = false;
-	private String cachedObjectName;
+	private String cachedObjectName = null;
+	private GameObject cachedObject = null;
+	private GameObject cachedObjectBackup = null;
 
 	protected boolean showGrid = true;
 	protected boolean showCollision = false;
@@ -524,11 +526,26 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 				}
 			break;
 			case KeyEvent.VK_X:	// Cut
-				if (this.editMode == EditMode.MODE_TILE_EDIT && ((modifiers & InputEvent.CTRL_MASK) > 0))
+				if ((modifiers & InputEvent.CTRL_MASK) > 0)
 				{
-					selectArea(selectedAreaX, selectedAreaY, selectedAreaX2, selectedAreaY2);
-					deleteSelectedArea(selectedAreaX, selectedAreaY, selectedAreaX2, selectedAreaY2);
-					drawSelection = false;
+					if (this.editMode == EditMode.MODE_TILE_EDIT)
+					{
+						selectArea(selectedAreaX, selectedAreaY, selectedAreaX2, selectedAreaY2);
+						deleteSelectedArea(selectedAreaX, selectedAreaY, selectedAreaX2, selectedAreaY2);
+						drawSelection = false;
+					}
+					else if (this.editMode == EditMode.MODE_OBJECT_EDIT && this.objectPanel != null)
+					{
+						GameObject tmp = this.objectPanel.getSelectedObject();
+
+						if (tmp != null)
+						{
+							cachedObjectBackup = cachedObject;
+							cachedObject = tmp;
+						}
+
+						this.objectPanel.deleteSelectedObject();
+					}
 				}
 			break;
 			case KeyEvent.VK_C:	// Copy
@@ -540,7 +557,13 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 					}
 					else if (this.editMode == EditMode.MODE_OBJECT_EDIT && this.objectPanel != null)
 					{
-						cachedObjectName = this.objectPanel.getSelectedObjectName();
+						GameObject tmp = this.objectPanel.getSelectedObject();
+
+						if (tmp != null)
+						{
+							cachedObjectBackup = cachedObject;
+							cachedObject = tmp;
+						}
 					}
 				}
 			break;
@@ -563,8 +586,8 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 					}
 					else if (this.editMode == EditMode.MODE_OBJECT_EDIT && this.objectPanel != null)
 					{
-						if (cachedObjectName != null)
-							this.objectPanel.addNewObject(cachedObjectName);
+						if (cachedObject != null)
+							this.objectPanel.addNewObject(cachedObject);
 					}
 				}
 			break;
@@ -600,12 +623,18 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 				{
 					if ((modifiers & InputEvent.CTRL_MASK) > 0)		// Copy
 					{
-						cachedObjectName = this.objectPanel.getSelectedObjectName();
+						GameObject tmp = this.objectPanel.getSelectedObject();
+
+						if (tmp != null)
+						{
+							cachedObjectBackup = cachedObject;
+							cachedObject = tmp;
+						}
 					}
 					else if (((modifiers & InputEvent.SHIFT_MASK) > 0))	// Paste
 					{
-						if (cachedObjectName != null)
-							this.objectPanel.addNewObject(cachedObjectName);
+						if (cachedObject != null)
+							this.objectPanel.addNewObject(cachedObject);
 					}
 				}
 			break;

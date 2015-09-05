@@ -336,6 +336,24 @@ public class ObjectPanel extends JPanel
 		this.repaint();
 	}
 
+	public void addNewObject(GameObject model)
+	{
+		if (model == null)
+			return;
+
+		GameObject newObj = new GameObject();
+
+		newObj.setName(model.getName());
+		newObj.setImgTemplate(model.getImgTemplate());
+		newObj.setDirection(model.getDirection());
+		addedObjectsList.push(newObj);
+		addedListModel.addElement(newObj);
+		addedObjects.setSelectedValue(newObj, true);
+		mapPanel.setObjectIsNew(true);
+		mapPanel.level.setModified(true);
+		mapPanel.repaint();
+	}
+
 	public void addNewObject(String name)
 	{
 		if (name == null)
@@ -399,14 +417,14 @@ public class ObjectPanel extends JPanel
 		}
 	}
 
-	public String getSelectedObjectName()
+	public GameObject getSelectedObject()
 	{
 		if (addedListModel != null)
 		{
 			int selectedIndex = addedObjects.getSelectedIndex();
 
 			if (selectedIndex != -1)
-				return addedListModel.get(selectedIndex).getName();
+				return addedListModel.get(selectedIndex);
 			else
 				return null;
 		}
