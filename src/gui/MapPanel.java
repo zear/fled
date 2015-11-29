@@ -513,6 +513,12 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 			case KeyEvent.VK_S:
 				down = true;
 			break;
+			case KeyEvent.VK_F:
+				if (this.editMode == EditMode.MODE_OBJECT_EDIT && this.selectedObject != null)
+				{
+					this.objectPanel.setObjectDirection(this.selectedObject, !this.selectedObject.getDirection());
+				}
+			break;
 			case KeyEvent.VK_SHIFT:	// Select
 				if (this.editMode == EditMode.MODE_TILE_EDIT)
 				{

@@ -385,6 +385,19 @@ public class ObjectPanel extends JPanel
 		}
 	}
 
+	public void setObjectDirection(GameObject obj, boolean direction)
+	{
+		obj.setDirection(direction);
+		mapPanel.level.setModified(true);
+		mapPanel.repaint();
+
+		if (obj == getSelectedObject())
+		{
+			directionLeft.setSelected(!direction);
+			directionRight.setSelected(direction);
+		}
+	}
+
 	public void setSelectedObject(GameObject selObj)
 	{
 		addedObjects.setSelectedValue(selObj, true);
