@@ -1097,7 +1097,19 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 
 		try
 		{
-			ImageIO.write(image, "png", new File("/tmp/fled_screenshot.png"));
+			String osType = System.getProperty("os.name");
+			String path;
+
+			if (osType.toLowerCase().contains("linux"))
+			{
+				path = "/tmp";
+			}
+			else
+			{
+				path = ".";
+			}
+
+			ImageIO.write(image, "png", new File(path + "/fled_screenshot.png"));
 		}
 		catch (IOException e)
 		{
