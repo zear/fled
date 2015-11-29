@@ -902,7 +902,9 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 										curY = super.drawAreaLayers.get(0).getHeight() - 16;
 
 									// center at the bottom-left corner
-									if (this.selectedObject.getName().equals("diamond")) // TODO: Solve this by checking object type
+									if (this.selectedObject.getName().equals("diamond") ||
+									this.selectedObject.getName().equals("heart") ||
+									this.selectedObject.getName().equals("1up")) // TODO: Solve this by checking object type
 									{
 										this.selectedObject.setX(curX + 8 - this.selectedObject.getW()/2);
 										this.selectedObject.setY(curY + 8 - this.selectedObject.getH()/2);
@@ -1024,7 +1026,9 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 								curY = super.drawAreaLayers.get(0).getHeight() - 16;
 
 							// center at the bottom-left corner
-							if (this.selectedObject.getName().equals("diamond")) // TODO: Solve this by checking object type
+							if (this.selectedObject.getName().equals("diamond") ||
+								this.selectedObject.getName().equals("heart") ||
+								this.selectedObject.getName().equals("1up")) // TODO: Solve this by checking object type
 							{
 								this.selectedObject.setX(curX + 8 - this.selectedObject.getW()/2);
 								this.selectedObject.setY(curY + 8 - this.selectedObject.getH()/2);
