@@ -379,6 +379,7 @@ public class Menu extends JMenuBar
 					{ "Move tile picker right", "D", "" },
 					{ "Move tile picker up", "W", "" },
 					{ "Move tile picker down", "S", "" },
+					{ "Swap object direction", "F", "" },
 					{ "Launch level", "F5", "" },
 					{ "Reload editor data", "CTRL + R", "" }
 				};
