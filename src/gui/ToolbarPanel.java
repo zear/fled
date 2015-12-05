@@ -230,6 +230,44 @@ public class ToolbarPanel extends JPanel
 		this.showObjects.setSelected(true);
 	}
 
+	public void setSelectedDrawOnButton(int num)
+	{
+		switch (num)
+		{
+			case 0:
+				this.drawOnForeground.setSelected(true);
+			break;
+			case 1:
+				this.drawOnMiddleground.setSelected(true);
+			break;
+			case 2:
+				this.drawOnBackground.setSelected(true);
+			break;
+
+			default:
+			break;
+		}
+	}
+
+	public void setSelectedShowLayerCheckbox(int num)
+	{
+		switch (num)
+		{
+			case 0:
+				this.showForeground.setSelected(!this.showForeground.isSelected());
+			break;
+			case 1:
+				this.showMiddleground.setSelected(!this.showMiddleground.isSelected());
+			break;
+			case 2:
+				this.showBackground.setSelected(!this.showBackground.isSelected());
+			break;
+
+			default:
+			break;
+		}
+	}
+
 	public void setPanels(MapPanel newMapPanel, TilesetPanel newTilesetPanel)
 	{
 		this.mapPanel = newMapPanel;

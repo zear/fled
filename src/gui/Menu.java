@@ -379,6 +379,12 @@ public class Menu extends JMenuBar
 					{ "Move tile picker right", "D", "" },
 					{ "Move tile picker up", "W", "" },
 					{ "Move tile picker down", "S", "" },
+					{ "Draw on BGD", "1", "" },
+					{ "Draw on MGD", "2", "" },
+					{ "Draw on FGD", "3", "" },
+					{ "Toggle show BGD", "Ctrl + 1", "" },
+					{ "Toggle show MGD", "Ctrl + 2", "" },
+					{ "Toggle show FGD", "Ctrl + 3", "" },
 					{ "Swap object direction", "F", "" },
 					{ "Launch level", "F5", "" },
 					{ "Reload editor data", "CTRL + R", "" }

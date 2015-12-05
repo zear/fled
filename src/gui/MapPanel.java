@@ -17,6 +17,7 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 	private Menu menu = null;
 	private TilesetPanel tileset = null;
 	private TileInfoPanel tileInfoPanel = null;
+	private ToolbarPanel toolbarPanel = null;
 	private ObjectPanel objectPanel = null;
 	private EditMode editMode = EditMode.MODE_TILE_EDIT;
 	private boolean canPaint = false;
@@ -453,10 +454,11 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 		super.repaint();
 	}
 
-	public void setPanels(TilesetPanel newTileset, TileInfoPanel newTileInfoPanel, ObjectPanel newObjectPanel, Menu menu)
+	public void setPanels(TilesetPanel newTileset, TileInfoPanel newTileInfoPanel, ToolbarPanel newToolbarPanel, ObjectPanel newObjectPanel, Menu menu)
 	{
 		this.tileset = newTileset;
 		this.tileInfoPanel = newTileInfoPanel;
+		this.toolbarPanel = newToolbarPanel;
 		this.objectPanel = newObjectPanel;
 		this.menu = menu;
 	}
@@ -501,6 +503,51 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 
 		switch (e.getKeyCode())
 		{
+			case KeyEvent.VK_1:
+				if (this.editMode == EditMode.MODE_TILE_EDIT)
+				{
+					if ((modifiers & InputEvent.CTRL_MASK) > 0)
+					{
+						this.showLayer[2] = !this.showLayer[2];
+						this.toolbarPanel.setSelectedShowLayerCheckbox(2);
+					}
+					else
+					{
+						this.paintOnLayer = 2;
+						this.toolbarPanel.setSelectedDrawOnButton(this.paintOnLayer);
+					}
+				}
+			break;
+			case KeyEvent.VK_2:
+				if (this.editMode == EditMode.MODE_TILE_EDIT)
+				{
+					if ((modifiers & InputEvent.CTRL_MASK) > 0)
+					{
+						this.showLayer[1] = !this.showLayer[1];
+						this.toolbarPanel.setSelectedShowLayerCheckbox(1);
+					}
+					else
+					{
+						this.paintOnLayer = 1;
+						this.toolbarPanel.setSelectedDrawOnButton(this.paintOnLayer);
+					}
+				}
+			break;
+			case KeyEvent.VK_3:
+				if (this.editMode == EditMode.MODE_TILE_EDIT)
+				{
+					if ((modifiers & InputEvent.CTRL_MASK) > 0)
+					{
+						this.showLayer[0] = !this.showLayer[0];
+						this.toolbarPanel.setSelectedShowLayerCheckbox(0);
+					}
+					else
+					{
+						this.paintOnLayer = 0;
+						this.toolbarPanel.setSelectedDrawOnButton(this.paintOnLayer);
+					}
+				}
+			break;
 			case KeyEvent.VK_A:
 				left = true;
 			break;
@@ -610,7 +657,7 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 					{
 						selectArea(selectedAreaX, selectedAreaY, selectedAreaX2, selectedAreaY2);
 					}
-					else if (((modifiers & InputEvent.SHIFT_MASK) > 0))	// Paste
+					else if ((modifiers & InputEvent.SHIFT_MASK) > 0)	// Paste
 					{
 						Point pos = this.getMousePosition();
 
@@ -637,7 +684,7 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 							cachedObject = tmp;
 						}
 					}
-					else if (((modifiers & InputEvent.SHIFT_MASK) > 0))	// Paste
+					else if ((modifiers & InputEvent.SHIFT_MASK) > 0)	// Paste
 					{
 						if (cachedObject != null)
 							this.objectPanel.addNewObject(cachedObject);

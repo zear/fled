@@ -78,7 +78,7 @@ public class Editor
 		toolbarPanel.setPreferredSize(new Dimension(256,150));
 		toolbarPanel.setMinimumSize(new Dimension(256,80));
 		toolbarPanel.setMaximumSize(new Dimension(256,150));
-		mapPanel.setPanels(tilesetPanel, tileInfoPanel, objectPanel, menuBar);
+		mapPanel.setPanels(tilesetPanel, tileInfoPanel, toolbarPanel, objectPanel, menuBar);
 
 
 		toolPanel.add(tilesetPanel, BorderLayout.NORTH);
