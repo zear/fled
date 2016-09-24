@@ -1053,8 +1053,8 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 					{
 						if (this.selectedObject != null && this.draggingObject)
 						{
-							int curX = e.getX()/16*16;
-							int curY = e.getY()/16*16;
+							int curX = e.getX()/8*8;
+							int curY = e.getY()/8*8;
 
 							if (super.drawAreaLayers.size() < 1)
 								break;
@@ -1064,12 +1064,12 @@ public class MapPanel extends DrawPanel implements KeyListener, MouseInputListen
 
 							if (curX < (this.selectedObject.getW() - 1)/16*16)
 								curX = (this.selectedObject.getW() - 1)/16*16;
-							else if (curX >= super.drawAreaLayers.get(0).getWidth())
+							else if (curX >= super.drawAreaLayers.get(0).getWidth() - 8)
 								curX = super.drawAreaLayers.get(0).getWidth() - 16;
 
 							if (curY < (this.selectedObject.getH() - 1)/16*16)
 								curY = (this.selectedObject.getH() - 1)/16*16;
-							else if (curY >= super.drawAreaLayers.get(0).getHeight())
+							else if (curY >= super.drawAreaLayers.get(0).getHeight() - 8)
 								curY = super.drawAreaLayers.get(0).getHeight() - 16;
 
 							// center at the bottom-left corner
